@@ -1,0 +1,17 @@
+# Ignorar sockets y carpetas temporales de Docker
+boda-backend/.docker/mysql/
+boda-backend/.docker/mysql/mysql.sock
+
+# Node modules (frontend)
+boda-frontend/node_modules/
+
+# Dependencias PHP (si usas composer dentro de la carpeta backend)
+boda-backend/vendor/
+
+# Archivos de build de frontend (opcional)
+boda-frontend/dist/
+
+# Entornos
+.env
+boda-backend/.env
+boda-frontend/.env
