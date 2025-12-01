@@ -19,7 +19,6 @@ import BodaPublicPage from "../features/public/pages/BodaPublicPage";
 import { BodaInvitadosPage } from "../features/bodas/pages/BodaInvitadosPage.jsx";
 import { RsvpPage } from "../features/public/pages/RsvpPage.jsx";
 
-
 // Si no tienes NotFound aún, puedes crearlo luego.
 function NotFoundPage() {
   return (
@@ -40,11 +39,12 @@ export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rutas públicas */}
+        {/* Rutas públicas con layout general */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/demo-boda/:slug" element={<BodaPublicPage />} />
+          <Route path="/demo-boda/:slug" element={<DemoBodaPage />} />
+          <Route path="/rsvp/:codigo" element={<RsvpPage />} />
         </Route>
 
         {/* RUTA PÚBLICA DE LA BODA REAL (FASE 8)
@@ -53,11 +53,7 @@ export function AppRouter() {
          */}
         <Route path="/boda/:slug" element={<BodaPublicPage />} />
 
-        {/* Rutas de administración:
-            - /admin → solo superadmin
-            - /panel → solo admin_boda
-         */}
-         
+        {/* ===================== ÁREA PRIVADA ===================== */}
 
         {/* SUPERADMIN */}
         <Route
@@ -68,25 +64,14 @@ export function AppRouter() {
           }
         >
           <Route path="/admin" element={<AdminDashboardPage />} />
-          {/* Más adelante: /admin/bodas, /admin/planes, etc. */}
+          {/* Más adelante: /admin/bodas, /admin/planes, /admin/plantillas, etc. */}
         </Route>
 
-        {/* ADMIN_BODA */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["admin_boda"]}>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/panel" element={<BodaDashboardPage />} />
-          {/* Más adelante: /panel/configuracion, /panel/invitados, /panel/fotos, etc. */}
-        </Route>
-
+        {/* PANEL ADMIN_BODA (y opcionalmente SUPERADMIN) */}
         <Route
           path="/panel"
           element={
-            <ProtectedRoute rolPermitido={["admin_boda", "superadmin"]}>
+            <ProtectedRoute allowedRoles={["admin_boda", "superadmin"]}>
               <AdminLayout />
             </ProtectedRoute>
           }
@@ -94,13 +79,11 @@ export function AppRouter() {
           <Route index element={<BodaDashboardPage />} />
           <Route path="configuracion" element={<BodaConfigPage />} />
           <Route path="invitados" element={<BodaInvitadosPage />} />
+          {/* Más adelante: /panel/fotos, /panel/estadisticas, etc. */}
         </Route>
 
         {/* 404 genérico */}
         <Route path="*" element={<NotFoundPage />} />
-
-        <Route path="/rsvp/:codigo" element={<RsvpPage />} />
-
       </Routes>
     </BrowserRouter>
   );
