@@ -1,0 +1,16 @@
+# Datos de docker (mysql, etc.)
+.docker
+.docker/mysql
+
+# Dependencias y cachés
+vendor
+node_modules
+storage
+bootstrap/cache
+
+# Enlace problemático
+public/storage
+
+# Git y otros
+.git
+.gitignore

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image; // para comprimir/redimensionar
+use Intervention\Image\Encoders\JpegEncoder;
 
 class FotoBodaController extends Controller
 {
@@ -124,64 +125,61 @@ class FotoBodaController extends Controller
     }
 
     public function storePropia(Request $request, Boda $boda)
-    {
-        $this->ensureOwnerOrAbort($boda);
+{
+    $request->validate([
+        'imagen'      => 'required|image|max:3072', // 3MB
+        'titulo'      => 'nullable|string|max:150',
+        'descripcion' => 'nullable|string|max:255',
+    ], [
+        'imagen.required' => 'Debes seleccionar una imagen.',
+        'imagen.image'    => 'El archivo debe ser una imagen válida.',
+        'imagen.max'      => 'La imagen supera el tamaño máximo permitido (3 MB).',
+    ]);
 
-        // 3 MB = 3072 KB
-        $validated = $request->validate(
-            [
-                'imagen'      => 'required|image|max:3072', // 3MB
-                'titulo'      => 'nullable|string|max:150',
-                'descripcion' => 'nullable|string|max:255',
-            ],
-            [
-                'imagen.required' => 'Debes seleccionar una imagen.',
-                'imagen.image'    => 'El archivo debe ser una imagen válida.',
-                'imagen.max'      => 'La imagen supera el tamaño máximo permitido (3 MB).',
-            ]
-        );
-
-        if (!$request->hasFile('imagen')) {
-            return response()->json([
-                'message' => 'No se recibió ningún archivo de imagen.',
-            ], 422);
-        }
-
-        $file      = $request->file('imagen');
-        $extension = $file->extension() ?: 'jpg';
-
-        // Nombre único
-        $filename = 'boda_' . $boda->id . '_' . uniqid() . '.' . $extension;
-
-        // Redimensionar y comprimir (máx 1600px de ancho/alto, calidad ~82)
-        $image = Image::read($file)
-            ->resize(1600, 1600, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
-            ->encode($extension, 82); // calidad
-
-        // Guardar en disco "public"
-        $path = 'fotos_boda/' . $filename;
-        Storage::disk('public')->put($path, (string) $image);
-
-        // Siguiente orden
-        $nextOrden = (int) ($boda->fotos()->max('orden') ?? 0) + 1;
-
-        $foto = FotoBoda::create([
-            'boda_id'            => $boda->id,
-            'url_imagen'         => $path,
-            'titulo'             => $validated['titulo'] ?? null,
-            'descripcion'        => $validated['descripcion'] ?? null,
-            'orden'              => $nextOrden,
-            'es_portada'         => false,
-            'es_galeria_privada' => false,
-        ]);
-
-        $foto->url_publica = $this->buildPublicUrl($foto);
-
-        return response()->json($foto, 201);
+    if (! $request->hasFile('imagen')) {
+        return response()->json([
+            'message' => 'No se recibió ningún archivo de imagen.',
+        ], 422);
     }
+
+    $file = $request->file('imagen');
+
+    // Siempre guardaremos como JPG
+    $extension = 'jpg';
+    $filename  = 'boda_' . $boda->id . '_' . uniqid() . '.' . $extension;
+
+    // 1) Redimensionar (máx. 1600x1600)
+    $image = Image::read($file)->resize(1600, 1600, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    });
+
+    // 2) Codificar a JPEG con calidad 82
+    $encoded = $image->encode(new JpegEncoder(quality: 82));
+
+    // 3) Guardar en disco 'public'
+    $path = 'fotos_boda/' . $filename;
+    Storage::disk('public')->put($path, (string) $encoded);
+
+    // 4) Siguiente orden
+    $nextOrden = (int) ($boda->fotos()->max('orden') ?? 0) + 1;
+
+    $foto = FotoBoda::create([
+        'boda_id'     => $boda->id,
+        'ruta'        => $path,
+        'titulo'      => $request->input('titulo'),
+        'descripcion' => $request->input('descripcion'),
+        'orden'       => $nextOrden,
+        'es_portada'  => false,
+    ]);
+
+    // construir url pública
+    $foto->url_publica = $this->buildPublicUrl($foto);
+
+    return response()->json($foto, 201);
+}
+
+
 
     public function updatePropia(Request $request, FotoBoda $foto)
     {
