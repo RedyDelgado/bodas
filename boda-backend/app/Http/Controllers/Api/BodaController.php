@@ -201,22 +201,65 @@ class BodaController extends Controller
         return response()->json($boda->fresh()->load(['plan', 'plantilla']));
     }
 
-    public function resumenPropia(Request $request, Boda $boda)
-    {
-        $this->ensureOwnerOrAbort($boda);
+public function resumenPropia(Request $request, Boda $boda)
+{
+    $this->ensureOwnerOrAbort($boda);
 
-        $totalInvitados   = $boda->invitados()->count();
-        $totalConfirmados = $boda->invitados()->where('es_confirmado', true)->count();
+    // Invitados
+    $totalInvitados = $boda->invitados()->count();
+    $totalConfirmados = $boda->invitados()
+        ->where('es_confirmado', true)
+        ->count();
 
-        return response()->json([
-            'boda_id'           => $boda->id,
-            'nombre_pareja'     => $boda->nombre_pareja,
-            'fecha_boda'        => $boda->fecha_boda,
-            'total_invitados'   => $totalInvitados,
-            'total_confirmados' => $totalConfirmados,
-            'total_vistas'      => $boda->total_vistas,
-        ]);
-    }
+    // En esta versión no manejamos "rechazados", así que siempre 0
+    $totalRechazados = 0;
+    $totalPendientes = $totalInvitados - $totalConfirmados - $totalRechazados;
+
+    // Pases (asistentes estimados) solo de confirmados
+    $totalAsistentesConfirmados = $boda->invitados()
+        ->where('es_confirmado', true)
+        ->sum('pases');
+
+    // Porcentajes
+    $porcentaje = function (int $valor) use ($totalInvitados): int {
+        if ($totalInvitados === 0) {
+            return 0;
+        }
+        return (int) round(($valor * 100) / $totalInvitados);
+    };
+
+    $porcentajes = [
+        'confirmados' => $porcentaje($totalConfirmados),
+        'pendientes'  => $porcentaje($totalPendientes),
+        'rechazados'  => $porcentaje($totalRechazados),
+    ];
+
+    // Fotos
+    $totalFotos = $boda->fotos()->count();
+
+    // Armamos el payload EXACTO que espera el frontend
+    return response()->json([
+        'boda' => [
+            'id'           => $boda->id,
+            'nombre_pareja'=> $boda->nombre_pareja,
+            'subdominio'   => $boda->subdominio,
+            'fecha_boda'   => $boda->fecha_boda,
+            'total_vistas' => $boda->total_vistas,
+        ],
+        'invitados' => [
+            'total'                        => $totalInvitados,
+            'confirmados'                  => $totalConfirmados,
+            'pendientes'                   => $totalPendientes,
+            'rechazados'                   => $totalRechazados,
+            'total_asistentes_confirmados' => $totalAsistentesConfirmados,
+            'porcentajes'                  => $porcentajes,
+        ],
+        'fotos' => [
+            'total' => $totalFotos,
+        ],
+    ]);
+}
+
 
     // ===================== LÓGICA DE DOMINIOS / SUBDOMINIOS =====================
 

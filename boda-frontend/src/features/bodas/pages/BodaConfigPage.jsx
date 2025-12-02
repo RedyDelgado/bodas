@@ -166,6 +166,9 @@ function IconFAQ(props) {
   );
 }
 
+const MAX_MB = 3;
+const MAX_BYTES = MAX_MB * 1024 * 1024;
+
 export function BodaConfigPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -212,15 +215,85 @@ export function BodaConfigPage() {
     []
   );
 
+  // -------- FAQs (tabla faqs_boda) ----------
+  const [faqs, setFaqs] = useState([{ pregunta: "", respuesta: "" }]);
+  const [cargandoFaqs, setCargandoFaqs] = useState(false);
+  const [guardandoFaqs, setGuardandoFaqs] = useState(false);
+  const [errorFaqs, setErrorFaqs] = useState("");
+
+  const cargarFaqs = useCallback(
+    async (id) => {
+      if (!id) return;
+      try {
+        setCargandoFaqs(true);
+        setErrorFaqs("");
+        const res = await axiosClient.get(`/mis-bodas/${id}/faqs`);
+        const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
+
+        if (!data.length) {
+          setFaqs([{ pregunta: "", respuesta: "" }]);
+        } else {
+          setFaqs(
+            data.map((f) => ({
+              pregunta: f.pregunta || "",
+              respuesta: f.respuesta || "",
+            }))
+          );
+        }
+      } catch (e) {
+        console.error(e);
+        setErrorFaqs("No se pudieron cargar las preguntas frecuentes.");
+        setFaqs([{ pregunta: "", respuesta: "" }]);
+      } finally {
+        setCargandoFaqs(false);
+      }
+    },
+    []
+  );
+
+  // Cargar fotos + faqs cuando tengamos bodaId
   useEffect(() => {
     if (bodaId) {
       cargarFotos(bodaId);
+      cargarFaqs(bodaId);
     }
-  }, [bodaId, cargarFotos]);
+  }, [bodaId, cargarFotos, cargarFaqs]);
+
+  const actualizarOrdenServidor = useCallback(
+    async (listaOrdenada) => {
+      if (!bodaId) return;
+      try {
+        setErrorFotos("");
+        const payload = {
+          fotos: listaOrdenada.map((f, idx) => ({
+            id: f.id,
+            orden: idx + 1,
+          })),
+        };
+        await axiosClient.put(`/mis-bodas/${bodaId}/fotos/orden`, payload);
+      } catch (e) {
+        console.error(e);
+        setErrorFotos("No se pudo guardar el nuevo orden de las fotos.");
+        // opcional: recargar orden original
+        await cargarFotos(bodaId);
+      }
+    },
+    [bodaId, cargarFotos]
+  );
 
   const handleSubirFotos = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length || !bodaId) return;
+
+    // Validación tamaño 3MB
+    const tooBig = files.find((f) => f.size > MAX_BYTES);
+    if (tooBig) {
+      setErrorFotos(
+        `La imagen "${tooBig.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
+      );
+      e.target.value = "";
+      return;
+    }
 
     try {
       setSubiendoFoto(true);
@@ -228,7 +301,6 @@ export function BodaConfigPage() {
 
       for (const file of files) {
         const formData = new FormData();
-        // IMPORTANTE: ajusta el nombre del campo ("imagen") si en tu backend se usa otro
         formData.append("imagen", file);
         await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -238,9 +310,15 @@ export function BodaConfigPage() {
       await cargarFotos(bodaId);
     } catch (e) {
       console.error(e);
-      setErrorFotos(
-        "Ocurrió un problema al subir las fotos. Inténtalo nuevamente."
-      );
+      if (e.response?.status === 422) {
+        setErrorFotos(
+          "La imagen no es válida o excede el tamaño permitido (máx. 3 MB)."
+        );
+      } else {
+        setErrorFotos(
+          "Ocurrió un problema al subir las fotos. Inténtalo nuevamente."
+        );
+      }
     } finally {
       setSubiendoFoto(false);
       e.target.value = "";
@@ -268,6 +346,19 @@ export function BodaConfigPage() {
     }
   };
 
+  const handleDropFoto = (fromIndex, toIndex) => {
+    if (fromIndex === toIndex) return;
+
+    setFotos((prev) => {
+      const copia = [...prev];
+      const [moved] = copia.splice(fromIndex, 1);
+      copia.splice(toIndex, 0, moved);
+      // enviar nuevo orden al backend (fire & forget)
+      actualizarOrdenServidor(copia);
+      return copia;
+    });
+  };
+
   // -------- FORMULARIO CONFIG --------
   const [form, setForm] = useState({
     frasePrincipal: "",
@@ -288,43 +379,13 @@ export function BodaConfigPage() {
     // Historia / mensaje final
     textoHistoriaPareja: "",
     textoMensajeFinal: "",
-    // Preguntas frecuentes
+    // Preguntas frecuentes (intro)
     textoPreguntasFrecuentes: "",
   });
 
-  // FAQs estructuradas
-  const [faqs, setFaqs] = useState([
-    { pregunta: "", respuesta: "" },
-  ]);
-
+  // efecto para config (solo config, ya no faqs)
   useEffect(() => {
     if (config) {
-      // Preguntas frecuentes desde backend
-      let faqsIniciales = [];
-      if (Array.isArray(config.preguntasFrecuentes)) {
-        faqsIniciales = config.preguntasFrecuentes;
-      } else if (typeof config.preguntasFrecuentes === "string") {
-        try {
-          const parsed = JSON.parse(config.preguntasFrecuentes);
-          if (Array.isArray(parsed)) {
-            faqsIniciales = parsed;
-          }
-        } catch (_) {
-          // ignorar error de parseo
-        }
-      }
-
-      if (!faqsIniciales.length) {
-        faqsIniciales = [{ pregunta: "", respuesta: "" }];
-      }
-
-      setFaqs(
-        faqsIniciales.map((f) => ({
-          pregunta: f.pregunta || "",
-          respuesta: f.respuesta || "",
-        }))
-      );
-
       setForm((prev) => ({
         ...prev,
         frasePrincipal: config.frasePrincipal || "",
@@ -332,7 +393,6 @@ export function BodaConfigPage() {
         textoFechaCivil: config.textoFechaCivil || "",
         localReligioso: config.localReligioso || "",
         localRecepcion: config.localRecepcion || "",
-        // De momento ponemos todo el texto del cronograma en "libre"
         cronogramaMatrimonio: "",
         cronogramaRecepcion: "",
         cronogramaBodaCivil: "",
@@ -411,11 +471,24 @@ export function BodaConfigPage() {
       textoHistoriaPareja: form.textoHistoriaPareja,
       textoMensajeFinal: form.textoMensajeFinal,
       textoPreguntasFrecuentes: form.textoPreguntasFrecuentes,
-      // Campo JSON en backend (ej: columna preguntas_frecuentes tipo json)
-      preguntasFrecuentes: faqsLimpias,
     };
 
-    await guardar(payload);
+    try {
+      setGuardandoFaqs(true);
+      setErrorFaqs("");
+
+      await Promise.all([
+        guardar(payload), // config de la boda
+        axiosClient.put(`/mis-bodas/${bodaId}/faqs`, { faqs: faqsLimpias }), // tabla faqs_boda
+      ]);
+
+      await cargarFaqs(bodaId);
+    } catch (e) {
+      console.error(e);
+      setErrorFaqs("No se pudieron guardar las preguntas frecuentes.");
+    } finally {
+      setGuardandoFaqs(false);
+    }
   };
 
   const handleIrDashboard = () => {
@@ -456,7 +529,7 @@ export function BodaConfigPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="space-y-6">
       {/* Barra superior: navegación rápida entre secciones de la boda */}
       <div className="bg-white border border-slate-200 rounded-3xl px-4 sm:px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-sm">
         <div className="flex items-start gap-3">
@@ -551,7 +624,7 @@ export function BodaConfigPage() {
       >
         {/* GRID PROFESIONAL DE CARDS */}
         <div className="grid lg:grid-cols-12 gap-5">
-          {/* CARD: Portada y fechas (principal, más ancha) */}
+          {/* CARD: Portada y fechas */}
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
@@ -613,7 +686,7 @@ export function BodaConfigPage() {
             </div>
           </section>
 
-          {/* CARD: Regalos y cuentas (más compacta) */}
+          {/* CARD: Regalos */}
           <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
@@ -659,7 +732,7 @@ export function BodaConfigPage() {
             </div>
           </section>
 
-          {/* CARD: Lugares y cronograma (ancho) */}
+          {/* CARD: Lugares y cronograma */}
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
@@ -703,7 +776,6 @@ export function BodaConfigPage() {
               </div>
             </div>
 
-            {/* Cronograma estructurado */}
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-xs font-medium text-slate-700">
@@ -784,7 +856,7 @@ export function BodaConfigPage() {
             </div>
           </section>
 
-          {/* CARD: Historia y mensaje final (más compacta) */}
+          {/* CARD: Historia */}
           <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
@@ -830,7 +902,7 @@ export function BodaConfigPage() {
             </div>
           </section>
 
-          {/* CARD: Fotos de la boda (ancha) */}
+          {/* CARD: Fotos */}
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
@@ -841,8 +913,9 @@ export function BodaConfigPage() {
                   Fotos de la boda
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Sube fotos para la portada y la galería. Puedes marcar una
-                  como portada y eliminar las que ya no quieras usar.
+                  Sube fotos para la portada y la galería. Puedes marcarlas
+                  como portada, eliminarlas y reordenarlas arrastrando con el
+                  mouse.
                 </p>
               </div>
             </div>
@@ -878,7 +951,7 @@ export function BodaConfigPage() {
 
             {fotos.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {fotos.map((foto) => {
+                {fotos.map((foto, index) => {
                   const url =
                     foto.url_publica ||
                     foto.url ||
@@ -892,7 +965,19 @@ export function BodaConfigPage() {
                   return (
                     <div
                       key={foto.id}
-                      className="group relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50"
+                      draggable
+                      onDragStart={(e) =>
+                        e.dataTransfer.setData("text/plain", String(index))
+                      }
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        const fromIndex = parseInt(
+                          e.dataTransfer.getData("text/plain"),
+                          10
+                        );
+                        handleDropFoto(fromIndex, index);
+                      }}
+                      className="group relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 cursor-move"
                     >
                       <img
                         src={url}
@@ -905,12 +990,15 @@ export function BodaConfigPage() {
                         </p>
                       </div>
                       <div className="absolute inset-0 flex flex-col justify-between p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex justify-end">
+                        <div className="flex justify-between">
                           {esPortada && (
                             <span className="inline-flex rounded-full bg-emerald-500/90 text-white text-[10px] px-2 py-0.5">
                               Portada
                             </span>
                           )}
+                          <span className="inline-flex rounded-full bg-black/50 text-white text-[10px] px-2 py-0.5">
+                            Arrastra para ordenar
+                          </span>
                         </div>
                         <div className="flex justify-between gap-1">
                           <button
@@ -940,7 +1028,7 @@ export function BodaConfigPage() {
             )}
           </section>
 
-          {/* CARD: Preguntas frecuentes (Q&A) */}
+          {/* CARD: Preguntas frecuentes */}
           <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
@@ -956,6 +1044,18 @@ export function BodaConfigPage() {
                 </p>
               </div>
             </div>
+
+            {cargandoFaqs && (
+              <p className="text-[11px] text-slate-500">
+                Cargando preguntas frecuentes...
+              </p>
+            )}
+
+            {errorFaqs && (
+              <p className="text-[11px] text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
+                {errorFaqs}
+              </p>
+            )}
 
             <div className="space-y-1.5">
               <label className="block text-xs font-medium text-slate-700">
@@ -1037,10 +1137,12 @@ export function BodaConfigPage() {
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             type="submit"
-            disabled={guardando}
+            disabled={guardando || guardandoFaqs}
             className="px-4 py-2 rounded-full bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 disabled:opacity-60"
           >
-            {guardando ? "Guardando cambios..." : "Guardar configuración"}
+            {guardando || guardandoFaqs
+              ? "Guardando cambios..."
+              : "Guardar configuración"}
           </button>
         </div>
       </form>

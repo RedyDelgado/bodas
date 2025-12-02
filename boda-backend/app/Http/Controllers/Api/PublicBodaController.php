@@ -10,29 +10,40 @@ use Illuminate\Http\JsonResponse;
 class PublicBodaController extends Controller
 {
     /**
-     * Devuelve los datos públicos de una boda detectando por HOST.
-     * Pensado para producción: dominio propio o subdominio.
+     * Producción: detectar la boda por HOST
+     * (subdominio o dominio propio).
+     * En local no lo vamos a usar, lo dejamos solo preparado.
      */
     public function showByHost(Request $request): JsonResponse
     {
-        $host = $request->getHost(); // p.e. redyypatricia.com o pareja1.miwebdebodas.com
+        $host = $request->getHost(); // ej. emilia-gabriel-1.miwebdebodas.test
+        $baseDomain = config('app.bodas_base_domain', 'miwebdebodas.test');
 
-        // Base de subdominios, configurable en .env / config/app.php
-        $baseDomain = config('app.boda_base_domain', 'miwebdebodas.com');
+        $query = Boda::query()
+            ->where('estado', 'activa')
+            ->with(['configuracion', 'fotos']);
 
-        $query = Boda::with(['configuracion', 'fotos', 'plantilla'])
-            ->where('estado', 'activa');
+        // Para desarrollo local (localhost, 127.0.0.1) devolvemos mensaje explicativo
+        if ($host === 'localhost' || str_starts_with($host, '127.')) {
+            return response()->json([
+                'message' => 'En desarrollo usa /api/public/boda/slug/{subdominio}.',
+            ], 400);
+        }
 
-        // 1) Si coincide dominio_personalizado
-        $boda = (clone $query)->where('dominio_personalizado', $host)->first();
+        $boda = null;
 
-        if (! $boda) {
-            // 2) Intentar como subdominio: slug.miwebdebodas.com
-            if (str_ends_with($host, $baseDomain)) {
-                $sub = str_replace('.' . $baseDomain, '', $host);
+        // Si el host termina en el dominio base -> subdominio
+        if ($baseDomain && str_ends_with($host, $baseDomain)) {
+            // ej. host = emilia-gabriel-1.miwebdebodas.test
+            $suffix = '.' . $baseDomain;
+            $subdominio = str_ends_with($host, $suffix)
+                ? substr($host, 0, -strlen($suffix))
+                : $host;
 
-                $boda = (clone $query)->where('subdominio', $sub)->first();
-            }
+            $boda = $query->where('subdominio', $subdominio)->first();
+        } else {
+            // Si no, asumimos dominio propio
+            $boda = $query->where('dominio_personalizado', $host)->first();
         }
 
         if (! $boda) {
@@ -41,7 +52,6 @@ class PublicBodaController extends Controller
             ], 404);
         }
 
-        // Incrementar contador de vistas
         $boda->increment('total_vistas');
 
         return response()->json([
@@ -52,14 +62,16 @@ class PublicBodaController extends Controller
     }
 
     /**
-     * Devuelve los datos públicos de una boda usando el slug del subdominio.
-     * Pensado para modo DEMO: /public/boda/slug/{subdominio}
+     * Versión para DEMO / desarrollo:
+     * /api/public/boda/slug/{slug}
+     *
+     * Usamos el campo "subdominio" como slug.
      */
     public function showBySlug(string $slug): JsonResponse
     {
-        $boda = Boda::with(['configuracion', 'fotos', 'plantilla'])
+        $boda = Boda::where('subdominio', $slug)
             ->where('estado', 'activa')
-            ->where('subdominio', $slug)
+            ->with(['configuracion', 'fotos'])
             ->first();
 
         if (! $boda) {

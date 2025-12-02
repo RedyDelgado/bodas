@@ -2,14 +2,19 @@
 
 return [
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => [
+        'api/*',
+        'sanctum/csrf-cookie',
+        '*',
+    ],
+
+    'allowed_methods' => ['*'],
 
     'allowed_origins' => [
         'http://localhost:5173',
     ],
-    // En desarrollo podrías usar: 'allowed_origins' => ['*'],
 
-    'allowed_methods' => ['*'],
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
@@ -17,5 +22,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false, // usamos token en header, no cookies
+    'supports_credentials' => false,
 ];

@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\AjusteMarcaController;
 use App\Http\Controllers\Api\FaqPlataformaController;
 use App\Http\Controllers\Api\PublicBodaController;
 use App\Http\Controllers\Api\PublicRsvpController;
-
+use App\Http\Controllers\Api\FaqBodaController;
 /*
 |--------------------------------------------------------------------------
 | Rutas públicas
@@ -70,6 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
     | - Logs de WhatsApp (solo lectura)
     |
     */
+    
+    
+   
+
 
     Route::middleware('role:superadmin')->group(function () {
 
@@ -140,6 +144,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/mis-bodas/{boda}/fotos', [FotoBodaController::class, 'storePropia']);
         Route::put('/fotos-boda/{foto}', [FotoBodaController::class, 'updatePropia']);
         Route::delete('/fotos-boda/{foto}', [FotoBodaController::class, 'destroyPropia']);
+   
+
+        // Fotos del dueño de la boda (panel admin_boda)
+        Route::put('/mis-bodas/{boda}/fotos/orden', [FotoBodaController::class, 'reordenarPropias']);
+
+
+        // FAQs por boda
+        Route::get('/mis-bodas/{boda}/faqs', [FaqBodaController::class, 'index']);
+        Route::put('/mis-bodas/{boda}/faqs', [FaqBodaController::class, 'sync']);
+
+        // Opcional, por ID
+        Route::delete('/boda-faqs/{faq}', [FaqBodaController::class, 'destroy']);
+
 
         // Invitados de la boda propia
         Route::get('/mis-bodas/{boda}/invitados', [InvitadoController::class, 'indexPropios']);

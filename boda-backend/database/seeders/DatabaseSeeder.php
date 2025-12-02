@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             AjustesMarcaSeeder::class,
             FaqsPlataformaSeeder::class,
             UsuariosYBodasSeeder::class,
+            FaqsBodaSeeder::class,
         ]);
     }
 }

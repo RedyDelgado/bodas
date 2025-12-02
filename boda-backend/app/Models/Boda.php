@@ -72,4 +72,8 @@ class Boda extends Model
     {
         return $this->hasMany(FotoBoda::class, 'boda_id');
     }
+    public function faqs()
+    {
+        return $this->hasMany(FaqBoda::class);
+    }
 }
