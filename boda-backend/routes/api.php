@@ -161,6 +161,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Invitados de la boda propia
         Route::get('/mis-bodas/{boda}/invitados', [InvitadoController::class, 'indexPropios']);
         Route::post('/mis-bodas/{boda}/invitados', [InvitadoController::class, 'storePropio']);
+        Route::post('/mis-bodas/{boda}/invitados/importar', [InvitadoController::class, 'importarPropio']);
+
+        
         Route::get('/invitados/{invitado}', [InvitadoController::class, 'showPropio']);
         Route::put('/invitados/{invitado}', [InvitadoController::class, 'updatePropio']);
         Route::delete('/invitados/{invitado}', [InvitadoController::class, 'destroyPropio']);
@@ -170,6 +173,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Envío de mensajes WhatsApp (crear log)
         Route::post('/invitados/{invitado}/enviar-whatsapp', [LogWhatsappEnvioController::class, 'enviarMensajeInvitado']);
+        
 
         // Estadísticas rápidas para el panel de admin de boda
         Route::get('/mis-bodas/{boda}/resumen', [BodaController::class, 'resumenPropia']);

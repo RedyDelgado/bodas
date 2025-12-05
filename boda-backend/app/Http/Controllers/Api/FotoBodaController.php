@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image; // para comprimir/redimensionar
 use Intervention\Image\Encoders\JpegEncoder;
+use Illuminate\Support\Str;
 
 class FotoBodaController extends Controller
 {
@@ -43,20 +44,21 @@ class FotoBodaController extends Controller
     /**
      * Construye una URL pública para la imagen.
      */
-    protected function buildPublicUrl(FotoBoda $foto): ?string
-    {
-        $url = $foto->url_imagen ?? $foto->ruta ?? null;
+protected function buildPublicUrl(FotoBoda $foto): ?string
+{
+    $url = $foto->url_imagen ?? null;
 
-        if (!$url) {
-            return null;
-        }
-
-        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
-            return $url;
-        }
-
-        return asset('storage/' . ltrim($url, '/'));
+    if (!$url) {
+        return null;
     }
+
+    if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
+        return $url;
+    }
+
+    return asset('storage/' . ltrim($url, '/'));
+}
+
 
     // =============== SUPERADMIN – apiResource(bodas.fotos) =================
 
@@ -124,7 +126,7 @@ class FotoBodaController extends Controller
         return response()->json($fotos);
     }
 
-    public function storePropia(Request $request, Boda $boda)
+   public function storePropia(Request $request, Boda $boda)
 {
     $request->validate([
         'imagen'      => 'required|image|max:3072', // 3MB
@@ -144,9 +146,11 @@ class FotoBodaController extends Controller
 
     $file = $request->file('imagen');
 
-    // Siempre guardaremos como JPG
-    $extension = 'jpg';
-    $filename  = 'boda_' . $boda->id . '_' . uniqid() . '.' . $extension;
+    // Datos para el nombre del archivo
+    $timestamp    = now()->format('Ymd_His');           // 20251202_110158
+    $slugPareja   = Str::slug($boda->nombre_pareja ?? 'boda');
+    $extension    = 'jpg';
+    $filename     = "{$timestamp}_{$slugPareja}_boda-{$boda->id}.{$extension}";
 
     // 1) Redimensionar (máx. 1600x1600)
     $image = Image::read($file)->resize(1600, 1600, function ($constraint) {
@@ -157,8 +161,8 @@ class FotoBodaController extends Controller
     // 2) Codificar a JPEG con calidad 82
     $encoded = $image->encode(new JpegEncoder(quality: 82));
 
-    // 3) Guardar en disco 'public'
-    $path = 'fotos_boda/' . $filename;
+    // 3) Guardar en disco 'public' (organizado por boda)
+    $path = 'fotos_boda/' . $boda->id . '/' . $filename;
     Storage::disk('public')->put($path, (string) $encoded);
 
     // 4) Siguiente orden
@@ -166,14 +170,13 @@ class FotoBodaController extends Controller
 
     $foto = FotoBoda::create([
         'boda_id'     => $boda->id,
-        'ruta'        => $path,
+        'url_imagen'  => $path,
         'titulo'      => $request->input('titulo'),
         'descripcion' => $request->input('descripcion'),
         'orden'       => $nextOrden,
         'es_portada'  => false,
     ]);
 
-    // construir url pública
     $foto->url_publica = $this->buildPublicUrl($foto);
 
     return response()->json($foto, 201);

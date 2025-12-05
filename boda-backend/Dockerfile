@@ -1,12 +1,13 @@
 FROM php:8.2-apache
 
-# 1) Librerías del sistema necesarias para GD
+# 1) Librerías del sistema necesarias para GD + ZIP
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    libzip-dev \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
- && docker-php-ext-install gd pdo pdo_mysql
+ && docker-php-ext-install gd pdo pdo_mysql zip
 
 # 2) Habilitar mod_rewrite para Laravel
 RUN a2enmod rewrite

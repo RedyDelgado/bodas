@@ -5,166 +5,16 @@ import { useMiBodaActual } from "../hooks/useBodas";
 import { useConfiguracionBoda } from "../hooks/useConfiguracionBoda";
 import axiosClient from "../../../shared/config/axiosClient";
 
-/* Iconos simples (no dependencias extras) */
-function IconChevronLeft(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <path
-        d="M15 18L9 12L15 6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconSparkles(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <path
-        d="M12 3l1.3 3.3L16.5 8 13.3 9.3 12 12l-1.3-2.7L7.5 8l3.2-1.7L12 3zM6 13l.7 1.8L9 15l-1.3.7L7 17l-.7-1.3L5 15l1.3-.2L6 13zm10 3l.7 1.8L19 18l-1.3.7L17 20l-.7-1.3L15 18l1.3-.2L16 16z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function IconCalendar(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <rect
-        x="3.5"
-        y="4.5"
-        width="17"
-        height="16"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M8 3.5v3M16 3.5v3M3.5 9.5h17"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconGift(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <rect
-        x="3.5"
-        y="9"
-        width="17"
-        height="11.5"
-        rx="1.8"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M12 4v16.5M3.5 9h17"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9.2 4.5C8.2 3.7 7 3.5 6.2 4.3 5.4 5.1 5.5 6.3 6.3 7.2 7.1 8 8.6 8.3 9.9 8.1c.1-1.2-.3-2.4-.7-3.6zM14.8 4.5c1-0.8 2.2-1 3-0.2.8.8.7 2-0.1 2.9-0.8.9-2.3 1.2-3.6 1 0-1.2.3-2.4.7-3.7z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconStory(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <path
-        d="M6 5.5C7.7 5 9.5 4.7 12 4.7s4.3.3 6 0.8v11.5c-1.7-.5-3.5-.8-6-.8s-4.3.3-6 .8V5.5z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.2 9.5L12 11l2.8-1.5M12 11v3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconCamera(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <rect
-        x="3.5"
-        y="6.5"
-        width="17"
-        height="13"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M9 6.5l1-2h4l1 2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <circle
-        cx="12"
-        cy="13"
-        r="3.2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-    </svg>
-  );
-}
-
-function IconFAQ(props) {
-  return (
-    <svg viewBox="0 0 24 24" className={props.className}>
-      <path
-        d="M4.5 5.5A2.5 2.5 0 0 1 7 3h10a2.5 2.5 0 0 1 2.5 2.5v7.5A2.5 2.5 0 0 1 17 15.5h-4.2L9 19.5v-4H7A2.5 2.5 0 0 1 4.5 13V5.5z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10.5 8.5a1.8 1.8 0 0 1 3.1-1.2c.3.3.4.7.4 1.1 0 .9-.6 1.3-1.1 1.6-.6.3-1 .7-1 1.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <circle cx="12" cy="13.9" r="0.8" fill="currentColor" />
-    </svg>
-  );
-}
+// Íconos desde react-icons (Heroicons v2)
+import {
+  HiChevronLeft,
+  HiSparkles,
+  HiOutlineCalendarDays,
+  HiOutlineGift,
+  HiOutlineBookOpen,
+  HiOutlineCamera,
+  HiOutlineQuestionMarkCircle,
+} from "react-icons/hi2";
 
 const MAX_MB = 3;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
@@ -196,37 +46,34 @@ export function BodaConfigPage() {
   const [subiendoFoto, setSubiendoFoto] = useState(false);
   const [errorFotos, setErrorFotos] = useState("");
 
-    
+  // modal para subida
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [filesToUpload, setFilesToUpload] = useState([]);
+  const [tituloFoto, setTituloFoto] = useState("");
+  const [descripcionFoto, setDescripcionFoto] = useState("");
 
-// modal para subida
-const [showUploadModal, setShowUploadModal] = useState(false);
-const [filesToUpload, setFilesToUpload] = useState([]);
-const [tituloFoto, setTituloFoto] = useState("");
-const [descripcionFoto, setDescripcionFoto] = useState("");
+  // NUEVO: previews de las imágenes
+  const [filePreviews, setFilePreviews] = useState([]);
 
-// NUEVO: previews de las imágenes
-const [filePreviews, setFilePreviews] = useState([]);
+  useEffect(() => {
+    if (!filesToUpload.length) {
+      setFilePreviews([]);
+      return;
+    }
 
-useEffect(() => {
-  if (!filesToUpload.length) {
-    setFilePreviews([]);
-    return;
-  }
+    const urls = filesToUpload.map((file) => ({
+      name: file.name,
+      size: file.size,
+      url: URL.createObjectURL(file),
+    }));
 
-  const urls = filesToUpload.map((file) => ({
-    name: file.name,
-    size: file.size,
-    url: URL.createObjectURL(file),
-  }));
+    setFilePreviews(urls);
 
-  setFilePreviews(urls);
-
-  // limpiar URLs al cambiar archivos o desmontar
-  return () => {
-    urls.forEach((item) => URL.revokeObjectURL(item.url));
-  };
-}, [filesToUpload]);
-
+    // limpiar URLs al cambiar archivos o desmontar
+    return () => {
+      urls.forEach((item) => URL.revokeObjectURL(item.url));
+    };
+  }, [filesToUpload]);
 
   const cargarFotos = useCallback(
     async (id) => {
@@ -248,27 +95,25 @@ useEffect(() => {
   );
 
   const handleSelectFiles = (e) => {
-  const files = Array.from(e.target.files || []);
-  if (!files.length || !bodaId) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length || !bodaId) return;
 
-  // Validación tamaño 3MB
-  const tooBig = files.find((f) => f.size > MAX_BYTES);
-  if (tooBig) {
-    setErrorFotos(
-      `La imagen "${tooBig.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
-    );
+    // Validación tamaño 3MB
+    const tooBig = files.find((f) => f.size > MAX_BYTES);
+    if (tooBig) {
+      setErrorFotos(
+        `La imagen "${tooBig.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
+      );
+      e.target.value = "";
+      return;
+    }
+
+    setFilesToUpload(files);
+    setTituloFoto("");
+    setDescripcionFoto("");
+    setShowUploadModal(true);
     e.target.value = "";
-    return;
-  }
-
-  setFilesToUpload(files);
-  setTituloFoto("");
-  setDescripcionFoto("");
-  setShowUploadModal(true);
-  e.target.value = "";
-};
-
-
+  };
 
   // -------- FAQs (tabla faqs_boda) ----------
   const [faqs, setFaqs] = useState([{ pregunta: "", respuesta: "" }]);
@@ -574,7 +419,7 @@ useEffect(() => {
     return (
       <div className="p-6">
         <div className="max-w-lg bg-white border border-rose-200 rounded-2xl px-4 py-3">
-          <h1 className="text-base font-semibold text-rose-700 mb-1">
+          <h1 className="text	base font-semibold text-rose-700 mb-1">
             No se pudo cargar la información de la boda
           </h1>
           <p className="text-sm text-slate-700">{errorBoda}</p>
@@ -583,67 +428,65 @@ useEffect(() => {
     );
   }
 
-const handleConfirmUpload = async () => {
-  if (!filesToUpload.length || !bodaId) {
-    setShowUploadModal(false);
-    return;
-  }
-
-  try {
-    setSubiendoFoto(true);
-    setErrorFotos("");
-
-    for (const file of filesToUpload) {
-      if (file.size > MAX_BYTES) {
-        setErrorFotos(
-          `La imagen "${file.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
-        );
-        continue;
-      }
-
-      const formData = new FormData();
-      formData.append("imagen", file);
-      if (tituloFoto.trim()) {
-        formData.append("titulo", tituloFoto.trim());
-      }
-      if (descripcionFoto.trim()) {
-        formData.append("descripcion", descripcionFoto.trim());
-      }
-
-      await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+  const handleConfirmUpload = async () => {
+    if (!filesToUpload.length || !bodaId) {
+      setShowUploadModal(false);
+      return;
     }
 
-    await cargarFotos(bodaId);
+    try {
+      setSubiendoFoto(true);
+      setErrorFotos("");
+
+      for (const file of filesToUpload) {
+        if (file.size > MAX_BYTES) {
+          setErrorFotos(
+            `La imagen "${file.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
+          );
+          continue;
+        }
+
+        const formData = new FormData();
+        formData.append("imagen", file);
+        if (tituloFoto.trim()) {
+          formData.append("titulo", tituloFoto.trim());
+        }
+        if (descripcionFoto.trim()) {
+          formData.append("descripcion", descripcionFoto.trim());
+        }
+
+        await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+
+      await cargarFotos(bodaId);
+      setShowUploadModal(false);
+      setFilesToUpload([]);
+      setTituloFoto("");
+      setDescripcionFoto("");
+    } catch (e) {
+      console.error(e);
+      if (e.response?.status === 422) {
+        setErrorFotos(
+          "La imagen no es válida o excede el tamaño permitido (máx. 3 MB)."
+        );
+      } else {
+        setErrorFotos(
+          "Ocurrió un problema al subir las fotos. Inténtalo nuevamente."
+        );
+      }
+    } finally {
+      setSubiendoFoto(false);
+    }
+  };
+
+  const handleCancelUpload = () => {
     setShowUploadModal(false);
     setFilesToUpload([]);
     setTituloFoto("");
     setDescripcionFoto("");
-  } catch (e) {
-    console.error(e);
-    if (e.response?.status === 422) {
-      setErrorFotos(
-        "La imagen no es válida o excede el tamaño permitido (máx. 3 MB)."
-      );
-    } else {
-      setErrorFotos(
-        "Ocurrió un problema al subir las fotos. Inténtalo nuevamente."
-      );
-    }
-  } finally {
-    setSubiendoFoto(false);
-  }
-};
-
-const handleCancelUpload = () => {
-  setShowUploadModal(false);
-  setFilesToUpload([]);
-  setTituloFoto("");
-  setDescripcionFoto("");
-};
-
-
+  };
 
   return (
     <div className="space-y-6">
@@ -656,7 +499,7 @@ const handleCancelUpload = () => {
             className="mt-1 inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
             title="Volver al dashboard"
           >
-            <IconChevronLeft className="w-4 h-4" />
+            <HiChevronLeft className="w-4 h-4" />
           </button>
 
           <div>
@@ -669,13 +512,13 @@ const handleCancelUpload = () => {
               </h1>
               {boda?.fecha_boda && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 border border-slate-200 px-2.5 py-1 text-[11px] text-slate-600">
-                  <IconCalendar className="w-3.5 h-3.5" />
+                  <HiOutlineCalendarDays className="w-3.5 h-3.5" />
                   {boda.fecha_boda}
                 </span>
               )}
               {boda?.subdominio && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-slate-900 text-white px-2.5 py-1 text-[11px] font-medium">
-                  <IconSparkles className="w-3.5 h-3.5" />
+                  <HiSparkles className="w-3.5 h-3.5" />
                   {boda.subdominio}
                 </span>
               )}
@@ -745,7 +588,7 @@ const handleCancelUpload = () => {
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                <IconSparkles className="w-4 h-4" />
+                <HiSparkles className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-900">
@@ -807,7 +650,7 @@ const handleCancelUpload = () => {
           <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                <IconGift className="w-4 h-4" />
+                <HiOutlineGift className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-900">
@@ -853,7 +696,7 @@ const handleCancelUpload = () => {
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                <IconCalendar className="w-4 h-4" />
+                <HiOutlineCalendarDays className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-900">
@@ -977,7 +820,7 @@ const handleCancelUpload = () => {
           <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                <IconStory className="w-4 h-4" />
+                <HiOutlineBookOpen className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-900">
@@ -1023,7 +866,7 @@ const handleCancelUpload = () => {
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                <IconCamera className="w-4 h-4" />
+                <HiOutlineCamera className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-900">
@@ -1040,12 +883,12 @@ const handleCancelUpload = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
                 <input
-  type="file"
-  accept="image/*"
-  multiple
-  className="hidden"
-  onChange={handleSelectFiles}
-/>
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleSelectFiles}
+                />
                 <span>Subir fotos</span>
                 {subiendoFoto && (
                   <span className="text-[11px] text-slate-500">
@@ -1101,7 +944,7 @@ const handleCancelUpload = () => {
                         alt={foto.titulo || "Foto de la boda"}
                         className="w-full h-32 sm:h-36 md:h-40 object-cover group-hover:scale-[1.03] transition-transform"
                       />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-2 flex items-end justify-between gap-2">
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-2 flex items	end justify-between gap-2">
                         <p className="text-[11px] text-white line-clamp-2">
                           {foto.titulo || "Foto de la boda"}
                         </p>
@@ -1138,163 +981,171 @@ const handleCancelUpload = () => {
                   );
                 })}
               </div>
-
-              
             ) : (
               <p className="text-xs text-slate-500">
                 Aún no hay fotos cargadas para esta boda.
               </p>
             )}
           </section>
-{showUploadModal && (
-  <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4">
-    <div className="w-full max-w-3xl bg-white rounded-3xl p-6 md:p-7 shadow-2xl">
-      <div className="flex justify-between items-start gap-3 mb-4">
-        <div>
-          <h3 className="text-sm md:text-base font-semibold text-slate-900">
-            Detalles de las fotos
-          </h3>
-          <p className="text-xs md:text-[13px] text-slate-600 mt-1">
-            Las imágenes se{" "}
-            <span className="font-semibold">redimensionarán automáticamente</span>{" "}
-            a un máximo de{" "}
-            <span className="font-semibold">1600 × 1600 píxeles</span>,
-            se <span className="font-semibold">convertirán a JPG optimizado</span>{" "}
-            y no deben superar los{" "}
-            <span className="font-semibold">{MAX_MB} MB</span> por archivo.
-          </p>
-        </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
-        {/* COLUMNA IZQUIERDA: archivos + preview */}
-        <div className="space-y-3">
-          <div>
-            <p className="text-[11px] font-medium text-slate-600 mb-1">
-              Archivos seleccionados
-            </p>
-            <ul className="max-h-24 overflow-auto text-[11px] text-slate-700 list-disc list-inside bg-slate-50 rounded-xl px-3 py-2">
-              {filesToUpload.map((f) => (
-                <li key={f.name}>
-                  {f.name} ({(f.size / 1024 / 1024).toFixed(2)} MB)
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* MODAL DE SUBIDA DE FOTOS */}
+          {showUploadModal && (
+            <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4">
+              <div className="w-full max-w-3xl bg-white rounded-3xl p-6 md:p-7 shadow-2xl">
+                <div className="flex justify-between items-start gap-3 mb-4">
+                  <div>
+                    <h3 className="text-sm md:text-base font-semibold text-slate-900">
+                      Detalles de las fotos
+                    </h3>
+                    <p className="text-xs md:text-[13px] text-slate-600 mt-1">
+                      Las imágenes se{" "}
+                      <span className="font-semibold">
+                        redimensionarán automáticamente
+                      </span>{" "}
+                      a un máximo de{" "}
+                      <span className="font-semibold">
+                        1600 × 1600 píxeles
+                      </span>
+                      , se{" "}
+                      <span className="font-semibold">
+                        convertirán a JPG optimizado
+                      </span>{" "}
+                      y no deben superar los{" "}
+                      <span className="font-semibold">{MAX_MB} MB</span> por
+                      archivo.
+                    </p>
+                  </div>
+                </div>
 
-         <div>
-  <p className="text-[11px] font-medium text-slate-600 mb-2">
-    Vista previa
-  </p>
+                <div className="grid md:grid-cols-2 gap-5">
+                  {/* COLUMNA IZQUIERDA: archivos + preview */}
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-[11px] font-medium text-slate-600 mb-1">
+                        Archivos seleccionados
+                      </p>
+                      <ul className="max-h-24 overflow-auto text-[11px] text-slate-700 list-disc list-inside bg-slate-50 rounded-xl px-3 py-2">
+                        {filesToUpload.map((f) => (
+                          <li key={f.name}>
+                            {f.name} (
+                            {(f.size / 1024 / 1024).toFixed(2)} MB)
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
-  {filePreviews.length > 0 ? (
-    filePreviews.length === 1 ? (
-      // UN SOLO ARCHIVO → PREVIEW GRANDE
-      <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
-        <img
-          src={filePreviews[0].url}
-          alt={filePreviews[0].name}
-          className="w-full h-52 md:h-64 object-cover"
-        />
-        <div className="absolute inset-x-0 bottom-0 bg-black/55 px-3 py-1.5">
-          <p className="text-[11px] text-white truncate">
-            {filePreviews[0].name}
-          </p>
-        </div>
-      </div>
-    ) : (
-      // VARIOS ARCHIVOS → GRID CON PREVIEW MÁS ALTA
-      <div className="grid grid-cols-2 gap-3 max-h-72 overflow-auto">
-        {filePreviews.map((item) => (
-          <div
-            key={item.url}
-            className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-50"
-          >
-            <img
-              src={item.url}
-              alt={item.name}
-              className="w-full h-32 md:h-40 object-cover"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-black/55 px-2 py-1">
-              <p className="text-[10px] text-white truncate">
-                {item.name}
-              </p>
+                    <div>
+                      <p className="text-[11px] font-medium text-slate-600 mb-2">
+                        Vista previa
+                      </p>
+
+                      {filePreviews.length > 0 ? (
+                        filePreviews.length === 1 ? (
+                          // UN SOLO ARCHIVO → PREVIEW GRANDE
+                          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+                            <img
+                              src={filePreviews[0].url}
+                              alt={filePreviews[0].name}
+                              className="w-full h-52 md:h-64 object-cover"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 bg-black/55 px-3 py-1.5">
+                              <p className="text-[11px] text-white truncate">
+                                {filePreviews[0].name}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          // VARIOS ARCHIVOS → GRID CON PREVIEW MÁS ALTA
+                          <div className="grid grid-cols-2 gap-3 max-h-72 overflow-auto">
+                            {filePreviews.map((item) => (
+                              <div
+                                key={item.url}
+                                className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-50"
+                              >
+                                <img
+                                  src={item.url}
+                                  alt={item.name}
+                                  className="w-full h-32 md:h-40 object-cover"
+                                />
+                                <div className="absolute inset-x-0 bottom-0 bg-black/55 px-2 py-1">
+                                  <p className="text-[10px] text-white truncate">
+                                    {item.name}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      ) : (
+                        <p className="text-[11px] text-slate-500">
+                          Selecciona una imagen para ver la vista previa.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* COLUMNA DERECHA: título y descripción */}
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-medium text-slate-700">
+                        Título para las fotos (opcional)
+                      </label>
+                      <input
+                        type="text"
+                        value={tituloFoto}
+                        onChange={(e) => setTituloFoto(e.target.value)}
+                        className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-200"
+                        placeholder="Ej: Sesión pre boda, recepción, etc."
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-medium text-slate-700">
+                        Descripción (opcional)
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={descripcionFoto}
+                        onChange={(e) => setDescripcionFoto(e.target.value)}
+                        className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-200"
+                        placeholder="Ej: Fotos de la ceremonia religiosa."
+                      />
+                    </div>
+
+                    {errorFotos && (
+                      <p className="mt-2 text-[11px] text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
+                        {errorFotos}
+                      </p>
+                    )}
+
+                    <div className="pt-1 flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={handleCancelUpload}
+                        className="px-3 py-1.5 text-xs rounded-full border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleConfirmUpload}
+                        disabled={subiendoFoto}
+                        className="px-4 py-1.5 text-xs rounded-full bg-slate-900 text-white font-medium hover:bg-slate-800 disabled:opacity-60"
+                      >
+                        {subiendoFoto ? "Subiendo..." : "Subir fotos"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    )
-  ) : (
-    <p className="text-[11px] text-slate-500">
-      Selecciona una imagen para ver la vista previa.
-    </p>
-  )}
-</div>
-
-        </div>
-
-        {/* COLUMNA DERECHA: título y descripción */}
-        <div className="space-y-3">
-          <div className="space-y-1">
-            <label className="block text-[11px] font-medium text-slate-700">
-              Título para las fotos (opcional)
-            </label>
-            <input
-              type="text"
-              value={tituloFoto}
-              onChange={(e) => setTituloFoto(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-200"
-              placeholder="Ej: Sesión pre boda, recepción, etc."
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="block text-[11px] font-medium text-slate-700">
-              Descripción (opcional)
-            </label>
-            <textarea
-              rows={4}
-              value={descripcionFoto}
-              onChange={(e) => setDescripcionFoto(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-200"
-              placeholder="Ej: Fotos de la ceremonia religiosa."
-            />
-          </div>
-{errorFotos && (
-  <p className="mt-2 text-[11px] text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
-    {errorFotos}
-  </p>
-)}
-
-          <div className="pt-1 flex justify-end gap-2">
-            <button
-              type="button"
-              onClick={handleCancelUpload}
-              className="px-3 py-1.5 text-xs rounded-full border border-slate-200 text-slate-700 hover:bg-slate-50"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              onClick={handleConfirmUpload}
-              disabled={subiendoFoto}
-              className="px-4 py-1.5 text-xs rounded-full bg-slate-900 text-white font-medium hover:bg-slate-800 disabled:opacity-60"
-            >
-              {subiendoFoto ? "Subiendo..." : "Subir fotos"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
+          )}
 
           {/* CARD: Preguntas frecuentes */}
           <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                <IconFAQ className="w-4 h-4" />
+                <HiOutlineQuestionMarkCircle className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-900">

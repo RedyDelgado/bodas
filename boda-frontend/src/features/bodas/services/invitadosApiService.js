@@ -44,4 +44,17 @@ export const invitadosApi = {
     const res = await axiosClient.post(`/invitados/${id}/confirmar`);
     return res.data;
   },
+  
+  async importarExcel(bodaId, formData) {
+    const res = await axiosClient.post(
+      `/mis-bodas/${bodaId}/invitados/importar`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data;
+  },
 };
