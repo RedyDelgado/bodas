@@ -22,25 +22,27 @@ class ConfiguracionBodaController extends Controller
         }
     }
 
-    protected function validateData(Request $request): array
-    {
-        return $request->validate([
-            'frase_principal'         => 'nullable|string|max:255',
-            'texto_fecha_religioso'   => 'nullable|string|max:255',
-            'texto_fecha_civil'       => 'nullable|string|max:255',
-            'texto_padres_novio'      => 'nullable|string',
-            'texto_padres_novia'      => 'nullable|string',
-            'texto_padrinos_mayores'  => 'nullable|string',
-            'texto_padrinos_civiles'  => 'nullable|string',
-            'cronograma_texto'        => 'nullable|string',
-            'local_religioso'         => 'nullable|string|max:255',
-            'local_recepcion'         => 'nullable|string|max:255',
-            'texto_cuentas_bancarias' => 'nullable|string',
-            'texto_yape'              => 'nullable|string',
-            'texto_historia_pareja'   => 'nullable|string',
-            'texto_mensaje_final'     => 'nullable|string',
-        ]);
-    }
+protected function validateData(Request $request): array
+{
+    return $request->validate([
+        'frase_principal'         => 'nullable|string|max:255',
+        'texto_fecha_religioso'   => 'nullable|string|max:255',
+        'texto_fecha_civil'       => 'nullable|string|max:255',
+        'texto_padres_novio'      => 'nullable|string',
+        'texto_padres_novia'      => 'nullable|string',
+        'texto_padrinos_mayores'  => 'nullable|string',
+        'texto_padrinos_civiles'  => 'nullable|string',
+        'cronograma_texto'        => 'nullable|string',
+        'local_religioso'         => 'nullable|string|max:255',
+        'local_recepcion'         => 'nullable|string|max:255',
+        'texto_cuentas_bancarias' => 'nullable|string',
+        'texto_yape'              => 'nullable|string',
+        'texto_historia_pareja'   => 'nullable|string',
+        'texto_mensaje_final'     => 'nullable|string',
+        'texto_preguntas_frecuentes' => 'nullable|string',
+    ]);
+}
+
 
     // ============= SUPERADMIN – apiResource (bodas.configuracion) =============
 

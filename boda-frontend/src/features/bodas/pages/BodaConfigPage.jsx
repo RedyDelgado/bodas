@@ -15,9 +15,72 @@ import {
   HiOutlineCamera,
   HiOutlineQuestionMarkCircle,
 } from "react-icons/hi2";
+// Paloma de paz
+import { GiPeaceDove } from "react-icons/gi";
 
 const MAX_MB = 3;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
+
+/**
+ * Parsea el cronograma texto guardado en BD y lo separa en:
+ * MATRIMONIO, RECEPCIÓN, BODA CIVIL, CENA, CELEBRACIÓN y resto (libre).
+ */
+function parseCronograma(cronogramaTexto) {
+  if (!cronogramaTexto) {
+    return {
+      matrimonio: "",
+      recepcion: "",
+      civil: "",
+      cena: "",
+      celebracion: "",
+      libre: "",
+    };
+  }
+
+  const lineas = cronogramaTexto
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  let matrimonio = "";
+  let recepcion = "";
+  let civil = "";
+  let cena = "";
+  let celebracion = "";
+  const libres = [];
+
+  for (const linea of lineas) {
+    // quitamos viñetas tipo "• "
+    const sinBullet = linea.replace(/^[-•]\s*/, "");
+    const upper = sinBullet.toUpperCase();
+
+    if (upper.startsWith("MATRIMONIO:")) {
+      matrimonio = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
+    } else if (upper.startsWith("RECEPCIÓN:") || upper.startsWith("RECEPCION:")) {
+      recepcion = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
+    } else if (upper.startsWith("BODA CIVIL:")) {
+      civil = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
+    } else if (upper.startsWith("CENA:")) {
+      cena = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
+    } else if (
+      upper.startsWith("CELEBRACIÓN:") ||
+      upper.startsWith("CELEBRACION:")
+    ) {
+      celebracion = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
+    } else {
+      libres.push(linea);
+    }
+  }
+
+  return {
+    matrimonio,
+    recepcion,
+    civil,
+    cena,
+    celebracion,
+    libre: libres.join("\n"),
+  };
+}
 
 export function BodaConfigPage() {
   const navigate = useNavigate();
@@ -273,6 +336,11 @@ export function BodaConfigPage() {
     cronogramaCena: "",
     cronogramaCelebracion: "",
     cronogramaTextoLibre: "",
+    // Padres y padrinos
+    textoPadresNovio: "",
+    textoPadresNovia: "",
+    textoPadrinosMayores: "",
+    textoPadrinosCiviles: "",
     // Regalos / cuentas
     textoCuentasBancarias: "",
     textoYape: "",
@@ -286,24 +354,47 @@ export function BodaConfigPage() {
   // efecto para config (solo config, ya no faqs)
   useEffect(() => {
     if (config) {
+      const cronogramaRaw =
+        config.cronogramaTexto || config.cronograma_texto || "";
+      const parsed = parseCronograma(cronogramaRaw);
+
       setForm((prev) => ({
         ...prev,
         frasePrincipal: config.frasePrincipal || "",
-        textoFechaReligioso: config.textoFechaReligioso || "",
-        textoFechaCivil: config.textoFechaCivil || "",
-        localReligioso: config.localReligioso || "",
-        localRecepcion: config.localRecepcion || "",
-        cronogramaMatrimonio: "",
-        cronogramaRecepcion: "",
-        cronogramaBodaCivil: "",
-        cronogramaCena: "",
-        cronogramaCelebracion: "",
-        cronogramaTextoLibre: config.cronogramaTexto || "",
-        textoCuentasBancarias: config.textoCuentasBancarias || "",
-        textoYape: config.textoYape || "",
-        textoHistoriaPareja: config.textoHistoriaPareja || "",
-        textoMensajeFinal: config.textoMensajeFinal || "",
-        textoPreguntasFrecuentes: config.textoPreguntasFrecuentes || "",
+        textoFechaReligioso:
+          config.textoFechaReligioso || config.texto_fecha_religioso || "",
+        textoFechaCivil:
+          config.textoFechaCivil || config.texto_fecha_civil || "",
+        localReligioso: config.localReligioso || config.local_religioso || "",
+        localRecepcion: config.localRecepcion || config.local_recepcion || "",
+        cronogramaMatrimonio: parsed.matrimonio || "",
+        cronogramaRecepcion: parsed.recepcion || "",
+        cronogramaBodaCivil: parsed.civil || "",
+        cronogramaCena: parsed.cena || "",
+        cronogramaCelebracion: parsed.celebracion || "",
+        cronogramaTextoLibre: parsed.libre || "",
+        // Padres y padrinos
+        textoPadresNovio:
+          config.textoPadresNovio || config.texto_padres_novio || "",
+        textoPadresNovia:
+          config.textoPadresNovia || config.texto_padres_novia || "",
+        textoPadrinosMayores:
+          config.textoPadrinosMayores || config.texto_padrinos_mayores || "",
+        textoPadrinosCiviles:
+          config.textoPadrinosCiviles || config.texto_padrinos_civiles || "",
+        // Regalos
+        textoCuentasBancarias:
+          config.textoCuentasBancarias || config.texto_cuentas_bancarias || "",
+        textoYape: config.textoYape || config.texto_yape || "",
+        // Historia / mensaje final
+        textoHistoriaPareja:
+          config.textoHistoriaPareja || config.texto_historia_pareja || "",
+        textoMensajeFinal:
+          config.textoMensajeFinal || config.texto_mensaje_final || "",
+        textoPreguntasFrecuentes:
+          config.textoPreguntasFrecuentes ||
+          config.texto_preguntas_frecuentes ||
+          "",
       }));
     }
   }, [config]);
@@ -330,66 +421,81 @@ export function BodaConfigPage() {
     setFaqs((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!bodaId) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!bodaId) return;
 
-    // Componemos el cronograma en un solo string
-    const partesCronograma = [
-      form.cronogramaMatrimonio &&
-        `MATRIMONIO: ${form.cronogramaMatrimonio.trim()}`,
-      form.cronogramaRecepcion &&
-        `RECEPCIÓN: ${form.cronogramaRecepcion.trim()}`,
-      form.cronogramaBodaCivil &&
-        `BODA CIVIL: ${form.cronogramaBodaCivil.trim()}`,
-      form.cronogramaCena && `CENA: ${form.cronogramaCena.trim()}`,
-      form.cronogramaCelebracion &&
-        `CELEBRACIÓN: ${form.cronogramaCelebracion.trim()}`,
-      form.cronogramaTextoLibre?.trim(),
-    ].filter(Boolean);
+  // Componemos el cronograma en un solo string
+  const partesCronograma = [
+    form.cronogramaMatrimonio &&
+      `MATRIMONIO: ${form.cronogramaMatrimonio.trim()}`,
+    form.cronogramaRecepcion &&
+      `RECEPCIÓN: ${form.cronogramaRecepcion.trim()}`,
+    form.cronogramaBodaCivil &&
+      `BODA CIVIL: ${form.cronogramaBodaCivil.trim()}`,
+    form.cronogramaCena && `CENA: ${form.cronogramaCena.trim()}`,
+    form.cronogramaCelebracion &&
+      `CELEBRACIÓN: ${form.cronogramaCelebracion.trim()}`,
+    form.cronogramaTextoLibre?.trim(),
+  ].filter(Boolean);
 
-    const cronogramaTexto = partesCronograma.join("\n");
+  const cronogramaTexto = partesCronograma.join("\n");
 
-    // FAQs limpias (sin filas totalmente vacías)
-    const faqsLimpias = faqs
-      .map((f) => ({
-        pregunta: (f.pregunta || "").trim(),
-        respuesta: (f.respuesta || "").trim(),
-      }))
-      .filter((f) => f.pregunta || f.respuesta);
+  // FAQs limpias (sin filas totalmente vacías)
+  const faqsLimpias = faqs
+    .map((f) => ({
+      pregunta: (f.pregunta || "").trim(),
+      respuesta: (f.respuesta || "").trim(),
+    }))
+    .filter((f) => f.pregunta || f.respuesta);
 
-    const payload = {
-      ...(config || {}),
-      frasePrincipal: form.frasePrincipal,
-      textoFechaReligioso: form.textoFechaReligioso,
-      textoFechaCivil: form.textoFechaCivil,
-      localReligioso: form.localReligioso,
-      localRecepcion: form.localRecepcion,
-      cronogramaTexto,
-      textoCuentasBancarias: form.textoCuentasBancarias,
-      textoYape: form.textoYape,
-      textoHistoriaPareja: form.textoHistoriaPareja,
-      textoMensajeFinal: form.textoMensajeFinal,
-      textoPreguntasFrecuentes: form.textoPreguntasFrecuentes,
-    };
+  // OJO: aquí ya usamos SNAKE_CASE para que coincida con Laravel
+  const payload = {
+    ...(config || {}),
 
-    try {
-      setGuardandoFaqs(true);
-      setErrorFaqs("");
+    frase_principal: form.frasePrincipal,
+    texto_fecha_religioso: form.textoFechaReligioso,
+    texto_fecha_civil: form.textoFechaCivil,
+    local_religioso: form.localReligioso,
+    local_recepcion: form.localRecepcion,
+    cronograma_texto: cronogramaTexto,
 
-      await Promise.all([
-        guardar(payload), // config de la boda
-        axiosClient.put(`/mis-bodas/${bodaId}/faqs`, { faqs: faqsLimpias }), // tabla faqs_boda
-      ]);
+    // Padres y padrinos
+    texto_padres_novio: form.textoPadresNovio,
+    texto_padres_novia: form.textoPadresNovia,
+    texto_padrinos_mayores: form.textoPadrinosMayores,
+    texto_padrinos_civiles: form.textoPadrinosCiviles,
 
-      await cargarFaqs(bodaId);
-    } catch (e) {
-      console.error(e);
-      setErrorFaqs("No se pudieron guardar las preguntas frecuentes.");
-    } finally {
-      setGuardandoFaqs(false);
-    }
+    // Regalos / cuentas
+    texto_cuentas_bancarias: form.textoCuentasBancarias,
+    texto_yape: form.textoYape,
+
+    // Historia / mensaje final
+    texto_historia_pareja: form.textoHistoriaPareja,
+    texto_mensaje_final: form.textoMensajeFinal,
+
+    // Intro preguntas frecuentes (campo nuevo)
+    texto_preguntas_frecuentes: form.textoPreguntasFrecuentes,
   };
+
+  try {
+    setGuardandoFaqs(true);
+    setErrorFaqs("");
+
+    await Promise.all([
+      guardar(payload), // config de la boda
+      axiosClient.put(`/mis-bodas/${bodaId}/faqs`, { faqs: faqsLimpias }),
+    ]);
+
+    await cargarFaqs(bodaId);
+  } catch (e) {
+    console.error(e);
+    setErrorFaqs("No se pudieron guardar las preguntas frecuentes.");
+  } finally {
+    setGuardandoFaqs(false);
+  }
+};
+
 
   const handleIrDashboard = () => {
     if (!bodaId) return;
@@ -419,7 +525,7 @@ export function BodaConfigPage() {
     return (
       <div className="p-6">
         <div className="max-w-lg bg-white border border-rose-200 rounded-2xl px-4 py-3">
-          <h1 className="text	base font-semibold text-rose-700 mb-1">
+          <h1 className="text base font-semibold text-rose-700 mb-1">
             No se pudo cargar la información de la boda
           </h1>
           <p className="text-sm text-slate-700">{errorBoda}</p>
@@ -862,6 +968,90 @@ export function BodaConfigPage() {
             </div>
           </section>
 
+          {/* CARD: Padres y padrinos */}
+          <section className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
+                <HiOutlineGift className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-slate-900">
+                  Padres y padrinos
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Información que se mostrará en la sección de ceremonia: padres
+                  de los novios y padrinos principales.
+                </p>
+                <p className="mt-1 text-[11px] text-slate-400 flex items-center gap-1">
+                  Si alguna persona ha fallecido, añade{" "}
+                  <span className="font-mono text-[10px] bg-slate-100 px-1 rounded">
+                    (QEPD)
+                  </span>{" "}
+                  después de su nombre. En la página pública aparecerá con el
+                  ícono{" "}
+                  <GiPeaceDove className="inline-block w-3.5 h-3.5 text-slate-500" />
+                  .
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-slate-700">
+                Padres del novio
+              </label>
+              <textarea
+                name="textoPadresNovio"
+                rows={2}
+                value={form.textoPadresNovio}
+                onChange={handleChange}
+                className="w-full border border-slate-200 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                placeholder="Ej: Juan Delgado Huamán (QEPD) y María Sequeiros Pérez"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-slate-700">
+                Padres de la novia
+              </label>
+              <textarea
+                name="textoPadresNovia"
+                rows={2}
+                value={form.textoPadresNovia}
+                onChange={handleChange}
+                className="w-full border border-slate-200 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                placeholder="Ej: Carlos Ramírez Quispe y Ana Paredes Luna (QEPD)"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-slate-700">
+                Padrinos mayores (religiosos)
+              </label>
+              <textarea
+                name="textoPadrinosMayores"
+                rows={2}
+                value={form.textoPadrinosMayores}
+                onChange={handleChange}
+                className="w-full border border-slate-200 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                placeholder="Ej: Pedro Guzmán y Luisa Vargas (QEPD)"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-slate-700">
+                Padrinos civiles
+              </label>
+              <textarea
+                name="textoPadrinosCiviles"
+                rows={2}
+                value={form.textoPadrinosCiviles}
+                onChange={handleChange}
+                className="w-full border border-slate-200 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                placeholder="Ej: José Flores y Daniela Herrera"
+              />
+            </div>
+          </section>
+
           {/* CARD: Fotos */}
           <section className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
@@ -944,7 +1134,7 @@ export function BodaConfigPage() {
                         alt={foto.titulo || "Foto de la boda"}
                         className="w-full h-32 sm:h-36 md:h-40 object-cover group-hover:scale-[1.03] transition-transform"
                       />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-2 flex items	end justify-between gap-2">
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-2 flex items end justify-between gap-2">
                         <p className="text-[11px] text-white line-clamp-2">
                           {foto.titulo || "Foto de la boda"}
                         </p>

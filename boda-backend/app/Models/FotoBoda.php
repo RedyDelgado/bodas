@@ -29,4 +29,9 @@ class FotoBoda extends Model
     {
         return $this->belongsTo(Boda::class, 'boda_id');
     }
+     public function scopePortada($q)
+    {
+        return $q->where('es_portada', true)
+                 ->orderBy('orden');
+    }
 }

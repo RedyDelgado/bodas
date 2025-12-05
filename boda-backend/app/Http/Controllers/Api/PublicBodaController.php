@@ -67,25 +67,43 @@ class PublicBodaController extends Controller
      *
      * Usamos el campo "subdominio" como slug.
      */
-    public function showBySlug(string $slug): JsonResponse
-    {
-        $boda = Boda::where('subdominio', $slug)
-            ->where('estado', 'activa')
-            ->with(['configuracion', 'fotos'])
-            ->first();
+   public function showBySlug(string $slug)
+{
+    $boda = Boda::with([
+        'configuracion',
+        'fotos',
+        'faqs',
+    ])->where('subdominio', $slug)->firstOrFail();
 
-        if (! $boda) {
-            return response()->json([
-                'message' => 'Boda no encontrada o no publicada.',
-            ], 404);
-        }
+    $fotoPortada = $boda->fotos->firstWhere('es_portada', 1)
+        ?? $boda->fotos->first();
 
-        $boda->increment('total_vistas');
-
-        return response()->json([
-            'boda'          => $boda,
-            'configuracion' => $boda->configuracion,
-            'fotos'         => $boda->fotos,
-        ]);
-    }
+    return response()->json([
+        'boda' => [
+            'nombre_pareja'  => $boda->nombre_pareja,
+            'novio_1'        => $boda->nombre_novio_1,
+            'novio_2'        => $boda->nombre_novio_2,
+            'fecha_boda'     => $boda->fecha_boda,
+            'ciudad'         => $boda->ciudad,
+            'foto_portada'   => optional($fotoPortada)->url_imagen,
+        ],
+        'configuracion' => [
+            'frase_principal'      => $boda->configuracion->frase_principal,
+            'texto_fecha_religioso'=> $boda->configuracion->texto_fecha_religioso,
+            'texto_fecha_civil'    => $boda->configuracion->texto_fecha_civil,
+            'cronograma_texto'     => $boda->configuracion->cronograma_texto,
+            'local_religioso'      => $boda->configuracion->local_religioso,
+            'local_recepcion'      => $boda->configuracion->local_recepcion,
+            'texto_historia_pareja'=> $boda->configuracion->texto_historia_pareja,
+            'texto_padres_novio'   => $boda->configuracion->texto_padres_novio,
+            'texto_padres_novia'   => $boda->configuracion->texto_padres_novia,
+            'texto_padrinos_mayores'=> $boda->configuracion->texto_padrinos_mayores,
+            'texto_padrinos_civiles'=> $boda->configuracion->texto_padrinos_civiles,
+            'texto_cuentas_bancarias'=> $boda->configuracion->texto_cuentas_bancarias,
+            'texto_yape'           => $boda->configuracion->texto_yape,
+            'texto_mensaje_final'  => $boda->configuracion->texto_mensaje_final,
+        ],
+        'faqs'   => $boda->faqs,
+    ]);
+}
 }

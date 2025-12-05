@@ -58,22 +58,27 @@ class Boda extends Model
         return $this->belongsTo(Plantilla::class, 'plantilla_id');
     }
 
-    public function configuracion(): HasOne
+      public function configuracion()
     {
         return $this->hasOne(ConfiguracionBoda::class, 'boda_id');
     }
 
-    public function invitados(): HasMany
+    public function fotos()
+    {
+        return $this->hasMany(FotoBoda::class, 'boda_id')
+            ->orderBy('orden');
+    }
+
+    public function faqs()
+    {
+        return $this->hasMany(FaqBoda::class, 'boda_id')
+            ->where('es_activa', true)
+            ->orderBy('orden');
+    }
+
+    public function invitados()
     {
         return $this->hasMany(Invitado::class, 'boda_id');
     }
-
-    public function fotos(): HasMany
-    {
-        return $this->hasMany(FotoBoda::class, 'boda_id');
-    }
-    public function faqs()
-    {
-        return $this->hasMany(FaqBoda::class);
-    }
+    
 }

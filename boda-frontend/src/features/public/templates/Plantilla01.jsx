@@ -1,5 +1,6 @@
 // src/features/public/templates/Plantilla01.jsx
-import React, { useEffect, useMemo, useState, useMemo as useReactMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useMemo as useReactMemo } from "react";
 import { registrarRsvp } from "../services/publicRsvpService";
 import {
   FiCalendar,
@@ -10,12 +11,32 @@ import {
   FiGift,
 } from "react-icons/fi";
 import { LuFlower2, LuSparkles } from "react-icons/lu";
+import { GiPeaceDove } from "react-icons/gi";
 
 /** =================== COLORES PALETA QUILLABAMBA =================== */
-const COLOR_AZUL = "#2C3E50";      // Azul acero
-const COLOR_MARFIL = "#F8F4E3";    // Blanco marfil
-const COLOR_DORADO = "#D4AF37";    // Dorado suave
-const COLOR_CORAL = "#E67E73";     // Coral elegante (acentos)
+const COLOR_AZUL = "#2C3E50"; // Azul acero
+const COLOR_MARFIL = "#F8F4E3"; // Blanco marfil
+const COLOR_DORADO = "#D4AF37"; // Dorado suave
+const COLOR_CORAL = "#E67E73"; // Coral elegante
+
+/** =================== BASE URL PARA FOTOS =================== */
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const STORAGE_BASE_URL =
+  import.meta.env.VITE_STORAGE_URL || API_BASE_URL.replace(/\/+$/, "");
+
+/** Normaliza la URL de la foto, soportando rutas tipo "/img/demo/boda1-1.jpg" */
+function resolveFotoUrl(path) {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+
+  // Si empieza con "/", lo pegamos a STORAGE_BASE_URL
+  if (path.startsWith("/")) {
+    return `${STORAGE_BASE_URL}${path}`;
+  }
+
+  // En caso venga sin "/" inicial
+  return `${STORAGE_BASE_URL}/${path.replace(/^\/+/, "")}`;
+}
 
 /** Fecha larga "jueves, 2 de julio de 2026" */
 function formatFechaLarga(fechaStr) {
@@ -46,6 +67,37 @@ function formatHoraCorta(horaStr) {
   });
 }
 
+/** Texto que reemplaza (QEPD)/† por la paloma */
+function TextoConPaloma({ texto }) {
+  if (!texto) return null;
+
+  // Detecta "(QEPD)" o variantes (mayús/minús, con o sin puntos) y también el símbolo †
+  const regex = /\(?\s*q\.?\s*e\.?\s*p\.?\s*d\.?\s*\)?|†/gi;
+
+  const partes = texto.split(regex); // trozos de texto sin el QEPD
+  const coincidencias = texto.match(regex) || []; // cuántas veces aparece QEPD/†
+
+  const resultado = [];
+
+  for (let i = 0; i < partes.length; i++) {
+    if (partes[i]) {
+      resultado.push(<span key={`t-${i}`}>{partes[i]}</span>);
+    }
+
+    // Después de cada coincidencia, ponemos la paloma
+    if (i < coincidencias.length) {
+      resultado.push(
+        <GiPeaceDove
+          key={`d-${i}`}
+          className="inline-block w-4 h-4 ml-1 text-[#D4AF37] align-text-bottom"
+        />
+      );
+    }
+  }
+
+  return <>{resultado}</>;
+}
+
 /** Hook fade-in */
 function useFade(delayMs = 0) {
   const [visible, setVisible] = useState(false);
@@ -55,9 +107,7 @@ function useFade(delayMs = 0) {
     return () => clearTimeout(t);
   }, [delayMs]);
 
-  return visible
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-4";
+  return visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4";
 }
 
 /** Wrapper animado */
@@ -139,19 +189,20 @@ function CelebrationOverlay({ nombres, onClose }) {
           ¡Tu asistencia ha sido confirmada!
         </h2>
         <p className="text-sm sm:text-base text-[#F8F4E3]/90 mb-4 max-w-lg mx-auto">
-          Gracias por decir <span className="font-semibold">“sí, estaré ahí”</span>. 
-          Estamos muy felices de poder compartir este momento con personas tan importantes 
+          Gracias por decir <span className="font-semibold">“sí, estaré ahí”</span>. Estamos muy
+          felices de poder compartir este momento con personas tan importantes
           como tú.
         </p>
         {nombres && (
           <p className="text-sm text-[#F8F4E3]/85 mb-6">
             Con cariño, <span className="font-semibold">{nombres}</span>.
-        </p>
+          </p>
         )}
         <button
           type="button"
           onClick={onClose}
-          className="inline-flex items-center gap-2 rounded-full bg-[${COLOR_MARFIL}] text-[${COLOR_AZUL}] text-xs sm:text-sm font-semibold px-5 py-2.5 shadow-md hover:bg-white transition-colors"
+          className="inline-flex items-center gap-2 rounded-full text-xs sm:text-sm font-semibold px-5 py-2.5 shadow-md hover:shadow-lg transition"
+          style={{ backgroundColor: COLOR_MARFIL, color: COLOR_AZUL }}
         >
           Ver detalles de la celebración
         </button>
@@ -285,12 +336,33 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
   const textoYape =
     configuracion?.textoYape || configuracion?.texto_yape || "";
 
+  // NUEVO: textos de padres y padrinos, soportando nombres nuevos y antiguos
+  const textoPadresNovio =
+    configuracion?.textoPadresNovio ||
+    configuracion?.texto_padres_novio ||
+    configuracion?.padres_novio ||
+    "";
+  const textoPadresNovia =
+    configuracion?.textoPadresNovia ||
+    configuracion?.texto_padres_novia ||
+    configuracion?.padres_novia ||
+    "";
+  const textoPadrinosMayores =
+    configuracion?.textoPadrinosMayores ||
+    configuracion?.texto_padrinos_mayores ||
+    configuracion?.padrinos_mayores ||
+    "";
+  const textoPadrinosCiviles =
+    configuracion?.textoPadrinosCiviles ||
+    configuracion?.texto_padrinos_civiles ||
+    configuracion?.padrinos_civiles ||
+    "";
+
   // ===================== FOTOS / HERO CARRUSEL =====================
   const fotosLimpias = Array.isArray(fotos) ? fotos : [];
 
-  // usar solo fotos públicas (si existen)
   let fotosPublicas = fotosLimpias.filter(
-    (f) => !f.es_galeria_privada && f != null
+    (f) => f && !f.es_galeria_privada && !f.es_galeria_privada === 0
   );
   if (!fotosPublicas.length) {
     fotosPublicas = fotosLimpias;
@@ -302,12 +374,9 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
           id: f.id ?? idx,
           title: tituloPrincipal,
           subtitle: fechaLarga || boda?.ciudad || "",
-          image:
-            f.url_publica ||
-            f.url ||
-            f.ruta ||
-            f.url_imagen ||
-            "",
+          image: resolveFotoUrl(
+            f.url_publica || f.url || f.ruta || f.url_imagen || ""
+          ),
         }))
       : [
           {
@@ -368,7 +437,7 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
         codigo: codigoRsvp.trim(),
         mensaje: rsvpMensaje.trim(),
         celular: rsvpCelular.trim(),
-        // cantidad_personas: NO se envía, el backend usa lo que definen ustedes
+        // cantidad_personas: la decide el backend según invitado
       };
 
       const data = await registrarRsvp(payload);
@@ -379,7 +448,6 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
           "¡Gracias! Tu asistencia ha sido confirmada. Nos vemos en la boda."
       );
 
-      // cerrar modal y mostrar celebración
       setShowRsvpModal(false);
       setShowCelebration(true);
     } catch (error) {
@@ -412,51 +480,41 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
   // ===================== RENDER =====================
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B2B3C] via-[#111827] to-[#020617] text-slate-50">
-      {/* ================= HERO ================= */}
-      <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
-        {/* Fondo + flores abstractas */}
-        <div className="absolute inset-0" style={{ backgroundColor: COLOR_AZUL }}>
-          <div className="absolute -top-32 -left-28 w-72 h-72 bg-[#D4AF37]/30 rounded-full blur-3xl" />
-          <div className="absolute -bottom-40 -right-24 w-80 h-80 bg-[#E67E73]/35 rounded-full blur-3xl" />
-          <div className="absolute top-10 right-20 opacity-40">
-            <LuFlower2 className="w-20 h-20 text-[#F8F4E3]/50" />
-          </div>
-          <div className="absolute bottom-16 left-10 opacity-40 rotate-12">
-            <LuFlower2 className="w-16 h-16 text-[#F8F4E3]/40" />
-          </div>
-        </div>
+      {/* ================= HERO NUEVO ================= */}
+      <section className="min-h-[80vh] flex items-center justify-center px-4 py-10">
+        <div className="max-w-6xl w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 bg-[#020617]/70 backdrop-blur-lg grid md:grid-cols-12">
+          {/* FOTO IZQUIERDA */}
+          <div className="relative md:col-span-7 h-[320px] md:h-[520px]">
+            {urlHero && (
+              <>
+                <img
+                  src={urlHero}
+                  alt={heroActual?.title || "Foto de la boda"}
+                  className="w-full h-full object-cover"
+                />
+                {/* Degradado que une con la parte derecha */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
 
-        {/* Contenido HERO */}
-        <div className="relative z-10 w-full max-w-7xl px-4 py-10">
-          <div className="grid gap-10 lg:grid-cols-2 items-center">
-            {/* FOTOS – arriba en móvil, derecha en desktop */}
-            <FadeIn>
-              <div className="order-1 lg:order-2 relative overflow-hidden rounded-[2.2rem] shadow-2xl border border-[#F8F4E3]/10 bg-slate-900/40">
-                {urlHero && (
-                  <div className="relative">
-                    <img
-                      key={heroActual?.id}
-                      src={urlHero}
-                      alt={heroActual?.title || "Foto de la boda"}
-                      className="h-[22rem] sm:h-[26rem] lg:h-[80vh] w-full object-cover transform scale-[1.03] transition-transform duration-[1500ms] ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/85 via-[#020617]/40 to-transparent" />
-                    <div className="absolute bottom-5 left-5 right-5 text-[#F8F4E3] drop-shadow">
-                      <p className="font-serif text-2xl sm:text-3xl md:text-4xl mb-1">
-                        {heroActual?.title || tituloPrincipal}
-                      </p>
-                      {heroActual?.subtitle && (
-                        <p className="text-xs md:text-sm text-[#F8F4E3]/90">
-                          {heroActual.subtitle}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
+                {/* Info sobre la foto (abajo izq) */}
+                <div className="absolute bottom-6 left-6 right-6 text-[#F8F4E3] drop-shadow">
+                  <p className="uppercase tracking-[0.25em] text-[10px] text-[#FDE68A]/90 mb-1 flex items-center gap-2">
+                    <LuFlower2 className="w-4 h-4" />
+                    <span>{boda?.ciudad || "Boda en Quillabamba"}</span>
+                  </p>
+                  <p className="font-serif text-2xl md:text-3xl lg:text-4xl">
+                    {tituloPrincipal}
+                  </p>
+                  {fechaLarga && (
+                    <p className="text-xs mt-1 text-[#F8F4E3]/85 flex items-center gap-1.5">
+                      <FiCalendar className="w-3.5 h-3.5" />
+                      <span>{fechaLarga}</span>
+                    </p>
+                  )}
+                </div>
 
-                {/* indicadores carrusel */}
+                {/* Indicadores carrusel (arriba der) */}
                 {heroSlides.length > 1 && (
-                  <div className="absolute top-4 right-4 flex items-center gap-2 bg-[#020617]/80 rounded-full px-3 py-1.5 text-[11px] text-[#F8F4E3]/85">
+                  <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-[10px] text-[#F8F4E3]/90">
                     <span>
                       {heroIndex + 1}/{heroSlides.length}
                     </span>
@@ -477,97 +535,101 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                     </div>
                   </div>
                 )}
+              </>
+            )}
+          </div>
+
+          {/* INFO DERECHA */}
+          <div className="md:col-span-5 bg-gradient-to-b from-[#111827]/95 via-[#111827]/90 to-[#1F2933]/95 text-[#F8F4E3] px-6 md:px-8 py-8 md:py-10 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-xs tracking-[0.3em] uppercase text-[#FDE68A]/90">
+                <LuSparkles className="w-4 h-4" />
+                <span>Invitación</span>
               </div>
-            </FadeIn>
 
-            {/* TEXTO – abajo en móvil, izquierda en desktop */}
-            <FadeIn delay={120}>
-              <div className="order-2 lg:order-1 text-[#F8F4E3] max-w-xl">
-                <div className="flex items-center gap-2 mb-3 text-xs tracking-[0.3em] uppercase text-[#D4AF37]/90">
-                  <LuSparkles className="w-4 h-4" />
-                  <span>{boda?.ciudad || "Boda en Quillabamba"}</span>
-                </div>
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight mb-3">
+                {tituloPrincipal}
+              </h1>
 
-                <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight mb-3">
-                  {tituloPrincipal}
-                </h1>
+              {fechaLarga && (
+                <p className="text-sm md:text-base mb-2 text-[#F8F4E3]/90 flex items-center gap-2">
+                  <FiCalendar className="w-4 h-4" />
+                  <span>{fechaLarga}</span>
+                </p>
+              )}
 
-                {fechaLarga && (
-                  <p className="text-base sm:text-lg md:text-xl mb-3 text-[#F8F4E3]/90 flex items-center gap-2">
-                    <FiCalendar className="w-4 h-4" />
-                    <span>{fechaLarga}</span>
+              {/* líneas R/C si existen */}
+              <div className="space-y-1 text-xs sm:text-sm text-[#F8F4E3]/85 mb-3">
+                {textoFechaReligioso && (
+                  <p className="flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px]">
+                      R
+                    </span>
+                    {textoFechaReligioso}
                   </p>
                 )}
-
-                {/* líneas R/C si existen */}
-                <div className="space-y-1 text-xs sm:text-sm text-[#F8F4E3]/85 mb-3">
-                  {textoFechaReligioso && (
-                    <p className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#020617]/80 text-[10px]">
-                        R
-                      </span>
-                      {textoFechaReligioso}
-                    </p>
-                  )}
-                  {textoFechaCivil && (
-                    <p className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#020617]/80 text-[10px]">
-                        C
-                      </span>
-                      {textoFechaCivil}
-                    </p>
-                  )}
-                </div>
-
-                {/* Countdown */}
-                {fechaBoda && (
-                  <div className="inline-flex rounded-2xl bg-[#020617]/80 border border-[#F8F4E3]/15 px-4 py-3 backdrop-blur-sm mb-5">
-                    <div className="flex gap-4 text-center text-sm items-center">
-                      <FiClock className="w-4 h-4 text-[#D4AF37]" />
-                      {[
-                        ["DÍAS", "dias"],
-                        ["HORAS", "horas"],
-                        ["MIN", "minutos"],
-                        ["SEG", "segundos"],
-                      ].map(([label, key]) => (
-                        <div
-                          key={label}
-                          className="flex flex-col items-center min-w-[2.5rem]"
-                        >
-                          <span className="text-lg font-semibold">
-                            {countdown[key]}
-                          </span>
-                          <span className="text-[10px] uppercase tracking-[0.2em] text-[#F8F4E3]/70">
-                            {label.toLowerCase()}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <p className="text-sm md:text-base text-[#F8F4E3]/95 mb-5">
-                  {textoBienvenida}
-                </p>
-
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowRsvpModal(true)}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#D4AF37] text-[#020617] text-xs sm:text-sm font-semibold px-5 py-2.5 shadow-md hover:bg-[#e0be4d] transition-colors"
-                  >
-                    <FiCheckCircle className="w-4 h-4" />
-                    Confirmar asistencia
-                  </button>
-                  <div className="text-[11px] text-[#F8F4E3]/75">
-                    Dress code:{" "}
-                    <span className="font-semibold text-[#FDE68A]">
-                      {dressCode}
+                {textoFechaCivil && (
+                  <p className="flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px]">
+                      C
                     </span>
+                    {textoFechaCivil}
+                  </p>
+                )}
+              </div>
+
+              {/* Countdown */}
+              {fechaBoda && (
+                <div className="inline-flex rounded-2xl bg-black/55 border border-[#F8F4E3]/20 px-4 py-3 backdrop-blur-sm mb-4">
+                  <div className="flex gap-4 textcenter text-sm items-center">
+                    <FiClock className="w-4 h-4 text-[#D4AF37]" />
+                    {[
+                      ["DÍAS", "dias"],
+                      ["HORAS", "horas"],
+                      ["MIN", "minutos"],
+                      ["SEG", "segundos"],
+                    ].map(([label, key]) => (
+                      <div
+                        key={label}
+                        className="flex flex-col items-center min-w-[2.5rem]"
+                      >
+                        <span className="text-lg font-semibold">
+                          {countdown[key]}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-[#F8F4E3]/70">
+                          {label.toLowerCase()}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              )}
+
+              <p className="text-sm md:text-[15px] text-[#F8F4E3]/95 mb-5">
+                {textoBienvenida}
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
+              <button
+                type="button"
+                onClick={() => setShowRsvpModal(true)}
+                className="inline-flex items-center gap-2 rounded-full bg-[#D4AF37] text-[#111827] text-xs sm:text-sm font-semibold px-6 py-2.5 shadow-md hover:bg-[#e0be4d] transition-colors"
+              >
+                <FiCheckCircle className="w-4 h-4" />
+                Confirmar asistencia
+              </button>
+
+              <div className="text-[11px] text-[#F8F4E3]/75 text-left sm:text-right">
+                <p>
+                  Dress code:{" "}
+                  <span className="font-semibold text-[#FDE68A]">
+                    {dressCode}
+                  </span>
+                </p>
+                <p className="mt-1">Desplázate para conocer más detalles.</p>
               </div>
-            </FadeIn>
+            </div>
           </div>
         </div>
       </section>
@@ -590,8 +652,8 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                 momento íntimo y significativo, más allá de una fiesta.
               </p>
               <p className="text-sm text-slate-700">
-                Gracias por ser parte de este capítulo tan importante en
-                nuestra historia.
+                Gracias por ser parte de este capítulo tan importante en nuestra
+                historia.
               </p>
             </div>
 
@@ -670,24 +732,44 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                   Padres del novio
                 </p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>{configuracion?.padres_novio || "Por definir"}</li>
+                  <li>
+                    {textoPadresNovio ? (
+                      <TextoConPaloma texto={textoPadresNovio} />
+                    ) : (
+                      "Por definir"
+                    )}
+                  </li>
                 </ul>
 
                 <p className="font-semibold text-[#111827] mt-3">
                   Padres de la novia
                 </p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>{configuracion?.padres_novia || "Por definir"}</li>
+                  <li>
+                    {textoPadresNovia ? (
+                      <TextoConPaloma texto={textoPadresNovia} />
+                    ) : (
+                      "Por definir"
+                    )}
+                  </li>
                 </ul>
               </div>
               <div className="space-y-3">
                 <p className="font-semibold text-[#111827]">Padrinos</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>
-                    {configuracion?.padrinos_mayores || "Padrinos principales"}
+                    {textoPadrinosMayores ? (
+                      <TextoConPaloma texto={textoPadrinosMayores} />
+                    ) : (
+                      "Padrinos principales"
+                    )}
                   </li>
                   <li>
-                    {configuracion?.padrinos_civiles || "Padrinos civiles"}
+                    {textoPadrinosCiviles ? (
+                      <TextoConPaloma texto={textoPadrinosCiviles} />
+                    ) : (
+                      "Padrinos civiles"
+                    )}
                   </li>
                 </ul>
 
@@ -889,9 +971,7 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
             <p className="text-[11px]">
               Con todo nuestro cariño,{" "}
               {boda?.nombre_pareja ||
-                `${boda?.nombre_novio_1 ?? ""} ${
-                  boda?.nombre_novio_2 ?? ""
-                }`}
+                `${boda?.nombre_novio_1 ?? ""} ${boda?.nombre_novio_2 ?? ""}`}
             </p>
             <p className="text-[11px]">
               Página creada con ♥ en nuestra plataforma de bodas.
@@ -900,20 +980,20 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
         </footer>
       </FadeIn>
 
-      {/* ================= MODAL RSVP ================= */}
+      {/* ================= MODAL RSVP (TONOS PASTELES) ================= */}
       {showRsvpModal && (
         <div
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 px-4"
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4"
           onClick={() => setShowRsvpModal(false)}
         >
           <div
-            className="relative max-w-xl w-full bg-[#020617] text-[#F8F4E3] rounded-3xl border border-[#D4AF37]/40 shadow-2xl p-6 sm:p-7"
+            className="relative max-w-xl w-full bg-[#F8F4E3] text-[#111827] rounded-3xl border border-[#D4AF37]/60 shadow-2xl p-6 sm:p-7"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setShowRsvpModal(false)}
-              className="absolute top-3 right-3 text-[#F8F4E3]/80 hover:text-white"
+              className="absolute top-3 right-3 text-slate-500 hover:text-slate-800"
             >
               <FiX className="w-5 h-5" />
             </button>
@@ -925,18 +1005,15 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
             <h2 className="text-xl sm:text-2xl font-serif mb-2 text-center">
               ¿Tienes un código de invitación?
             </h2>
-            <p className="text-sm text-[#F8F4E3]/90 mb-5 text-center">
+            <p className="text-sm text-slate-700 mb-5 text-center">
               Ingresa el código que aparece en tu invitación y tu número de
               celular para registrar tu asistencia.
             </p>
 
-            <form
-              onSubmit={handleRsvpSubmit}
-              className="space-y-4 text-left"
-            >
+            <form onSubmit={handleRsvpSubmit} className="space-y-4 text-left">
               <div className="flex flex-col gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-[#F8F4E3]/80 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     Código de invitación
                   </label>
                   <input
@@ -946,13 +1023,13 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                       setCodigoRsvp(e.target.value.toUpperCase())
                     }
                     placeholder="Ej: AB39KLP"
-                    className="w-full rounded-full border border-[#F8F4E3]/40 bg-[#020617] text-[#F8F4E3] placeholder:text-[#F8F4E3]/50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
+                    className="w-full rounded-full border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
                     maxLength={16}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#F8F4E3]/80 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     Celular
                   </label>
                   <input
@@ -960,13 +1037,13 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                     value={rsvpCelular}
                     onChange={(e) => setRsvpCelular(e.target.value)}
                     placeholder="Ej: 987 654 321"
-                    className="w-full rounded-full border border-[#F8F4E3]/40 bg-[#020617] text-[#F8F4E3] placeholder:text-[#F8F4E3]/50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
+                    className="w-full rounded-full border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#F8F4E3]/80 mb-1">
+                <label className="block text-xs font-medium text-slate-700 mb-1">
                   Mensaje (opcional)
                 </label>
                 <textarea
@@ -974,7 +1051,7 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                   value={rsvpMensaje}
                   onChange={(e) => setRsvpMensaje(e.target.value)}
                   placeholder="Ej: Iré con mi pareja :)"
-                  className="w-full rounded-2xl border border-[#F8F4E3]/40 bg-[#020617] text-[#F8F4E3] placeholder:text-[#F8F4E3]/50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
+                  className="w-full rounded-2xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
                 />
               </div>
 
@@ -982,7 +1059,7 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                 <button
                   type="submit"
                   disabled={rsvpEstado === "loading"}
-                  className="inline-flex justify-center items-center rounded-full bg-[#D4AF37] text-[#020617] text-sm font-semibold px-5 py-2 hover:bg-[#e0be4d] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex justify-center items-center rounded-full bg-[#D4AF37] text-[#111827] text-sm font-semibold px-5 py-2 hover:bg-[#e0be4d] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 >
                   {rsvpEstado === "loading"
                     ? "Enviando..."
@@ -992,9 +1069,7 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
                 {rsvpMensajeEstado && (
                   <p
                     className={`text-xs text-center sm:text-right ${
-                      rsvpEstado === "ok"
-                        ? "text-emerald-300"
-                        : "text-[#FFC9C9]"
+                      rsvpEstado === "ok" ? "text-emerald-600" : "text-red-500"
                     }`}
                   >
                     {rsvpMensajeEstado}
@@ -1003,7 +1078,7 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
               </div>
             </form>
 
-            <div className="mt-5 text-[11px] sm:text-xs text-[#F8F4E3]/75 bg-[#020617] border border-[#D4AF37]/30 rounded-2xl px-4 py-3 flex gap-3 items-start">
+            <div className="mt-5 text-[11px] sm:text-xs text-slate-700 bg-[#FFF9EA] border border-[#FACC15]/40 rounded-2xl px-4 py-3 flex gap-3 items-start">
               <div className="mt-[2px]">
                 <FiClock className="w-4 h-4 text-[#D4AF37]" />
               </div>
