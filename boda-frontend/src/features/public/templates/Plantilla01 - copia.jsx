@@ -2,10 +2,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useMemo as useReactMemo } from "react";
 import { registrarRsvp } from "../services/publicRsvpService";
-import anillosBoda from "../../../../public/img/anillos-boda.png";
-import parejaBoda from "../../../../public/img/pareja-boda.png";
-import parejaBoda2 from "../../../../public/img/pareja-boda_2.png";
-
 import {
   FiCalendar,
   FiMapPin,
@@ -387,38 +383,36 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
           },
         ];
 
-const [heroIndex, setHeroIndex] = useState(0);
-const [heroPrevIndex, setHeroPrevIndex] = useState(null);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const heroActual = heroSlides[heroIndex] || heroSlides[0];
+  const urlHero = heroActual?.image || "";
+ 
 
-const heroActual = heroSlides[heroIndex] || heroSlides[0];
-const urlHero = heroActual?.image || "";
-
-  // Permite posición configurable, si algún día la guardas en BD
-  const heroPosicion = configuracion?.heroPosicion || "center 42%";
+// Permite posición configurable, si algún día la guardas en BD
+const heroPosicion =
+  configuracion?.heroPosicion || "center 42%"; 
   // 42% = centrado un poquito hacia arriba, para que no corte tanto la parte baja
 
-  const heroBgStyle = urlHero
-    ? {
-        backgroundImage: `url('${urlHero}')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center 30%", // 30% desde arriba
-        backgroundRepeat: "no-repeat",
-      }
-    : { backgroundColor: "#111827" };
+const heroBgStyle = urlHero
+  ? {
+      backgroundImage: `url('${urlHero}')`,
+      backgroundSize: "cover",
+      backgroundPosition: "center 30%", // 30% desde arriba
+      backgroundRepeat: "no-repeat",
+    }
+  : { backgroundColor: "#111827" };
 
-useEffect(() => {
-  if (!heroSlides.length) return;
 
-  const id = setInterval(() => {
-    setHeroIndex((prev) => {
-      const next = (prev + 1) % heroSlides.length;
-      setHeroPrevIndex(prev); // recuerda cuál era la foto anterior
-      return next;
-    });
-  }, 9000); // antes 6000
 
-  return () => clearInterval(id);
-}, [heroSlides.length]);
+
+  useEffect(() => {
+    if (!heroSlides.length) return;
+    const id = setInterval(
+      () => setHeroIndex((prev) => (prev + 1) % heroSlides.length),
+      6000
+    );
+    return () => clearInterval(id);
+  }, [heroSlides.length]);
 
   // ===================== RSVP =====================
   const [showRsvpModal, setShowRsvpModal] = useState(false);
@@ -498,36 +492,39 @@ useEffect(() => {
   // ===================== RENDER =====================
   return (
     <div className="min-h-screen bg-marfil text-slate-900">
-      {/* ================= HERO ================= */}
-      <section className="relative min-h-[92vh] lg:min-h-[100vh] flex items-center justify-center overflow-hidden">
-        {/* FONDO DIFUMINADO CON LA MISMA FOTO */}
-        {urlHero && (
-          <>
-            <div
-              className="absolute inset-0 -z-20"
-              style={{
-                backgroundImage: `url('${urlHero}')`,
-                backgroundSize: "cover",
-                backgroundPosition: heroPosicion,
-                backgroundRepeat: "no-repeat",
-                filter: "blur(10px)",
-                transform: "scale(1.08)",
-              }}
-            />
-            <div className="absolute inset-0 -z-10 bg-black/45" />
-          </>
-        )}
 
-        {/* SEPARADOR INFERIOR */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0">
-          <svg
-            viewBox="0 0 1440 120"
-            preserveAspectRatio="none"
-            className="block w-full h-[60px] sm:h-[75px] md:h-[90px]"
-          >
-            <path
-              fill={COLOR_MARFIL}
-              d="
+        {/* ================= HERO ================= */}
+<section
+  className="relative min-h-[92vh] lg:min-h-[100vh] flex items-center justify-center overflow-hidden"
+>
+  {/* FONDO DIFUMINADO CON LA MISMA FOTO */}
+  {urlHero && (
+    <>
+      <div
+        className="absolute inset-0 -z-20"
+        style={{
+          backgroundImage: `url('${urlHero}')`,
+          backgroundSize: "cover",
+          backgroundPosition: heroPosicion,
+          backgroundRepeat: "no-repeat",
+          filter: "blur(10px)",
+          transform: "scale(1.08)",
+        }}
+      />
+      <div className="absolute inset-0 -z-10 bg-black/45" />
+    </>
+  )}
+
+  {/* SEPARADOR INFERIOR */}
+  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0">
+    <svg
+      viewBox="0 0 1440 120"
+      preserveAspectRatio="none"
+      className="block w-full h-[60px] sm:h-[75px] md:h-[90px]"
+    >
+      <path
+        fill={COLOR_MARFIL}
+        d="
           M0,96
           C60,88,120,72,180,68
           C260,63,340,72,420,80
@@ -539,81 +536,65 @@ useEffect(() => {
           L0,120
           Z
         "
-            />
-          </svg>
-        </div>
-
-        {/* CONTENIDO PRINCIPAL: FOTO + TARJETA */}
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-3 lg:px-8 xl:px-10 py-8 lg:py-12">
-          <div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-6 lg:gap-10 lg:justify-between">
-            {/* ====== IZQUIERDA: FOTO ENMARCADA (MUY GRANDE) ====== */}
-<div className="w-full lg:w-[60%] xl:w-[63%] flex justify-center lg:justify-start">
-  <div className="relative w-full xl:w-[100%] aspect-[16/10]">
-    {/* Fondo acuarela */}
-    <svg
-      viewBox="0 0 400 300"
-      className="absolute inset-0 w-full h-full text-[#1E293B]"
-    >
-      <defs>
-        <radialGradient id="acuarelaAzul" cx="30%" cy="15%" r="80%">
-          <stop offset="0%" stopColor="#1E293B" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#1E293B" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#020617" stopOpacity="0.2" />
-        </radialGradient>
-      </defs>
-      <path
-        d="
-          M10,80
-          C40,10,140,0,220,20
-          C310,40,360,80,380,140
-          C400,200,360,260,280,280
-          C200,300,100,290,40,240
-          C-10,200,-10,150,10,80
-        "
-        fill="url(#acuarelaAzul)"
-        opacity="0.9"
       />
     </svg>
-
-    {/* Marcos dobles */}
-    <div className="absolute inset-2 rounded-[2.6rem] border border-white/75 shadow-[0_20px_55px_rgba(15,23,42,0.85)]" />
-    <div className="absolute inset-5 rounded-[2.2rem] border border-[#FDE68A]/85" />
-
-    {/* FOTO: el contenedor ya NO se anima, solo el <img> */}
-   <div className="absolute inset-4 rounded-[2.4rem] overflow-hidden bg-[#020617]">
-  {heroSlides.map((slide, index) => {
-    const isActive = index === heroIndex;
-    const isPrev = index === heroPrevIndex;
-    const visible = isActive || isPrev; // solo actual y anterior se muestran
-
-    return (
-      <img
-        key={slide.id ?? index}
-        src={slide.image}
-        alt={tituloPrincipal}
-        className={
-          "absolute inset-0 w-full h-full object-cover transition-opacity duration-900 ease-out" +
-          (isActive ? " opacity-100" : " opacity-0") +
-          (visible ? "" : " pointer-events-none")
-        }
-      />
-    );
-  })}
-</div>
-
   </div>
-</div>
 
+  {/* CONTENIDO PRINCIPAL: FOTO + TARJETA */}
+  <div className="relative z-10 w-full max-w-[1600px] mx-auto px-3 lg:px-8 xl:px-10 py-8 lg:py-12">
+    <div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-6 lg:gap-10 lg:justify-between">
 
+      {/* ====== IZQUIERDA: FOTO ENMARCADA (MUY GRANDE) ====== */}
+      <div className="w-full lg:w-[58%] xl:w-[60%] flex justify-center lg:justify-start">
+        <div className="relative w-full xl:w-[105%] aspect-[16/10]">
+          {/* Fondo acuarela */}
+          <svg
+            viewBox="0 0 400 300"
+            className="absolute inset-0 w-full h-full text-[#1E293B]"
+          >
+            <defs>
+              <radialGradient id="acuarelaAzul" cx="30%" cy="15%" r="80%">
+                <stop offset="0%" stopColor="#1E293B" stopOpacity="0.9" />
+                <stop offset="45%" stopColor="#1E293B" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#020617" stopOpacity="0.2" />
+              </radialGradient>
+            </defs>
+            <path
+              d="
+                M10,80
+                C40,10,140,0,220,20
+                C310,40,360,80,380,140
+                C400,200,360,260,280,280
+                C200,300,100,290,40,240
+                C-10,200,-10,150,10,80
+              "
+              fill="url(#acuarelaAzul)"
+              opacity="0.9"
+            />
+          </svg>
 
-            {/* ====== DERECHA: TARJETA INFORMATIVA ====== */}
-            {/* CAMBIO 2: lg:w-[40%] xl:w-[37%] para que el card sea más angosto */}
-            <div className="w-full lg:w-[40%] xl:w-[37%] flex justify-center lg:justify-end">
-              <div
-                className="
+          {/* Marcos dobles, con menos margen para que la foto se vea más grande */}
+          <div className="absolute inset-2 rounded-[2.6rem] border border-white/75 shadow-[0_20px_55px_rgba(15,23,42,0.85)]" />
+          <div className="absolute inset-5 rounded-[2.2rem] border border-[#FDE68A]/85" />
+
+          {/* Foto casi a full */}
+          <div className="absolute inset-4 rounded-[2.4rem] overflow-hidden bg-[#020617]">
+            <img
+              src={urlHero}
+              alt={tituloPrincipal}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ====== DERECHA: TARJETA INFORMATIVA ====== */}
+      <div className="w-full lg:w-[42%] xl:w-[40%] flex justify-center lg:justify-end">
+        <div
+          className="
             w-full
             max-w-md lg:max-w-md xl:max-w-lg
-            lg:mr-0 xl:mr-0 {/* CAMBIO 4: Eliminados los márgenes laterales */}
+            lg:mr-1 xl:mr-4
             bg-[#020617]/72
             border border-[#FDE68A]/25
             rounded-[2.5rem]
@@ -622,31 +603,50 @@ useEffect(() => {
             px-7 md:px-9
             py-7 md:py-9
           "
-              >
+        >
+                {/* --- aquí dentro deja TODO tu contenido actual del card tal cual lo tienes --- */}
+
+                {/* Línea de eventos tipo invitación física */}
+                <div className="flex flex-col gap-2 mb-4 border-b border-white/15 pb-3">
+                  <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-[#F8F4E3]/80 uppercase tracking-[0.18em]">
+                    <div className="flex items-center gap-2">
+                      <LuSparkles className="w-4 h-4 text-[#FDE68A]" />
+                      <span>Boda en {boda?.ciudad || "Quillabamba"}</span>
+                    </div>
+                    <span>{fechaLarga || ""}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-3 justify-between text-[10px] sm:text-xs text-[#F8F4E3]/85">
+                    {horaCeremonia && (
+                      <div className="flex items-center gap-1.5">
+                        <FiMapPin className="w-3.5 h-3.5" />
+                        <span>Religioso {horaCeremonia}</span>
+                      </div>
+                    )}
+                    {horaRecepcion && (
+                      <div className="flex items-center gap-1.5">
+                        <FiGift className="w-3.5 h-3.5" />
+                        <span>Recepción {horaRecepcion}</span>
+                      </div>
+                    )}
+                    <div className="hidden sm:flex items-center gap-1.5">
+                      <FiClock className="w-3.5 h-3.5" />
+                      <span>Cena 6:30 p.m.</span>
+                    </div>
+                    <div className="hidden sm:flex items-center gap-1.5">
+                      <FiClock className="w-3.5 h-3.5" />
+                      <span>Vals 7:00 p.m.</span>
+                    </div>
+                    <div className="hidden sm:flex items-center gap-1.5">
+                      <FiClock className="w-3.5 h-3.5" />
+                      <span>Fiesta 7:20 p.m.</span>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Título parejas */}
-<h1
-  className="
-    mb-4
-    leading-tight
-    text-4xl md:text-5xl lg:text-[3.4rem]
-    bg-gradient-to-r
-    from-[#FDE68A]
-    via-[#FFFFFF]
-    to-[#FDE68A]
-    bg-clip-text
-    text-transparent
-    drop-shadow-[0_0_16px_rgba(0,0,0,0.65)]
-  "
-  style={{
-    fontFamily: "'Great Vibes', 'Times New Roman', serif",
-    letterSpacing: "0.03em",
-  }}
->
-  {tituloPrincipal}
-</h1>
-
-
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-[2.6rem] leading-tight mb-2 text-[#F8F4E3]">
+                  {tituloPrincipal}
+                </h1>
 
                 {fechaLarga && (
                   <p className="font-serif text-sm md:text-base mb-3 flex items-center gap-2 text-[#F8F4E3]/90">
@@ -723,7 +723,7 @@ useEffect(() => {
                       Confirmar asistencia
                     </button>
                     <div className="text-[10px] sm:text-[11px] text-[#F8F4E3]/75">
-                      Codigo de Vestimenta:{" "}
+                      Dress code:{" "}
                       <span className="font-semibold text-[#FDE68A]">
                         {dressCode}
                       </span>
@@ -745,31 +745,36 @@ useEffect(() => {
         </div>
       </section>
 
+
+
+
       {/* ================= NUESTRA HISTORIA ================= */}
       <FadeIn delay={240}>
-         <section className="relative bg-[#F8F4E3] text-[#111827] py-12 px-4">
-    {/* ÍCONO DE ANILLOS FLOtANDO ENTRE HERO Y HISTORIA */}
-     <div className="absolute top-0 left-1/2 -translate-x-1/2 translate-y-[-10%]">
-    <img
-      src={anillosBoda}
-      alt="Anillos de boda"
-      className="w-20 h-20 opacity-90 drop-shadow-md"
-    />
-  </div>
+        <section className="bg-[#F8F4E3] text-[#111827] py-12 px-4">
           <div className="max-w-5xl mx-auto grid gap-10 lg:grid-cols-[2.2fr,1.8fr] items-center">
             <div>
               <p className="text-3xl text-[#111827] mb-1 font-serif flex items-center gap-2">
                 <LuFlower2 className="w-6 h-6 text-[#D4AF37]" />
                 <span>Nuestra historia</span>
-              </p>              
-              <p className="text-sm text-slate-700 mb-3">{textoHistoria}</p>            
+              </p>
+              <h2 className="text-2xl text-[#111827] mb-4 font-serif">
+                De {boda?.ciudad || "nuestra ciudad"} al altar
+              </h2>
+              <p className="text-sm text-slate-700 mb-3">{textoHistoria}</p>
+              <p className="text-sm text-slate-700 mb-3">
+                La idea es que cada invitado sienta que está entrando a un
+                momento íntimo y significativo, más allá de una fiesta.
+              </p>
+              <p className="text-sm text-slate-700">
+                Gracias por ser parte de este capítulo tan importante en nuestra
+                historia.
+              </p>
             </div>
 
             <div className="bg-white rounded-3xl border border-[#F1E5D3] shadow-md p-6 flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                {/* CAMBIO: Ícono dorado y fondo más sutil */}
-                <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                  <LuSparkles className="w-6 h-6 text-[#D4AF37]" />
+                <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                  <LuSparkles className="w-6 h-6 text-[#111827]" />
                 </div>
                 <div>
                   <p className="text-base text-[#111827] font-semibold">
@@ -782,9 +787,22 @@ useEffect(() => {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                {/* CAMBIO: Ícono dorado y fondo más sutil */}
-                <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                  <LuFlower2 className="w-5 h-5 text-[#D4AF37]" />
+                <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                  <FiMapPin className="w-5 h-5 text-[#111827]" />
+                </div>
+                <div>
+                  <p className="text-base text-[#111827] font-semibold">
+                    Aventuras juntos
+                  </p>
+                  <p className="text-xs text-slate-600">
+                    Viajes, proyectos y sueños compartidos que los han traído
+                    hasta aquí.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                  <LuFlower2 className="w-5 h-5 text-[#111827]" />
                 </div>
                 <div>
                   <p className="text-base text-[#111827] font-semibold">
@@ -803,16 +821,8 @@ useEffect(() => {
 
       {/* ================= PADRES Y PADRINOS ================= */}
       <FadeIn delay={280}>
-       <section className="bg-[#F1E5D3] py-12 px-4">
-    <div className="relative max-w-5xl mx-auto bg-white/95 backdrop-blur rounded-3xl border border-[#F1E5D3] shadow-md pt-10 md:pt-12 pb-6 md:pb-8 px-6 md:px-8">
-      {/* ÍCONO DE PAREJA FLOTANDO SOBRE EL CARD */}
-      <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-        <img
-          src={parejaBoda2}
-          alt="Pareja de novios"
-          className="w-20 h-20 opacity-90 drop-shadow-md"
-        />
-      </div>
+        <section className="bg-[#F1E5D3] py-10 px-4">
+          <div className="max-w-5xl mx-auto bg-white/95 backdrop-blur rounded-3xl border border-[#F1E5D3] shadow-md p-6 md:p-8">
             <h2 className="text-2xl text-[#111827] mb-4 text-center font-serif">
               Nuestros padres y padrinos
             </h2>
@@ -823,8 +833,7 @@ useEffect(() => {
             <div className="grid gap-6 md:grid-cols-2 text-sm text-slate-800">
               <div className="space-y-3">
                 <p className="font-semibold text-[#111827]">Novios</p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
+                <ul className="list-disc list-inside space-y-1">
                   <li>
                     {boda?.nombre_pareja ||
                       `${boda?.nombre_novio_1 ?? ""} ${
@@ -836,8 +845,7 @@ useEffect(() => {
                 <p className="font-semibold text-[#111827] mt-3">
                   Padres del novio
                 </p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
+                <ul className="list-disc list-inside space-y-1">
                   <li>
                     {textoPadresNovio ? (
                       <TextoConPaloma texto={textoPadresNovio} />
@@ -850,8 +858,7 @@ useEffect(() => {
                 <p className="font-semibold text-[#111827] mt-3">
                   Padres de la novia
                 </p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
+                <ul className="list-disc list-inside space-y-1">
                   <li>
                     {textoPadresNovia ? (
                       <TextoConPaloma texto={textoPadresNovia} />
@@ -863,8 +870,7 @@ useEffect(() => {
               </div>
               <div className="space-y-3">
                 <p className="font-semibold text-[#111827]">Padrinos</p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
+                <ul className="list-disc list-inside space-y-1">
                   <li>
                     {textoPadrinosMayores ? (
                       <TextoConPaloma texto={textoPadrinosMayores} />

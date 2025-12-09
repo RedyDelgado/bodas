@@ -449,34 +449,33 @@ const handleSubmit = async (e) => {
     }))
     .filter((f) => f.pregunta || f.respuesta);
 
-  // OJO: aquí ya usamos SNAKE_CASE para que coincida con Laravel
-  const payload = {
-    ...(config || {}),
+// OJO: aquí ya usamos SNAKE_CASE para que coincida con Laravel
+const payload = {
+  frase_principal: form.frasePrincipal,
+  texto_fecha_religioso: form.textoFechaReligioso,
+  texto_fecha_civil: form.textoFechaCivil,
+  local_religioso: form.localReligioso,
+  local_recepcion: form.localRecepcion,
+  cronograma_texto: cronogramaTexto,
 
-    frase_principal: form.frasePrincipal,
-    texto_fecha_religioso: form.textoFechaReligioso,
-    texto_fecha_civil: form.textoFechaCivil,
-    local_religioso: form.localReligioso,
-    local_recepcion: form.localRecepcion,
-    cronograma_texto: cronogramaTexto,
+  // Padres y padrinos
+  texto_padres_novio: form.textoPadresNovio,
+  texto_padres_novia: form.textoPadresNovia,
+  texto_padrinos_mayores: form.textoPadrinosMayores,
+  texto_padrinos_civiles: form.textoPadrinosCiviles,
 
-    // Padres y padrinos
-    texto_padres_novio: form.textoPadresNovio,
-    texto_padres_novia: form.textoPadresNovia,
-    texto_padrinos_mayores: form.textoPadrinosMayores,
-    texto_padrinos_civiles: form.textoPadrinosCiviles,
+  // Regalos / cuentas
+  texto_cuentas_bancarias: form.textoCuentasBancarias,
+  texto_yape: form.textoYape,
 
-    // Regalos / cuentas
-    texto_cuentas_bancarias: form.textoCuentasBancarias,
-    texto_yape: form.textoYape,
+  // Historia / mensaje final
+  texto_historia_pareja: form.textoHistoriaPareja,
+  texto_mensaje_final: form.textoMensajeFinal,
 
-    // Historia / mensaje final
-    texto_historia_pareja: form.textoHistoriaPareja,
-    texto_mensaje_final: form.textoMensajeFinal,
+  // Intro preguntas frecuentes (si algún día lo usas)
+  texto_preguntas_frecuentes: form.textoPreguntasFrecuentes,
+};
 
-    // Intro preguntas frecuentes (campo nuevo)
-    texto_preguntas_frecuentes: form.textoPreguntasFrecuentes,
-  };
 
   try {
     setGuardandoFaqs(true);
@@ -907,7 +906,7 @@ const handleSubmit = async (e) => {
               </div>
             </div>
 
-            <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
               <label className="block text-xs font-medium text-slate-700">
                 Texto libre de cronograma (opcional)
               </label>
@@ -919,7 +918,7 @@ const handleSubmit = async (e) => {
                 className="w-full border border-slate-200 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
                 placeholder={`Ej:\n• Recepción de invitados\n• Ceremonia\n• Brindis\n• Baile de los novios`}
               />
-            </div>
+            </div> */}
           </section>
 
           {/* CARD: Historia */}
@@ -984,7 +983,7 @@ const handleSubmit = async (e) => {
                 </p>
                 <p className="mt-1 text-[11px] text-slate-400 flex items-center gap-1">
                   Si alguna persona ha fallecido, añade{" "}
-                  <span className="font-mono text-[10px] bg-slate-100 px-1 rounded">
+                  <span className="font-mono text-[12px] bg-slate-100 px-1 rounded">
                     (QEPD)
                   </span>{" "}
                   después de su nombre. En la página pública aparecerá con el
@@ -1360,19 +1359,7 @@ const handleSubmit = async (e) => {
               </p>
             )}
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-700">
-                Texto introductorio (opcional)
-              </label>
-              <textarea
-                name="textoPreguntasFrecuentes"
-                rows={2}
-                value={form.textoPreguntasFrecuentes}
-                onChange={handleChange}
-                className="w-full border border-slate-200 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
-                placeholder="Ej: Aquí respondemos algunas preguntas frecuentes sobre nuestro gran día."
-              />
-            </div>
+         
 
             <div className="space-y-3">
               {faqs.map((faq, index) => (
