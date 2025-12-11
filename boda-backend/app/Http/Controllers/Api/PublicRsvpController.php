@@ -20,6 +20,7 @@ class PublicRsvpController extends Controller
      *   "respuesta": "confirmado"|"rechazado",   // requerido
      *   "cantidad_personas": 1-10,               // opcional, se guarda en pases
      *   "mensaje": "texto opcional"              // opcional, se guarda en notas
+     *   "celular": "987654321"                   // opcional, se guarda en celular
      * }
      */
     public function registrar(Request $request): JsonResponse
@@ -32,6 +33,7 @@ class PublicRsvpController extends Controller
             ],
             'cantidad_personas' => ['nullable', 'integer', 'min:1', 'max:10'],
             'mensaje' => ['nullable', 'string', 'max:255'],
+            'celular' => ['nullable', 'string', 'max:20'],
         ]);
 
         if ($validator->fails()) {
@@ -61,6 +63,10 @@ class PublicRsvpController extends Controller
             $invitado->notas = $request->mensaje;
         }
 
+        if ($request->filled('celular')) {
+            $invitado->celular = $request->celular;
+        }
+
         $invitado->save();
 
         return response()->json([
@@ -72,6 +78,7 @@ class PublicRsvpController extends Controller
                 'pases'             => $invitado->pases,
                 'fecha_confirmacion'=> $invitado->fecha_confirmacion,
                 'notas'             => $invitado->notas,
+                'celular'           => $invitado->celular,
             ],
         ]);
     }

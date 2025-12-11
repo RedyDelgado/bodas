@@ -198,6 +198,51 @@ wedding/
 - **Node.js** 16+
 - **npm** 8+ o **yarn**
 
+> Nota importante: el `dev server` del frontend usa Vite. Vite requiere **Node.js >= 20.19** o **>= 22.12**. Si tu Node está en una versión intermedia (por ejemplo 22.11.x) puede mostrar una advertencia o impedir que el servidor arranque correctamente. Recomendamos usar Node >= 22.12.
+
+### Desarrollo - Frontend (Vite)
+
+Sigue estos pasos para iniciar el servidor de desarrollo del frontend:
+
+1. Abre una terminal y sitúate en la carpeta del frontend:
+
+```powershell
+cd c:\xampp\htdocs\wedding\boda-frontend
+```
+
+2. Instala dependencias (si no están instaladas):
+
+```powershell
+npm install
+```
+
+3. Arranca el servidor de desarrollo:
+
+```powershell
+npm run dev
+```
+
+Vite abrirá una URL local (por ejemplo `http://localhost:5173` o un puerto alternativo si 5173 está en uso).
+
+Si ves un mensaje como "You are using Node.js 22.11.0. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.", entonces actualiza Node a una versión compatible antes de continuar.
+
+Cómo actualizar Node en Windows (opciones):
+
+- Opción (recomendada): Instalar nvm-windows y usarlo para administrar versiones:
+
+     1. Descarga e instala `nvm-windows` desde https://github.com/coreybutler/nvm-windows/releases
+     2. Abre PowerShell como administrador y ejecuta:
+
+```powershell
+nvm install 22.12.0
+nvm use 22.12.0
+node -v
+```
+
+- Opción alternativa: descargar el instalador de Node.js (LTS o la versión 22.12+) desde https://nodejs.org/ y ejecutar el instalador.
+
+Después de actualizar Node, repite `npm install` (si es necesario) y `npm run dev`.
+
 ---
 
 ## 🚀 Instalación

@@ -1,7 +1,6 @@
 // src/features/public/templates/Plantilla01.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useMemo as useReactMemo } from "react";
-import { registrarRsvp } from "../services/publicRsvpService";
 import anillosBoda from "../../../../public/img/anillos-boda.png";
 import parejaBoda from "../../../../public/img/pareja-boda.png";
 import parejaBoda2 from "../../../../public/img/pareja-boda_2.png";
@@ -17,13 +16,16 @@ import {
 } from "react-icons/fi";
 import { LuFlower2, LuSparkles } from "react-icons/lu";
 import { GiPeaceDove } from "react-icons/gi";
-
-/** =================== COLORES PALETA REDY & PATRICIA =================== */
-const COLOR_AZUL = "#1E293B"; // Azul marino (Principal oscuro)
-const COLOR_MARFIL = "#F8F4E3"; // Blanco marfil (Principal claro)
-const COLOR_DORADO = "#D4AF37"; // Dorado suave (Acento 1 - Botones, Íconos)
-const COLOR_CORAL = "#E67E73"; // Acento cálido (Acento 2 - Para darle calidez)
-const COLOR_AZUL_OSCURO_FONDO = "#0A1320"; // Un azul muy profundo, mejor para fondos oscuros que el negro puro.
+import { ConfirmationSuccess } from "../components/ConfirmationSuccess";
+import { PostConfirmationDetails } from "../components/PostConfirmationDetails";
+import { RsvpModal } from "../components/RsvpModal";
+import {
+  COLOR_AZUL,
+  COLOR_MARFIL,
+  COLOR_DORADO,
+  COLOR_CORAL,
+  COLOR_AZUL_OSCURO_FONDO,
+} from "../../../shared/styles/colors";
 
 /** =================== BASE URL PARA FOTOS =================== */
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -443,78 +445,24 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
   }, [heroSlides.length]);
 
   // ===================== RSVP =====================
-  const [showRsvpModal, setShowRsvpModal] = useState(false);
-  const [codigoRsvp, setCodigoRsvp] = useState("");
-  const [rsvpMensaje, setRsvpMensaje] = useState("");
-  const [rsvpCelular, setRsvpCelular] = useState("");
-  const [rsvpEstado, setRsvpEstado] = useState("idle");
-  const [rsvpMensajeEstado, setRsvpMensajeEstado] = useState("");
-
-  const [showCelebration, setShowCelebration] = useState(false);
+  const [mostrarModalRsvp, setMostrarModalRsvp] = useState(false);
+  const [mostrarCelebracion, setMostrarCelebracion] = useState(false);
   const [mostrarDetalles, setMostrarDetalles] = useState(false);
+  const [datosConfirmacion, setDatosConfirmacion] = useState(null);
 
-  const handleRsvpSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!codigoRsvp.trim()) {
-      setRsvpEstado("error");
-      setRsvpMensajeEstado("Por favor ingresa el código de invitación.");
-      return;
-    }
-
-    if (!rsvpCelular.trim() || rsvpCelular.trim().length < 6) {
-      setRsvpEstado("error");
-      setRsvpMensajeEstado(
-        "Por favor ingresa un número de celular válido para enviarte la confirmación."
-      );
-      return;
-    }
-
-    try {
-      setRsvpEstado("loading");
-      setRsvpMensajeEstado("");
-
-      const payload = {
-        codigo: codigoRsvp.trim(),
-        mensaje: rsvpMensaje.trim(),
-        celular: rsvpCelular.trim(),
-      };
-
-      const data = await registrarRsvp(payload);
-
-      setRsvpEstado("ok");
-      setRsvpMensajeEstado(
-        data?.message ||
-          "¡Gracias! Tu asistencia ha sido confirmada. Nos vemos en la boda."
-      );
-
-      setShowRsvpModal(false);
-      setShowCelebration(true);
-    } catch (error) {
-      console.error(error);
-      setRsvpEstado("error");
-
-      if (error.response?.status === 404) {
-        setRsvpMensajeEstado(
-          error.response?.data?.message ||
-            "No encontramos un invitado con ese código. Verifica e inténtalo nuevamente."
-        );
-      } else if (error.response?.status === 422) {
-        setRsvpMensajeEstado(
-          error.response?.data?.message ||
-            "No se pudo registrar tu asistencia. Revisa los datos e inténtalo de nuevo."
-        );
-      } else {
-        setRsvpMensajeEstado(
-          "Ocurrió un problema al registrar tu asistencia. Inténtalo otra vez en unos minutos."
-        );
-      }
-    }
+  const manejadorExitoRsvp = (datos) => {
+    setDatosConfirmacion(datos);
+    setMostrarModalRsvp(false);
+    setMostrarCelebracion(true);
   };
 
-  const handleCelebrationClose = () => {
-    setShowCelebration(false);
+  const manejadorCerrarCelebracion = () => {
+    setMostrarCelebracion(false);
     setMostrarDetalles(true);
+    // Scroll suave hacia abajo
+    setTimeout(() => {
+      window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
+    }, 300);
   };
 
   // ===================== RENDER =====================
@@ -680,7 +628,7 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
               {/* Botón Confirmar asistencia */}
               <button
                 type="button"
-                onClick={() => setShowRsvpModal(true)}
+                onClick={() => setMostrarModalRsvp(true)}
                 className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] text-[#111827] text-sm font-semibold px-7 py-2.5 shadow-md hover:bg-[#e0be4d] transition-colors"
               >
                 <FiCheckCircle className="w-4 h-4" />
@@ -748,7 +696,7 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
             {/* ÍCONO DE PAREJA FLOTANDO SOBRE EL CARD */}
             <div className="absolute -top-10 left-1/2 -translate-x-1/2">
               <img
-                src={parejaBoda2}
+                 src={parejaBoda2}
                 alt="Pareja de novios"
                 className="w-20 h-20 opacity-90 drop-shadow-md"
               />
@@ -828,8 +776,9 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
 
 
       {/* === FILA 2: CARD DE INVITADOS, EN SU PROPIO ROW === */}
-      <FadeIn delay={280}>
-        <section className="bg-[#FFF7E6] py-12 px-4">
+      {mostrarDetalles && (
+        <FadeIn delay={280}>
+          <section className="bg-[#FFF7E6] py-12 px-4">
           <div className="max-w-5xl mx-auto flex justify-center">
             <div className="w-full md:max-w-lg">
               <div className="bg-white rounded-3xl border border-[#FDE7C5] shadow-md p-6 flex flex-col gap-4">
@@ -909,8 +858,9 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
               </div>
             </div>
           </div>
-        </section>
-      </FadeIn>
+          </section>
+        </FadeIn>
+      )}
 
 
 
@@ -918,162 +868,12 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
       {mostrarDetalles && (
         <FadeIn delay={320}>
           <section className="bg-[#F8F4E3] py-12 px-4">
-            <div className="max-w-5xl mx-auto space-y-8">
-              <div className="bg-white rounded-3xl border border-[#F1E5D3] shadow-sm p-6 md:p-7 flex flex-col gap-5">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-1 flex items-center gap-2">
-                      <FiCalendar className="w-4 h-4 text-[#D4AF37]" />
-                      Detalles de la celebración
-                    </p>
-                    <h3 className="font-serif text-xl text-[#111827]">
-                      Día, hora y lugares
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2 text-xs md:text-sm">
-                    <span className="px-4 py-2 rounded-full bg-[#E6E7E3] text-[#2C3E50] font-semibold">
-                      {fechaLarga || "Fecha por confirmar"}
-                    </span>
-                    {boda?.ciudad && (
-                      <span className="px-4 py-2 rounded-full bg-[#D4AF37]/20 text-[#2C3E50] font-semibold">
-                        {boda.ciudad}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm text-slate-800">
-                  <div className="rounded-2xl border border-[#F1E5D3] bg-[#FFFCF6] p-4">
-                    <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-1">
-                      Ceremonia
-                    </p>
-                    {lugarCeremonia ? (
-                      <>
-                        <h4 className="font-semibold text-[#111827]">
-                          {lugarCeremonia}
-                        </h4>
-                        {(horaCeremonia || direccionCeremonia) && (
-                          <p className="mt-2 text-xs sm:text-sm text-slate-700">
-                            {horaCeremonia && (
-                              <span className="block">
-                                Hora: <strong>{horaCeremonia}</strong>
-                              </span>
-                            )}
-                            {direccionCeremonia && (
-                              <span className="block mt-1">
-                                {direccionCeremonia}
-                              </span>
-                            )}
-                          </p>
-                        )}
-                      </>
-                    ) : (
-                      <p className="text-xs text-slate-500">
-                        Muy pronto confirmaremos los detalles de la ceremonia.
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="rounded-2xl border border-[#F1E5D3] bg-[#FFFCF6] p-4">
-                    <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-1">
-                      Recepción
-                    </p>
-                    {lugarRecepcion ? (
-                      <>
-                        <h4 className="font-semibold text-[#111827]">
-                          {lugarRecepcion}
-                        </h4>
-                        {(horaRecepcion || direccionRecepcion) && (
-                          <p className="mt-2 text-xs sm:text-sm text-slate-700">
-                            {horaRecepcion && (
-                              <span className="block">
-                                Hora: <strong>{horaRecepcion}</strong>
-                              </span>
-                            )}
-                            {direccionRecepcion && (
-                              <span className="block mt-1">
-                                {direccionRecepcion}
-                              </span>
-                            )}
-                          </p>
-                        )}
-                      </>
-                    ) : (
-                      <p className="text-xs text-slate-500">
-                        Estamos ultimando los detalles de la recepción.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {cronogramaTexto && (
-                  <div className="mt-2 rounded-2xl border border-dashed border-[#E5D5B8] bg-[#FFFBF3] p-4 text-xs sm:text-sm text-slate-700">
-                    <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-2">
-                      Cronograma del día
-                    </p>
-                    <ul className="space-y-1">
-                      {cronogramaTexto
-                        .split("\n")
-                        .map((linea) => linea.trim())
-                        .filter(Boolean)
-                        .map((linea, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span className="mt-[2px] h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-                            <span>{linea}</span>
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-                )}
-
-                <p className="text-xs sm:text-sm text-slate-700 mt-3">
-                  {mensajeFinal}
-                </p>
-              </div>
-
-              {(textoCuentasBancarias || textoYape) && (
-                <div className="bg-white rounded-3xl border border-[#F1E5D3] shadow-sm p-6 md:p-7">
-                  <div className="flex items-center justify-between gap-3 mb-4">
-                    <div>
-                      <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-1 flex items-center gap-2">
-                        <FiGift className="w-4 h-4 text-[#D4AF37]" />
-                        Nuestro regalo
-                      </p>
-                      <h3 className="font-serif text-xl text-[#111827]">
-                        Si deseas acompañarnos con un detalle
-                      </h3>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
-                    {textoCuentasBancarias && (
-                      <div className="rounded-2xl border border-[#F1E5D3] bg-[#FFFCF6] p-4">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 mb-2">
-                          Cuentas bancarias / CCI
-                        </p>
-                        <pre className="whitespace-pre-wrap font-sans text-xs sm:text-sm">
-                          {textoCuentasBancarias}
-                        </pre>
-                      </div>
-                    )}
-                    {textoYape && (
-                      <div className="rounded-2xl border border-[#F1E5D3] bg-[#FFF7E6] p-4">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 mb-2">
-                          Yape / Plin
-                        </p>
-                        <p className="text-xs sm:text-sm whitespace-pre-wrap">
-                          {textoYape}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <p className="mt-4 text-[11px] text-slate-600">
-                    Tu presencia es lo más importante. El regalo es totalmente
-                    opcional.
-                  </p>
-                </div>
-              )}
+            <div className="max-w-5xl mx-auto">
+              <PostConfirmationDetails
+                boda={boda}
+                configuracion={configuracion}
+                faqs={[]} // TODO: Pasar FAQs reales si están disponibles
+              />
             </div>
           </section>
         </FadeIn>
@@ -1095,126 +895,23 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
         </footer>
       </FadeIn>
 
-      {/* ================= MODAL RSVP ================= */}
-      {showRsvpModal && (
-        <div
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4"
-          onClick={() => setShowRsvpModal(false)}
-        >
-          <div
-            className="relative max-w-xl w-full bg-[#F8F4E3] text-[#111827] rounded-3xl border border-[#D4AF37]/60 shadow-2xl p-6 sm:p-7"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setShowRsvpModal(false)}
-              className="absolute top-3 right-3 text-slate-500 hover:text-slate-800"
-            >
-              <FiX className="w-5 h-5" />
-            </button>
+      {/* ================= MODAL RSVP NUEVO ================= */}
+      <RsvpModal
+        isOpen={mostrarModalRsvp}
+        onClose={() => setMostrarModalRsvp(false)}
+        bodaNombre={
+          boda?.nombre_pareja ||
+          `${boda?.nombre_novio_1 ?? ""} ${boda?.nombre_novio_2 ?? ""}`
+        }
+        onSuccess={manejadorExitoRsvp}
+      />
 
-            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D4AF37]/90 uppercase mb-2 text-center flex items-center justify-center gap-1.5">
-              <FiCheckCircle className="w-3.5 h-3.5" />
-              Confirmar asistencia
-            </p>
-            <h2 className="text-xl sm:text-2xl font-serif mb-2 text-center">
-              ¿Tienes un código de invitación?
-            </h2>
-            <p className="text-sm text-slate-700 mb-5 text-center">
-              Ingresa el código que aparece en tu invitación y tu número de
-              celular para registrar tu asistencia.
-            </p>
-
-            <form onSubmit={handleRsvpSubmit} className="space-y-4 text-left">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Código de invitación
-                  </label>
-                  <input
-                    type="text"
-                    value={codigoRsvp}
-                    onChange={(e) =>
-                      setCodigoRsvp(e.target.value.toUpperCase())
-                    }
-                    placeholder="Ej: AB39KLP"
-                    className="w-full rounded-full border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
-                    maxLength={16}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Celular
-                  </label>
-                  <input
-                    type="tel"
-                    value={rsvpCelular}
-                    onChange={(e) => setRsvpCelular(e.target.value)}
-                    placeholder="Ej: 987 654 321"
-                    className="w-full rounded-full border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Mensaje (opcional)
-                </label>
-                <textarea
-                  rows={3}
-                  value={rsvpMensaje}
-                  onChange={(e) => setRsvpMensaje(e.target.value)}
-                  placeholder="Ej: Iré con mi pareja :)"
-                  className="w-full rounded-2xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/60"
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                <button
-                  type="submit"
-                  disabled={rsvpEstado === "loading"}
-                  className="inline-flex justify-center items-center rounded-full bg-[#D4AF37] text-[#111827] text-sm font-semibold px-5 py-2 hover:bg-[#e0be4d] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-                >
-                  {rsvpEstado === "loading"
-                    ? "Enviando..."
-                    : "Confirmar asistencia"}
-                </button>
-
-                {rsvpMensajeEstado && (
-                  <p
-                    className={`text-xs text-center sm:text-right ${
-                      rsvpEstado === "ok" ? "text-emerald-600" : "text-red-500"
-                    }`}
-                  >
-                    {rsvpMensajeEstado}
-                  </p>
-                )}
-              </div>
-            </form>
-
-            <div className="mt-5 text-[11px] sm:text-xs text-slate-700 bg-[#FFF9EA] border border-[#FACC15]/40 rounded-2xl px-4 py-3 flex gap-3 items-start">
-              <div className="mt-[2px]">
-                <FiClock className="w-4 h-4 text-[#D4AF37]" />
-              </div>
-              <p>
-                Esta será una celebración pensada solo para adultos. Queremos
-                que puedas disfrutar de la noche sin preocupaciones; los más
-                pequeños, esta vez, nos acompañan desde casa.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ================= OVERLAY CELEBRACIÓN ================= */}
-      {showCelebration && (
-        <CelebrationOverlay
-          nombres={
-            boda?.nombre_pareja ||
-            `${boda?.nombre_novio_1 ?? ""} ${boda?.nombre_novio_2 ?? ""}`
-          }
-          onClose={handleCelebrationClose}
+      {/* ================= OVERLAY CELEBRACIÓN NUEVO ================= */}
+      {mostrarCelebracion && (
+        <ConfirmationSuccess
+          nombreInvitado={datosConfirmacion?.nombre}
+          cantidadPersonas={datosConfirmacion?.cantidad || 1}
+          onClose={manejadorCerrarCelebracion}
         />
       )}
     </div>
