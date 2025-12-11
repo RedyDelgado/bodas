@@ -13,15 +13,17 @@ import {
   FiClock,
   FiX,
   FiGift,
+  FiUsers,
 } from "react-icons/fi";
 import { LuFlower2, LuSparkles } from "react-icons/lu";
 import { GiPeaceDove } from "react-icons/gi";
 
 /** =================== COLORES PALETA REDY & PATRICIA =================== */
-const COLOR_AZUL = "#1E293B"; // Azul marino más cercano al sobre
-const COLOR_MARFIL = "#F8F4E3"; // Blanco marfil
-const COLOR_DORADO = "#D4AF37"; // Dorado suave
-const COLOR_CORAL = "#E67E73"; // Acento cálido
+const COLOR_AZUL = "#1E293B"; // Azul marino (Principal oscuro)
+const COLOR_MARFIL = "#F8F4E3"; // Blanco marfil (Principal claro)
+const COLOR_DORADO = "#D4AF37"; // Dorado suave (Acento 1 - Botones, Íconos)
+const COLOR_CORAL = "#E67E73"; // Acento cálido (Acento 2 - Para darle calidez)
+const COLOR_AZUL_OSCURO_FONDO = "#0A1320"; // Un azul muy profundo, mejor para fondos oscuros que el negro puro.
 
 /** =================== BASE URL PARA FOTOS =================== */
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -197,7 +199,8 @@ function CelebrationOverlay({ nombres, onClose }) {
 }
 
 /** ====================== COMPONENTE PRINCIPAL ====================== */
-export default function Plantilla01({ boda, configuracion, fotos }) {
+export default function Plantilla01({ boda, configuracion, fotos, invitadosResumen }) {
+
   // ===================== COUNTDOWN =====================
   const [countdown, setCountdown] = useState({
     dias: "--",
@@ -331,6 +334,25 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
     configuracion?.padrinos_civiles ||
     "";
 
+  // ===================== MÉTRICAS DE INVITADOS (PÚBLICO) =====================
+  const totalInvitadosPublic =
+    invitadosResumen?.total_invitados ??
+    boda?.total_invitados ??
+    0;
+
+  const totalConfirmadosPublic =
+    invitadosResumen?.total_confirmados ??
+    boda?.total_confirmados ??
+    0;
+
+  const porcentajeConfirmadosPublic =
+    invitadosResumen?.porcentaje_confirmados ??
+    (totalInvitadosPublic > 0
+      ? Math.round((totalConfirmadosPublic * 100) / totalInvitadosPublic)
+      : 0);
+
+
+
   // ===================== FOTOS / HERO CARRUSEL =====================
   const fotosLimpias = Array.isArray(fotos) ? fotos : [];
 
@@ -387,11 +409,11 @@ export default function Plantilla01({ boda, configuracion, fotos }) {
           },
         ];
 
-const [heroIndex, setHeroIndex] = useState(0);
-const [heroPrevIndex, setHeroPrevIndex] = useState(null);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroPrevIndex, setHeroPrevIndex] = useState(null);
 
-const heroActual = heroSlides[heroIndex] || heroSlides[0];
-const urlHero = heroActual?.image || "";
+  const heroActual = heroSlides[heroIndex] || heroSlides[0];
+  const urlHero = heroActual?.image || "";
 
   // Permite posición configurable, si algún día la guardas en BD
   const heroPosicion = configuracion?.heroPosicion || "center 42%";
@@ -406,19 +428,19 @@ const urlHero = heroActual?.image || "";
       }
     : { backgroundColor: "#111827" };
 
-useEffect(() => {
-  if (!heroSlides.length) return;
+  useEffect(() => {
+    if (!heroSlides.length) return;
 
-  const id = setInterval(() => {
-    setHeroIndex((prev) => {
-      const next = (prev + 1) % heroSlides.length;
-      setHeroPrevIndex(prev); // recuerda cuál era la foto anterior
-      return next;
-    });
-  }, 9000); // antes 6000
+    const id = setInterval(() => {
+      setHeroIndex((prev) => {
+        const next = (prev + 1) % heroSlides.length;
+        setHeroPrevIndex(prev); // recuerda cuál era la foto anterior
+        return next;
+      });
+    }, 9000); // antes 6000
 
-  return () => clearInterval(id);
-}, [heroSlides.length]);
+    return () => clearInterval(id);
+  }, [heroSlides.length]);
 
   // ===================== RSVP =====================
   const [showRsvpModal, setShowRsvpModal] = useState(false);
@@ -497,29 +519,52 @@ useEffect(() => {
 
   // ===================== RENDER =====================
   return (
-    <div className="min-h-screen bg-marfil text-slate-900">
-      {/* ================= HERO ================= */}
-      <section className="relative min-h-[92vh] lg:min-h-[100vh] flex items-center justify-center overflow-hidden">
-        {/* FONDO DIFUMINADO CON LA MISMA FOTO */}
+     <div className="min-h-screen bg-marfil text-slate-900 overflow-x-hidden">
+            {/* ================= HERO ================= */}
+          {/* ================= HERO ================= */}
+      <section className="relative min-h-[92vh] lg:min-h-[100vh] flex items-center justify-center">
+        {/* Animación del corazón */}
+        <style>{`
+          @keyframes heartbeat-soft {
+            0%, 100% {
+              transform: scale(1);
+            }
+            15% {
+              transform: scale(1.18);
+            }
+            30% {
+              transform: scale(1);
+            }
+            45% {
+              transform: scale(1.18);
+            }
+            60% {
+              transform: scale(1);
+            }
+          }
+          .heartbeat-soft {
+            animation: heartbeat-soft 2.6s ease-in-out infinite;
+            transform-origin: center;
+          }
+        `}</style>
+
+        {/* FONDO CON LA FOTO PRINCIPAL */}
         {urlHero && (
-          <>
-            <div
-              className="absolute inset-0 -z-20"
-              style={{
-                backgroundImage: `url('${urlHero}')`,
-                backgroundSize: "cover",
-                backgroundPosition: heroPosicion,
-                backgroundRepeat: "no-repeat",
-                filter: "blur(10px)",
-                transform: "scale(1.08)",
-              }}
-            />
-            <div className="absolute inset-0 -z-10 bg-black/45" />
-          </>
+          <div
+            className="absolute inset-0 -z-20"
+            style={{
+              backgroundImage: `url('${urlHero}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              filter: "none",
+              transform: "scale(1)",
+            }}
+          />
         )}
 
-        {/* SEPARADOR INFERIOR */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0">
+        {/* SEPARADOR INFERIOR EN FORMA DE OLA */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden">
           <svg
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
@@ -528,119 +573,55 @@ useEffect(() => {
             <path
               fill={COLOR_MARFIL}
               d="
-          M0,96
-          C60,88,120,72,180,68
-          C260,63,340,72,420,80
-          C520,90,620,102,720,100
-          C820,98,920,82,1020,74
-          C1120,66,1220,68,1320,76
-          C1380,80,1420,88,1440,92
-          L1440,120
-          L0,120
-          Z
-        "
+                M0,96
+                C60,88,120,72,180,68
+                C260,63,340,72,420,80
+                C520,90,620,102,720,100
+                C820,98,920,82,1020,74
+                C1120,66,1220,68,1320,76
+                C1380,80,1420,88,1440,92
+                L1440,120
+                L0,120
+                Z
+              "
             />
           </svg>
         </div>
 
-        {/* CONTENIDO PRINCIPAL: FOTO + TARJETA */}
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-3 lg:px-8 xl:px-10 py-8 lg:py-12">
-          <div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-6 lg:gap-10 lg:justify-between">
-            {/* ====== IZQUIERDA: FOTO ENMARCADA (MUY GRANDE) ====== */}
-<div className="w-full lg:w-[60%] xl:w-[63%] flex justify-center lg:justify-start">
-  <div className="relative w-full xl:w-[100%] aspect-[16/10]">
-    {/* Fondo acuarela */}
-    <svg
-      viewBox="0 0 400 300"
-      className="absolute inset-0 w-full h-full text-[#1E293B]"
-    >
-      <defs>
-        <radialGradient id="acuarelaAzul" cx="30%" cy="15%" r="80%">
-          <stop offset="0%" stopColor="#1E293B" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#1E293B" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#020617" stopOpacity="0.2" />
-        </radialGradient>
-      </defs>
-      <path
-        d="
-          M10,80
-          C40,10,140,0,220,20
-          C310,40,360,80,380,140
-          C400,200,360,260,280,280
-          C200,300,100,290,40,240
-          C-10,200,-10,150,10,80
-        "
-        fill="url(#acuarelaAzul)"
-        opacity="0.9"
-      />
-    </svg>
-
-    {/* Marcos dobles */}
-    <div className="absolute inset-2 rounded-[2.6rem] border border-white/75 shadow-[0_20px_55px_rgba(15,23,42,0.85)]" />
-    <div className="absolute inset-5 rounded-[2.2rem] border border-[#FDE68A]/85" />
-
-    {/* FOTO: el contenedor ya NO se anima, solo el <img> */}
-   <div className="absolute inset-4 rounded-[2.4rem] overflow-hidden bg-[#020617]">
-  {heroSlides.map((slide, index) => {
-    const isActive = index === heroIndex;
-    const isPrev = index === heroPrevIndex;
-    const visible = isActive || isPrev; // solo actual y anterior se muestran
-
-    return (
-      <img
-        key={slide.id ?? index}
-        src={slide.image}
-        alt={tituloPrincipal}
-        className={
-          "absolute inset-0 w-full h-full object-cover transition-opacity duration-900 ease-out" +
-          (isActive ? " opacity-100" : " opacity-0") +
-          (visible ? "" : " pointer-events-none")
-        }
-      />
-    );
-  })}
-</div>
-
-  </div>
-</div>
-
-
-
-            {/* ====== DERECHA: TARJETA INFORMATIVA ====== */}
-            {/* CAMBIO 2: lg:w-[40%] xl:w-[37%] para que el card sea más angosto */}
-            <div className="w-full lg:w-[40%] xl:w-[37%] flex justify-center lg:justify-end">
-              <div
-                className="
-            w-full
-            max-w-md lg:max-w-md xl:max-w-lg
-            lg:mr-0 xl:mr-0 {/* CAMBIO 4: Eliminados los márgenes laterales */}
-            bg-[#020617]/72
-            border border-[#FDE68A]/25
-            rounded-[2.5rem]
-            shadow-2xl
-            backdrop-blur-md
-            px-7 md:px-9
-            py-7 md:py-9
-          "
-              >
-
-                {/* Título parejas */}
+        {/* CONTENEDOR PRINCIPAL: DOS BLOQUES VERTICALES */}
+        <div className="relative z-10 w-full max-w-3xl mx-auto px-4 py-10">
+          <div className="flex flex-col items-center justify-between h-[72vh] sm:h-[70vh]">
+            {/* ===== BLOQUE SUPERIOR: CORAZÓN + TÍTULO + “NOS CASAMOS” ===== */}
+            <div className="flex flex-col items-center text-center">
+              {/* Corazón animado */}
+              <div className="inline-flex items-center justify-center mb-4">
+                <span
+                  className="
+                    heartbeat-soft
+                    inline-flex h-9 w-9 items-center justify-center
+                    rounded-full bg-black/30 border border-white/40
+                  "
+                >
+                  <span className="text-white text-lg">♥</span>
+                </span>
+              </div>
+{/* Nombres: estilo fino, sin contorno y sin recorte */}
 <h1
   className="
     mb-4
-    leading-tight
-    text-4xl md:text-5xl lg:text-[3.4rem]
-    bg-gradient-to-r
-    from-[#FDE68A]
-    via-[#FFFFFF]
-    to-[#FDE68A]
-    bg-clip-text
-    text-transparent
-    drop-shadow-[0_0_16px_rgba(0,0,0,0.65)]
+    text-4xl sm:text-5xl lg:text-[3.7rem]
+    leading-[1.3]          /* más alto para que no corte las letras */
+    font-normal            /* quitamos el semibold, se ve más delicado */
+    text-center
   "
   style={{
-    fontFamily: "'Great Vibes', 'Times New Roman', serif",
-    letterSpacing: "0.03em",
+    fontFamily:
+      "'Great Vibes', 'Cormorant Garamond', 'Times New Roman', serif",
+    letterSpacing: "0.06em",
+    color: "#FDF5D9",       // dorado claro / marfil
+    textShadow: "0 2px 6px rgba(0,0,0,0.45)", // sombra suave, sin mancha
+    paddingTop: "0.4rem",   // un poquito de aire arriba
+    paddingBottom: "0.2rem" // y abajo, para que nada se recorte
   }}
 >
   {tituloPrincipal}
@@ -648,92 +629,63 @@ useEffect(() => {
 
 
 
-                {fechaLarga && (
-                  <p className="font-serif text-sm md:text-base mb-3 flex items-center gap-2 text-[#F8F4E3]/90">
+              {/* Línea decorativa */}
+              <div className="h-[2px] w-16 bg-white/85 mx-auto mb-4 rounded-full" />
+
+              {/* Frase “¡Nos casamos!” */}
+              <p className="text-base sm:text-lg text-white/90">
+                {configuracion?.subtituloHero || "¡Nos casamos!"}
+              </p>
+            </div>
+
+            {/* ===== BLOQUE INFERIOR: FECHA + COUNTDOWN + BOTÓN ===== */}
+            <div className="flex flex-col items-center text-center pb-8 gap-3">
+              {/* Fecha */}
+              {fechaLarga && (
+                <div>
+                  <p className="font-serif text-sm sm:text-base flex items-center justify-center gap-2 text-[#F8F4E3]/95">
                     <FiCalendar className="w-4 h-4" />
                     <span>{fechaLarga}</span>
                   </p>
-                )}
-
-                {/* Bloques R / C */}
-                <div className="space-y-1 text-[11px] sm:text-xs text-[#F8F4E3]/85 mb-3">
-                  {textoFechaReligioso && (
-                    <p className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px]">
-                        R
-                      </span>
-                      {textoFechaReligioso}
-                    </p>
-                  )}
-                  {textoFechaCivil && (
-                    <p className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px]">
-                        C
-                      </span>
-                      {textoFechaCivil}
-                    </p>
-                  )}
                 </div>
+              )}
 
-                {/* COUNTDOWN */}
-                {fechaBoda && (
-                  <div className="inline-flex rounded-2xl bg-[#020617]/70 border border-[#F8F4E3]/25 px-4 py-3 backdrop-blur-sm mb-4">
-                    <div className="flex gap-4 text-center text-sm items-center">
-                      <FiClock className="w-4 h-4 text-[#D4AF37]" />
-                      {[
-                        ["DÍAS", "dias"],
-                        ["HORAS", "horas"],
-                        ["MIN", "minutos"],
-                        ["SEG", "segundos"],
-                      ].map(([label, key]) => (
-                        <div
-                          key={label}
-                          className="flex flex-col items-center min-w-[2.6rem]"
-                        >
-                          <span className="text-lg font-semibold text-[#F8F4E3]">
-                            {countdown[key]}
-                          </span>
-                          <span className="text-[10px] uppercase tracking-[0.18em] text-[#F8F4E3]/70">
-                            {label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <p className="text-xs sm:text-sm md:text-[15px] text-[#F8F4E3]/95 mb-5">
-                  {textoBienvenida}
-                </p>
-
-                {/* BLOQUE RSVP / CÓDIGO */}
-                <div className="bg-white/6 backdrop-blur-sm border border-white/18 rounded-2xl p-4">
-                  <p className="text-xs sm:text-sm text-[#F8F4E3]/90 mb-3">
-                    Ingresa con tu código personal de invitación y confirma tu
-                    asistencia. Esto nos ayudará a organizar mejor todos los
-                    detalles del gran día.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowRsvpModal(true)}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#D4AF37] text-[#111827] text-xs sm:text-sm font-semibold px-6 py-2.5 shadow-md hover:bg-[#e0be4d] transition-colors"
-                    >
-                      <FiCheckCircle className="w-4 h-4" />
-                      Confirmar asistencia
-                    </button>
-                    <div className="text-[10px] sm:text-[11px] text-[#F8F4E3]/75">
-                      Codigo de Vestimenta:{" "}
-                      <span className="font-semibold text-[#FDE68A]">
-                        {dressCode}
-                      </span>
-                      <br />
-                      Desplázate para conocer nuestra historia, padres, padrinos
-                      y detalles de la celebración.
-                    </div>
+              {/* COUNTDOWN */}
+              {fechaBoda && (
+                <div className="inline-flex rounded-2xl bg-black/65 border border-white/25 px-4 py-3 backdrop-blur-sm mx-auto">
+                  <div className="flex gap-4 text-center text-sm items-center">
+                    <FiClock className="w-4 h-4 text-[#FDE68A]" />
+                    {[
+                      ["DÍAS", "dias"],
+                      ["HORAS", "horas"],
+                      ["MIN", "minutos"],
+                      ["SEG", "segundos"],
+                    ].map(([label, key]) => (
+                      <div
+                        key={label}
+                        className="flex flex-col items-center min-w-[2.6rem]"
+                      >
+                        <span className="text-lg font-semibold text-[#F8F4E3]">
+                          {countdown[key]}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-[0.18em] text-[#F8F4E3]/70">
+                          {label}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
+              )}
+
+              {/* Botón Confirmar asistencia */}
+              <button
+                type="button"
+                onClick={() => setShowRsvpModal(true)}
+                className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] text-[#111827] text-sm font-semibold px-7 py-2.5 shadow-md hover:bg-[#e0be4d] transition-colors"
+              >
+                <FiCheckCircle className="w-4 h-4" />
+                Confirmar asistencia
+              </button>
             </div>
           </div>
         </div>
@@ -745,74 +697,62 @@ useEffect(() => {
         </div>
       </section>
 
+
+
       {/* ================= NUESTRA HISTORIA ================= */}
       <FadeIn delay={240}>
-         <section className="relative bg-[#F8F4E3] text-[#111827] py-12 px-4">
-    {/* ÍCONO DE ANILLOS FLOtANDO ENTRE HERO Y HISTORIA */}
-     <div className="absolute top-0 left-1/2 -translate-x-1/2 translate-y-[-10%]">
-    <img
-      src={anillosBoda}
-      alt="Anillos de boda"
-      className="w-20 h-20 opacity-90 drop-shadow-md"
-    />
-  </div>
-          <div className="max-w-5xl mx-auto grid gap-10 lg:grid-cols-[2.2fr,1.8fr] items-center">
+        <section className="relative bg-[#F8F4E3] text-[#111827] py-12 px-4">
+          {/* ÍCONO DE ANILLOS FLOTANDO ENTRE HERO Y HISTORIA */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 translate-y-[-10%]">
+            <img
+              src={anillosBoda}
+              alt="Anillos de boda"
+              className="w-20 h-20 opacity-90 drop-shadow-md"
+            />
+          </div>
+
+          {/* CONTENEDOR EN COLUMNAS (UNA FILA PARA HISTORIA, OTRA PARA LA CARD) */}
+          <div className="max-w-5xl mx-auto flex flex-col gap-8">
+            {/* === FILA 1: TÍTULO + TEXTO DE HISTORIA === */}
             <div>
-              <p className="text-3xl text-[#111827] mb-1 font-serif flex items-center gap-2">
-                <LuFlower2 className="w-6 h-6 text-[#D4AF37]" />
+              <h2
+                className="
+                  text-3xl sm:text-4xl lg:text-[2.5rem]
+                  text-[#111827]
+                  mb-3
+                  font-serif
+                  flex items-center gap-3
+                "
+              >
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF7E6]">
+                  <LuFlower2 className="w-5 h-5 text-[#D4AF37]" />
+                </span>
                 <span>Nuestra historia</span>
-              </p>              
-              <p className="text-sm text-slate-700 mb-3">{textoHistoria}</p>            
+              </h2>
+
+              <p className="text-base sm:text-lg text-slate-700 max-w-2xl">
+                {textoHistoria}
+              </p>
             </div>
 
-            <div className="bg-white rounded-3xl border border-[#F1E5D3] shadow-md p-6 flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                {/* CAMBIO: Ícono dorado y fondo más sutil */}
-                <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                  <LuSparkles className="w-6 h-6 text-[#D4AF37]" />
-                </div>
-                <div>
-                  <p className="text-base text-[#111827] font-semibold">
-                    El compromiso
-                  </p>
-                  <p className="text-xs text-slate-600">
-                    Un pequeño resumen del momento en que decidieron dar este
-                    paso (puedes ajustar el texto en configuración).
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                {/* CAMBIO: Ícono dorado y fondo más sutil */}
-                <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                  <LuFlower2 className="w-5 h-5 text-[#D4AF37]" />
-                </div>
-                <div>
-                  <p className="text-base text-[#111827] font-semibold">
-                    {boda?.ciudad || "Quillabamba"} en el corazón
-                  </p>
-                  <p className="text-xs text-slate-600">
-                    La ciudad, el clima y la gente que hacen especial esta
-                    celebración.
-                  </p>
-                </div>
-              </div>
-            </div>
+           
           </div>
         </section>
       </FadeIn>
 
+
       {/* ================= PADRES Y PADRINOS ================= */}
       <FadeIn delay={280}>
-       <section className="bg-[#F1E5D3] py-12 px-4">
-    <div className="relative max-w-5xl mx-auto bg-white/95 backdrop-blur rounded-3xl border border-[#F1E5D3] shadow-md pt-10 md:pt-12 pb-6 md:pb-8 px-6 md:px-8">
-      {/* ÍCONO DE PAREJA FLOTANDO SOBRE EL CARD */}
-      <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-        <img
-          src={parejaBoda2}
-          alt="Pareja de novios"
-          className="w-20 h-20 opacity-90 drop-shadow-md"
-        />
-      </div>
+        <section className="bg-[#F1E5D3] py-12 px-4">
+          <div className="relative max-w-5xl mx-auto bg-white/95 backdrop-blur rounded-3xl border border-[#F1E5D3] shadow-md pt-10 md:pt-12 pb-6 md:pb-8 px-6 md:px-8">
+            {/* ÍCONO DE PAREJA FLOTANDO SOBRE EL CARD */}
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2">
+              <img
+                src={parejaBoda2}
+                alt="Pareja de novios"
+                className="w-20 h-20 opacity-90 drop-shadow-md"
+              />
+            </div>
             <h2 className="text-2xl text-[#111827] mb-4 text-center font-serif">
               Nuestros padres y padrinos
             </h2>
@@ -885,6 +825,94 @@ useEffect(() => {
           </div>
         </section>
       </FadeIn>
+
+
+      {/* === FILA 2: CARD DE INVITADOS, EN SU PROPIO ROW === */}
+      <FadeIn delay={280}>
+        <section className="bg-[#FFF7E6] py-12 px-4">
+          <div className="max-w-5xl mx-auto flex justify-center">
+            <div className="w-full md:max-w-lg">
+              <div className="bg-white rounded-3xl border border-[#FDE7C5] shadow-md p-6 flex flex-col gap-4">
+                {/* Cabecera de la tarjeta */}
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-1 flex items-center gap-1.5">
+                      <FiUsers className="w-4 h-4 text-[#D4AF37]" />
+                      Invitados
+                    </p>
+                    <h3 className="font-serif text-lg text-[#111827]">
+                      Nuestra lista de invitados
+                    </h3>
+                  </div>
+
+                  {totalInvitadosPublic > 0 && (
+                    <span className="inline-flex items-center justify-center rounded-full bg-[#FFF3C4] border border-[#FACC15]/40 px-3 py-1 text-[11px] font-medium text-slate-700">
+                      {porcentajeConfirmadosPublic}% confirmados
+                    </span>
+                  )}
+                </div>
+
+                {/* Dos tarjetas: totales y confirmados */}
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  {/* Invitados totales */}
+                  <div className="rounded-2xl border border-slate-100 bg-[#FFFCF6] p-3 flex flex-col gap-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-semibold text-slate-500 uppercase">
+                        Invitados totales
+                      </span>
+                      <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-slate-50 text-slate-700">
+                        <FiUsers className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                    <p className="text-xl font-semibold text-slate-900">
+                      {totalInvitadosPublic}
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      Personas a las que llega esta invitación.
+                    </p>
+                  </div>
+
+                  {/* Confirmados */}
+                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3 flex flex-col gap-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-semibold text-emerald-700 uppercase">
+                        Confirmados
+                      </span>
+                      <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-white text-emerald-700 border border-emerald-200">
+                        <FiCheckCircle className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                    <p className="text-xl font-semibold text-emerald-800">
+                      {totalConfirmadosPublic}
+                    </p>
+                    <p className="text-[11px] text-emerald-700">
+                      Ya nos dijeron que estarán presentes.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Barra de progreso */}
+                {totalInvitadosPublic > 0 && (
+                  <div className="mt-1">
+                    <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+                      <div
+                        className="h-2.5 rounded-full bg-[#D4AF37] transition-all"
+                        style={{ width: `${porcentajeConfirmadosPublic}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-500">
+                      Este indicador se actualiza cada vez que alguien confirma
+                      su asistencia.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      </FadeIn>
+
+
 
       {/* ================= DETALLES (DESPUÉS DE CONFIRMAR) ================= */}
       {mostrarDetalles && (

@@ -4,11 +4,16 @@ import { useParams } from "react-router-dom";
 import axiosClient from "../../../shared/config/axiosClient";
 import Plantilla01 from "../templates/Plantilla01";
 
+const LOADER_COLOR = "#1E293B"; // azul para ícono y texto
+
 function BodaPublicPage() {
   const { slug } = useParams(); // /boda/:slug
+
   const [boda, setBoda] = useState(null);
   const [configuracion, setConfiguracion] = useState(null);
   const [fotos, setFotos] = useState([]);
+  const [invitadosResumen, setInvitadosResumen] = useState(null);
+
   const [estado, setEstado] = useState("loading"); // loading | ok | error
   const [mensajeError, setMensajeError] = useState("");
 
@@ -25,28 +30,25 @@ function BodaPublicPage() {
         const response = await axiosClient.get(url);
         console.log("RESPUESTA API BODA PUBLICA ===>", response.data);
 
-        // La API según tu captura: { boda: {...}, configuracion: {...}, fotos: [...] }
-        const apiBoda = response.data.boda || null;
-        const apiConfig =
-          response.data.configuracion ||
-          response.data.configuracion_boda ||
-          apiBoda?.configuracion_boda ||
-          null;
+        const {
+          boda: apiBoda = null,
+          configuracion: apiConfig,
+          fotos: apiFotosRaw,
+          invitados_resumen: apiInvitadosResumen,
+        } = response.data;
 
-        const apiFotos =
-          (Array.isArray(response.data.fotos)
-            ? response.data.fotos
-            : Array.isArray(response.data.fotos_boda)
-            ? response.data.fotos_boda
-            : Array.isArray(apiBoda?.fotos_boda)
-            ? apiBoda.fotos_boda
-            : []) || [];
+        const fotosNormalizadas =
+          (Array.isArray(apiFotosRaw) ? apiFotosRaw : []) || [];
 
-        console.log("FOTOS QUE SE ENVIAN A PLANTILLA01 ===>", apiFotos);
+        console.log(
+          "FOTOS QUE SE ENVIAN A PLANTILLA01 ===>",
+          fotosNormalizadas
+        );
 
         setBoda(apiBoda);
         setConfiguracion(apiConfig);
-        setFotos(apiFotos);
+        setFotos(fotosNormalizadas);
+        setInvitadosResumen(apiInvitadosResumen || null);
 
         setEstado("ok");
       } catch (error) {
@@ -63,14 +65,28 @@ function BodaPublicPage() {
 
     fetchData();
   }, [slug]);
+// ================== LOADING CON PNG DE NOVIOS ==================
+if (estado === "loading") {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="flex flex-col items-center gap-4">
+        {/* Contenedor redondo con la imagen */}
+        <div className="w-28 h-28 rounded-full bg-white shadow-md border border-slate-200 flex items-center justify-center">
+          <img
+            src="/img/pareja-boda.png"     
+            alt="Pareja de novios"
+            className="w-24 h-24 object-contain animate-bounce"
+          />
+        </div>
 
-  if (estado === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-slate-700 text-lg">Cargando la boda...</p>
+        <p className="text-lg font-medium text-sky-800" style={{ color: LOADER_COLOR }}>
+          Cargando la boda...
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
+  // ================================================================
 
   if (estado === "error") {
     return (
@@ -96,6 +112,7 @@ function BodaPublicPage() {
       boda={boda}
       configuracion={configuracion}
       fotos={fotos}
+      invitadosResumen={invitadosResumen}
     />
   );
 }

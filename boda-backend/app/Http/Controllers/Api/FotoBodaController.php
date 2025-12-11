@@ -152,8 +152,8 @@ protected function buildPublicUrl(FotoBoda $foto): ?string
     $extension    = 'jpg';
     $filename     = "{$timestamp}_{$slugPareja}_boda-{$boda->id}.{$extension}";
 
-    // 1) Redimensionar (máx. 1600x1600)
-    $image = Image::read($file)->resize(1600, 1600, function ($constraint) {
+    // 1) Redimensionar (máx. 1600x1600)1920×1280
+    $image = Image::read($file)->resize(1920, 1280, function ($constraint) {
         $constraint->aspectRatio();
         $constraint->upsize();
     });

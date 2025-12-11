@@ -67,50 +67,60 @@ class PublicBodaController extends Controller
      *
      * Usamos el campo "subdominio" como slug.
      */
-    public function showBySlug(string $slug): JsonResponse
-    {
-        $boda = Boda::with([
-            'configuracion',
-            'fotos',
-            'faqs',
-        ])->where('subdominio', $slug)->firstOrFail();
+   public function showBySlug(string $slug): JsonResponse
+{
+    $boda = Boda::with([
+        'configuracion',
+        'fotos',
+        'faqs',
+    ])->where('subdominio', $slug)->firstOrFail();
 
-        // opcional: contar visita
-        $boda->increment('total_vistas');
+    // Contar visita
+    $boda->increment('total_vistas');
 
-        // foto de portada (por si la quieres usar en algún lado)
-        $fotoPortada = $boda->fotos->firstWhere('es_portada', 1)
-            ?? $boda->fotos->first();
+    $fotoPortada = $boda->fotos->firstWhere('es_portada', 1)
+        ?? $boda->fotos->first();
 
-        return response()->json([
-            // Puedes devolver el modelo completo (sin duplicar relaciones)
-            'boda' => $boda->makeHidden(['configuracion', 'fotos', 'faqs'])->toArray(),
+    // Resumen de invitados (basado en columnas agregadas de la tabla bodas)
+    $totalInvitados   = (int) $boda->total_invitados;
+    $totalConfirmados = (int) $boda->total_confirmados;
+    $porcentaje = $totalInvitados > 0
+        ? round(($totalConfirmados * 100) / $totalInvitados)
+        : 0;
 
-            // Devolvemos la configuración tal cual (snake_case),
-            // el frontend ya soporta esos nombres.
-            'configuracion' => $boda->configuracion
-                ? $boda->configuracion->toArray()
-                : null,
+    $invitadosResumen = [
+        'total_invitados'        => $totalInvitados,
+        'total_confirmados'      => $totalConfirmados,
+        'porcentaje_confirmados' => $porcentaje,
+    ];
 
-             
-            'fotos' => $boda->fotos->map(function ($f) {
-                return [
-                    'id'                 => $f->id,
-                    'boda_id'            => $f->boda_id,
-                    'url_imagen'         => $f->url_imagen,
-                    'es_portada'         => (bool) $f->es_portada,
-                    'es_galeria_privada' => $f->es_galeria_privada,
-                    'orden'              => $f->orden,
-                ];
-            })->values(),
+    return response()->json([
+        'boda' => $boda->makeHidden(['configuracion', 'fotos', 'faqs'])->toArray(),
 
-            // Preguntas frecuentes 
-            'faqs' => $boda->faqs->toArray(),
+        'configuracion' => $boda->configuracion
+            ? $boda->configuracion->toArray()
+            : null,
 
-            // si quieres seguir exponiendo la portada suelta:
-            'foto_portada' => $fotoPortada
-                ? $fotoPortada->url_imagen
-                : null,
-        ]);
-    }
+        'fotos' => $boda->fotos->map(function ($f) {
+            return [
+                'id'                 => $f->id,
+                'boda_id'            => $f->boda_id,
+                'url_imagen'         => $f->url_imagen,
+                'es_portada'         => (bool) $f->es_portada,
+                'es_galeria_privada' => $f->es_galeria_privada,
+                'orden'              => $f->orden,
+            ];
+        })->values(),
+
+        'faqs' => $boda->faqs->toArray(),
+
+        // Nuevo bloque
+        'invitados_resumen' => $invitadosResumen,
+
+        'foto_portada' => $fotoPortada
+            ? $fotoPortada->url_imagen
+            : null,
+    ]);
+}
+
 }

@@ -1193,7 +1193,7 @@ const payload = {
                       </span>{" "}
                       a un máximo de{" "}
                       <span className="font-semibold">
-                        1600 × 1600 píxeles
+                        1920 × 1280 píxeles
                       </span>
                       , se{" "}
                       <span className="font-semibold">
