@@ -148,8 +148,6 @@ export function BodaConfigPage() {
     }
   }, []);
 
- 
-
   // -------- FAQs (tabla faqs_boda) ----------
   const [faqs, setFaqs] = useState([{ pregunta: "", respuesta: "" }]);
   const [cargandoFaqs, setCargandoFaqs] = useState(false);
@@ -289,6 +287,27 @@ export function BodaConfigPage() {
       actualizarOrdenServidor(copia);
       return copia;
     });
+  };
+  const handleTogglePrivada = async (foto) => {
+    try {
+      const esPrivadaActual =
+        foto?.es_galeria_privada === 1 ||
+        foto?.es_galeria_privada === "1" ||
+        foto?.es_galeria_privada === true;
+
+      // Si la estás volviendo PRIVADA, por seguridad le quitamos portada
+      const payload = esPrivadaActual
+        ? { es_galeria_privada: false } // pasa a pública
+        : { es_galeria_privada: true, es_portada: false }; // pasa a privada + NO portada
+
+      await axiosClient.put(`/fotos-boda/${foto.id}`, payload);
+      await cargarFotos(bodaId);
+    } catch (e) {
+      console.error(e);
+      setErrorFotos(
+        "No se pudo actualizar el estado privada/pública de la foto."
+      );
+    }
   };
 
   // -------- FORMULARIO CONFIG --------
@@ -486,9 +505,9 @@ export function BodaConfigPage() {
     if (!boda?.subdominio) return;
     window.open(`/boda/${boda.subdominio}`, "_blank");
   };
-const publicUrl = boda?.subdominio
-  ? `${window.location.origin}/boda/${boda.subdominio}`
-  : "";
+  const publicUrl = boda?.subdominio
+    ? `${window.location.origin}/boda/${boda.subdominio}`
+    : "";
   // -------- ESTADOS GENERALES --------
   if (cargandoBoda && !boda) {
     return (
@@ -511,106 +530,104 @@ const publicUrl = boda?.subdominio
     );
   }
 
-const triggerFilePicker = () => {
-  setErrorFotos("");
-  if (fileInputRef.current) {
-    // para permitir seleccionar el MISMO archivo otra vez
-    fileInputRef.current.value = "";
-    fileInputRef.current.click();
-  }
-};
-
-const openUploadModal = () => {
-  setErrorFotos("");
-  setShowUploadModal(true);
-
-  // reset de campos (como tu lógica original)
-  setFilesToUpload([]);
-  setTituloFoto("");
-  setDescripcionFoto("");
-
-  // ABRE el selector de archivo inmediatamente (misma interacción del click)
-  triggerFilePicker();
-};
-
-const handleSelectFiles = (e) => {
-  const file = (e.target.files && e.target.files[0]) || null;
-  if (!file) return;
-
-  if (file.size > MAX_BYTES) {
-    setErrorFotos(
-      `La imagen "${file.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
-    );
-    e.target.value = "";
-    return;
-  }
-
-  setErrorFotos("");
-  setFilesToUpload([file]); // SIEMPRE 1 foto
-  // el modal ya está abierto; si vinieras desde otro flujo, asegura esto:
-  setShowUploadModal(true);
-
-  e.target.value = "";
-};
-
-const handleConfirmUpload = async () => {
-  if (!bodaId) return;
-
-  const file = filesToUpload?.[0] || null;
-  if (!file) {
-    setErrorFotos("Selecciona una foto antes de subir.");
-    return;
-  }
-
-  try {
-    setSubiendoFoto(true);
+  const triggerFilePicker = () => {
     setErrorFotos("");
+    if (fileInputRef.current) {
+      // para permitir seleccionar el MISMO archivo otra vez
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
+  };
 
-    const formData = new FormData();
-    formData.append("imagen", file);
+  const openUploadModal = () => {
+    setErrorFotos("");
+    setShowUploadModal(true);
 
-    if (tituloFoto.trim()) formData.append("titulo", tituloFoto.trim());
-    if (descripcionFoto.trim())
-      formData.append("descripcion", descripcionFoto.trim());
+    // reset de campos (como tu lógica original)
+    setFilesToUpload([]);
+    setTituloFoto("");
+    setDescripcionFoto("");
 
-    await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    // ABRE el selector de archivo inmediatamente (misma interacción del click)
+    triggerFilePicker();
+  };
 
-    await cargarFotos(bodaId);
+  const handleSelectFiles = (e) => {
+    const file = (e.target.files && e.target.files[0]) || null;
+    if (!file) return;
 
-    // reset + cerrar
+    if (file.size > MAX_BYTES) {
+      setErrorFotos(
+        `La imagen "${file.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
+      );
+      e.target.value = "";
+      return;
+    }
+
+    setErrorFotos("");
+    setFilesToUpload([file]); // SIEMPRE 1 foto
+    // el modal ya está abierto; si vinieras desde otro flujo, asegura esto:
+    setShowUploadModal(true);
+
+    e.target.value = "";
+  };
+
+  const handleConfirmUpload = async () => {
+    if (!bodaId) return;
+
+    const file = filesToUpload?.[0] || null;
+    if (!file) {
+      setErrorFotos("Selecciona una foto antes de subir.");
+      return;
+    }
+
+    try {
+      setSubiendoFoto(true);
+      setErrorFotos("");
+
+      const formData = new FormData();
+      formData.append("imagen", file);
+
+      if (tituloFoto.trim()) formData.append("titulo", tituloFoto.trim());
+      if (descripcionFoto.trim())
+        formData.append("descripcion", descripcionFoto.trim());
+
+      await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      await cargarFotos(bodaId);
+
+      // reset + cerrar
+      setShowUploadModal(false);
+      setFilesToUpload([]);
+      setTituloFoto("");
+      setDescripcionFoto("");
+    } catch (e) {
+      console.error(e);
+      if (e.response?.status === 422) {
+        setErrorFotos(
+          `La imagen no es válida o excede el tamaño permitido (máx. ${MAX_MB} MB).`
+        );
+      } else {
+        setErrorFotos(
+          "Ocurrió un problema al subir la foto. Inténtalo nuevamente."
+        );
+      }
+    } finally {
+      setSubiendoFoto(false);
+    }
+  };
+
+  const handleCancelUpload = () => {
     setShowUploadModal(false);
     setFilesToUpload([]);
     setTituloFoto("");
     setDescripcionFoto("");
-  } catch (e) {
-    console.error(e);
-    if (e.response?.status === 422) {
-      setErrorFotos(
-        `La imagen no es válida o excede el tamaño permitido (máx. ${MAX_MB} MB).`
-      );
-    } else {
-      setErrorFotos("Ocurrió un problema al subir la foto. Inténtalo nuevamente.");
-    }
-  } finally {
-    setSubiendoFoto(false);
-  }
-};
+    setErrorFotos("");
 
-const handleCancelUpload = () => {
-  setShowUploadModal(false);
-  setFilesToUpload([]);
-  setTituloFoto("");
-  setDescripcionFoto("");
-  setErrorFotos("");
-
-  if (fileInputRef.current) fileInputRef.current.value = "";
-};
-
-
-
- 
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   return (
     <div className="space-y-6">
@@ -647,26 +664,23 @@ const handleCancelUpload = () => {
                 </span>
               )}
               {publicUrl && (
-  <div className="flex items-center gap-2 text-xs">
-    <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
-      {publicUrl}
-    </span>
-    <button
-      type="button"
-      onClick={() => navigator.clipboard.writeText(publicUrl)}
-      className="px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800"
-    >
-      Copiar link
-    </button>
-  </div>
-)}
-
-
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    {publicUrl}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText(publicUrl)}
+                    className="px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800"
+                  >
+                    Copiar link
+                  </button>
+                </div>
+              )}
             </div>
             {boda?.ciudad && (
               <p className="mt-1 text-xs text-slate-500">{boda.ciudad}</p>
             )}
-            
           </div>
         </div>
 
@@ -877,46 +891,47 @@ const handleCancelUpload = () => {
               </div>
 
               {/* CEREMONIA MAPS URL */}
-<div className="space-y-1.5">
-  <label className="block text-xs font-medium text-slate-700">
-    Link de Google Maps (Ceremonia)
-  </label>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-slate-700">
+                  Link de Google Maps (Ceremonia)
+                </label>
 
-  {/* INDICACIÓN CLARA PARA EL USUARIO */}
-  <p className="text-[11px] text-slate-500">
-    Cómo obtenerlo: Google Maps → <b>Compartir</b> → <b>Copiar enlace</b> y pégalo aquí.
-  </p>
+                {/* INDICACIÓN CLARA PARA EL USUARIO */}
+                <p className="text-[11px] text-slate-500">
+                  Cómo obtenerlo: Google Maps → <b>Compartir</b> →{" "}
+                  <b>Copiar enlace</b> y pégalo aquí.
+                </p>
 
-  <input
-    type="url"
-    name="ceremoniaMapsUrl"
-    value={form.ceremoniaMapsUrl}
-    onChange={handleChange}
-    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
-    placeholder="Pega aquí el link de Google Maps (Compartir → Copiar enlace)"
-  />
-</div>
+                <input
+                  type="url"
+                  name="ceremoniaMapsUrl"
+                  value={form.ceremoniaMapsUrl}
+                  onChange={handleChange}
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  placeholder="Pega aquí el link de Google Maps (Compartir → Copiar enlace)"
+                />
+              </div>
 
-{/* RECEPCIÓN MAPS URL */}
-<div className="space-y-1.5">
-  <label className="block text-xs font-medium text-slate-700">
-    Link de Google Maps (Recepción)
-  </label>
+              {/* RECEPCIÓN MAPS URL */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-slate-700">
+                  Link de Google Maps (Recepción)
+                </label>
 
-  <p className="text-[11px] text-slate-500">
-    Cómo obtenerlo: Google Maps → <b>Compartir</b> → <b>Copiar enlace</b> y pégalo aquí.
-  </p>
+                <p className="text-[11px] text-slate-500">
+                  Cómo obtenerlo: Google Maps → <b>Compartir</b> →{" "}
+                  <b>Copiar enlace</b> y pégalo aquí.
+                </p>
 
-  <input
-    type="url"
-    name="recepcionMapsUrl"
-    value={form.recepcionMapsUrl}
-    onChange={handleChange}
-    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
-    placeholder="Pega aquí el link de Google Maps (Compartir → Copiar enlace)"
-  />
-</div>
-
+                <input
+                  type="url"
+                  name="recepcionMapsUrl"
+                  value={form.recepcionMapsUrl}
+                  onChange={handleChange}
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  placeholder="Pega aquí el link de Google Maps (Compartir → Copiar enlace)"
+                />
+              </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -1147,22 +1162,21 @@ const handleCancelUpload = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-<input
-  ref={fileInputRef}
-  type="file"
-  accept="image/*"
-  className="hidden"
-  onChange={handleSelectFiles}
-/>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleSelectFiles}
+              />
 
-
-             <button
-  type="button"
-  onClick={openUploadModal}
-  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
->
-  <span>Subir fotos</span>
-</button>
+              <button
+                type="button"
+                onClick={openUploadModal}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              >
+                <span>Subir fotos</span>
+              </button>
 
               {cargandoFotos && (
                 <p className="text-xs text-slate-500">
@@ -1189,6 +1203,11 @@ const handleCancelUpload = () => {
                   if (!url) return null;
 
                   const esPortada = !!foto.es_portada;
+
+                  const esPrivada =
+                    foto.es_galeria_privada === 1 ||
+                    foto.es_galeria_privada === "1" ||
+                    foto.es_galeria_privada === true;
 
                   return (
                     <div
@@ -1218,24 +1237,50 @@ const handleCancelUpload = () => {
                         </p>
                       </div>
                       <div className="absolute inset-0 flex flex-col justify-between p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex justify-between">
-                          {esPortada && (
-                            <span className="inline-flex rounded-full bg-emerald-500/90 text-white text-[10px] px-2 py-0.5">
-                              Portada
-                            </span>
-                          )}
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="flex flex-wrap gap-1">
+                            {esPortada && (
+                              <span className="inline-flex rounded-full bg-emerald-500/90 text-white text-[10px] px-2 py-0.5">
+                                Portada
+                              </span>
+                            )}
+
+                            {esPrivada && (
+                              <span className="inline-flex rounded-full bg-slate-900/90 text-white text-[10px] px-2 py-0.5">
+                                Privada
+                              </span>
+                            )}
+                          </div>
+
                           <span className="inline-flex rounded-full bg-black/50 text-white text-[10px] px-2 py-0.5">
                             Arrastra para ordenar
                           </span>
                         </div>
+
                         <div className="flex justify-between gap-1">
                           <button
                             type="button"
                             onClick={() => handleMarcarPortada(foto.id)}
-                            className="flex-1 inline-flex items-center justify-center rounded-full bg-white/95 text-[11px] font-medium text-slate-900 px-2 py-1 hover:bg-white"
+                            disabled={esPrivada} // opcional: no permitir portada si es privada
+                            className={`flex-1 inline-flex items-center justify-center rounded-full bg-white/95 text-[11px] font-medium px-2 py-1 hover:bg-white
+      ${esPrivada ? "opacity-50 cursor-not-allowed" : "text-slate-900"}`}
+                            title={
+                              esPrivada
+                                ? "Una foto privada no puede ser portada"
+                                : "Marcar como portada"
+                            }
                           >
                             Portada
                           </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleTogglePrivada(foto)}
+                            className="flex-1 inline-flex items-center justify-center rounded-full bg-white/95 text-[11px] font-medium text-slate-900 px-2 py-1 hover:bg-white"
+                          >
+                            {esPrivada ? "Hacer pública" : "Hacer privada"}
+                          </button>
+
                           <button
                             type="button"
                             onClick={() => handleEliminarFoto(foto.id)}

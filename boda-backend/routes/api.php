@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\FaqPlataformaController;
 use App\Http\Controllers\Api\PublicBodaController;
 use App\Http\Controllers\Api\PublicRsvpController;
 use App\Http\Controllers\Api\FaqBodaController;
+use App\Http\Controllers\Api\PublicRsvpCardController;
 /*
 |--------------------------------------------------------------------------
 | Rutas públicas
@@ -40,6 +41,10 @@ Route::prefix('public')->group(function () {
     Route::get('boda/slug/{slug}', [PublicBodaController::class, 'showBySlug']);
 
     Route::post('rsvp', [PublicRsvpController::class, 'registrar']);
+
+    // FAQs públicas de una boda por ID/slug (ej. usada por frontend público)
+    // GET /api/public/bodas/{boda}/faqs
+    Route::get('bodas/{boda}/faqs', [PublicBodaController::class, 'faqs']);
 
 });
 Route::get('/public/rsvp/validar/{codigo}', [PublicRsvpController::class, 'validar']);
@@ -167,6 +172,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/invitados/{invitado}', [InvitadoController::class, 'showPropio']);
         Route::put('/invitados/{invitado}', [InvitadoController::class, 'updatePropio']);
         Route::delete('/invitados/{invitado}', [InvitadoController::class, 'destroyPropio']);
+
+        Route::get('/public/rsvp-card/{codigo}.png', [PublicRsvpCardController::class, 'show']);
 
         // Confirmación manual de invitado (si llaman por teléfono, etc.)
         Route::post('/invitados/{invitado}/confirmar', [InvitadoController::class, 'confirmar']);

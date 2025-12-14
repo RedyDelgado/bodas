@@ -11,6 +11,7 @@ import {
   FiCopy,
   FiCheck,
   FiInfo,
+  FiMapPin,
 } from "react-icons/fi";
 import {
   COLOR_DORADO,
@@ -223,7 +224,6 @@ export function PostConfirmationDetails({
       setCopied(null);
     }
   }
-console.log("faqs prop:", faqs);
   const hasGifts = Boolean((cuentas || "").trim() || (yape || "").trim());
   const embedCeremonia = buildGoogleEmbedUrl(ceremoniaMapsUrl);
   const embedRecepcion = buildGoogleEmbedUrl(recepcionMapsUrl);
@@ -434,7 +434,7 @@ console.log("faqs prop:", faqs);
                         Regalos
                       </h4>
                       <p className="text-xs text-slate-600 mt-0.5">
-                        Elige el método que prefieras (transferencia o Yape).
+                       El mejor regalo es verte allí, acompañándonos con tu cariño. Estamos felices de compartir contigo este momento inolvidable. Y si deseas obsequiarnos algo adicional, aquí encontrarás nuestros números de cuenta.
                       </p>
                     </div>
                   </div>
@@ -661,209 +661,221 @@ console.log("faqs prop:", faqs);
                   </div>
                 </div>
               </div>
-
-             
             </section>
           </div>
-        {/* ====== NUEVA FILA: MAPAS (izquierda) + FAQ (derecha) ====== */}
-<div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
-  {/* MAPAS: una sola columna, un solo enmarcado */}
- <section className="lg:col-span-6 min-w-0">
-    <div
-      className="rounded-3xl border bg-white/85 p-5 sm:p-6 shadow-sm"
-      style={{ borderColor: `${COLOR_DORADO}2B` }}
-    >
-      <div className="flex items-start gap-3">
-        <span
-          className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border"
-          style={{ backgroundColor: "#FFF7E6", borderColor: `${COLOR_DORADO}40` }}
-        >
-          <img
-            src={PNG.UBICACION}
-            alt="Ubicación"
-            className="w-5 h-5 opacity-90"
-            loading="lazy"
-            decoding="async"
-          />
-        </span>
-
-        <div className="min-w-0 flex-1">
-          <h4 className="text-lg font-semibold text-slate-900">Ubicación</h4>
-          <p className="text-xs text-slate-600 mt-0.5">
-            Mapas de la ceremonia y recepción (abre en Google Maps).
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-4 space-y-5">
-        {/* Ceremonia */}
-        <div>
-          <div className="text-sm font-semibold text-slate-900 mb-2">Ceremonia</div>
-
-          <div className="w-full h-52 sm:h-60 rounded-2xl overflow-hidden bg-slate-100">
-            {ceremoniaMapsUrl ? (
-              embedCeremonia ? (
-                <iframe
-                  src={embedCeremonia}
-                  title="Mapa ceremonia"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
-                  <a
-                    href={ceremoniaMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    Abrir en Google Maps
-                  </a>
-                </div>
-              )
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
-                No hay enlace de mapa para la ceremonia.
-              </div>
-            )}
-          </div>
-
-          {ceremoniaMapsUrl && (
-            <div className="mt-2 text-right">
-              <a
-                href={ceremoniaMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 underline"
-              >
-                Abrir en Google Maps
-              </a>
-            </div>
-          )}
-        </div>
-
-        {/* Recepción */}
-        <div>
-          <div className="text-sm font-semibold text-slate-900 mb-2">Recepción</div>
-
-          <div className="w-full h-52 sm:h-60 rounded-2xl overflow-hidden bg-slate-100">
-            {recepcionMapsUrl ? (
-              embedRecepcion ? (
-                <iframe
-                  src={embedRecepcion}
-                  title="Mapa recepción"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
-                  <a
-                    href={recepcionMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    Abrir en Google Maps
-                  </a>
-                </div>
-              )
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
-                No hay enlace de mapa para la recepción.
-              </div>
-            )}
-          </div>
-
-          {recepcionMapsUrl && (
-            <div className="mt-2 text-right">
-              <a
-                href={recepcionMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 underline"
-              >
-                Abrir en Google Maps
-              </a>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* FAQ: su propio card en la otra columna */}
- <section className="lg:col-span-6 min-w-0">
-    {faqs.length > 0 && (
-      <div
-        className="rounded-3xl border bg-white/85 p-5 sm:p-6 shadow-sm"
-        style={{ borderColor: `${COLOR_DORADO}2B` }}
-      >
-        <div className="flex items-start gap-3">
-          <span
-            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border"
-            style={{ backgroundColor: "#FFF7E6", borderColor: `${COLOR_DORADO}40` }}
-          >
-            <FiHelpCircle className="w-5 h-5" style={{ color: COLOR_DORADO }} />
-          </span>
-
-          <div className="min-w-0">
-            <h4 className="text-lg font-semibold text-slate-900">
-              Preguntas frecuentes
-            </h4>
-            <p className="text-xs text-slate-600 mt-0.5">
-              Respuestas rápidas para tus invitados.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-4 space-y-3">
-          {faqs.map((q) => {
-            const id = q.id ?? q._id ?? (q.pregunta || q.question);
-            const opened = openFaq === id;
-
-            return (
+          {/* ====== NUEVA FILA: MAPAS (izquierda) + FAQ (derecha) ====== */}
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+            {/* MAPAS: una sola columna, un solo enmarcado */}
+            <section className="lg:col-span-6 min-w-0">
               <div
-                key={id}
-                className="rounded-2xl border bg-white/80 overflow-hidden"
+                className="rounded-3xl border bg-white/85 p-5 sm:p-6 shadow-sm"
                 style={{ borderColor: `${COLOR_DORADO}2B` }}
               >
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(opened ? null : id)}
-                  className="w-full text-left px-4 py-3 flex items-center justify-between gap-3"
-                  aria-expanded={opened}
-                >
-                  <div className="text-sm font-semibold text-slate-900">
-                    {q.pregunta || q.question}
-                  </div>
-                  <FiChevronDown
-                    className={`w-4 h-4 transition-transform ${opened ? "rotate-180" : ""}`}
-                    style={{ color: COLOR_DORADO }}
-                  />
-                </button>
+                <div className="flex items-start gap-3">
+                  <span
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border"
+                    style={{
+                      backgroundColor: "#FFF7E6",
+                      borderColor: `${COLOR_DORADO}40`,
+                    }}
+                  >
+                    <FiMapPin
+                      className="w-5 h-5"
+                      style={{ color: COLOR_DORADO }}
+                    />
+                  </span>
 
-                <div className={`grid transition-all duration-200 ease-out ${opened ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-                  <div className="overflow-hidden">
-                    <div className="px-4 pb-4 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
-                      {q.respuesta || q.answer}
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-lg font-semibold text-slate-900">
+                      Ubicación
+                    </h4>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      Mapas de la ceremonia y recepción (abre en Google Maps).
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-5">
+                  {/* Ceremonia */}
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900 mb-2">
+                      Ceremonia
                     </div>
+
+                    <div className="w-full h-52 sm:h-60 rounded-2xl overflow-hidden bg-slate-100">
+                      {ceremoniaMapsUrl ? (
+                        embedCeremonia ? (
+                          <iframe
+                            src={embedCeremonia}
+                            title="Mapa ceremonia"
+                            className="w-full h-full border-0"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
+                            <a
+                              href={ceremoniaMapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 underline"
+                            >
+                              Abrir en Google Maps
+                            </a>
+                          </div>
+                        )
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
+                          No hay enlace de mapa para la ceremonia.
+                        </div>
+                      )}
+                    </div>
+
+                    {ceremoniaMapsUrl && (
+                      <div className="mt-2 text-right">
+                        <a
+                          href={ceremoniaMapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline"
+                        >
+                          Abrir en Google Maps
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Recepción */}
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900 mb-2">
+                      Recepción
+                    </div>
+
+                    <div className="w-full h-52 sm:h-60 rounded-2xl overflow-hidden bg-slate-100">
+                      {recepcionMapsUrl ? (
+                        embedRecepcion ? (
+                          <iframe
+                            src={embedRecepcion}
+                            title="Mapa recepción"
+                            className="w-full h-full border-0"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
+                            <a
+                              href={recepcionMapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 underline"
+                            >
+                              Abrir en Google Maps
+                            </a>
+                          </div>
+                        )
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-sm text-slate-600">
+                          No hay enlace de mapa para la recepción.
+                        </div>
+                      )}
+                    </div>
+
+                    {recepcionMapsUrl && (
+                      <div className="mt-2 text-right">
+                        <a
+                          href={recepcionMapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline"
+                        >
+                          Abrir en Google Maps
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-            );
-          })}
+            </section>
+
+            {/* FAQ: su propio card en la otra columna */}
+            <section className="lg:col-span-6 min-w-0">
+              {faqs.length > 0 && (
+                <div
+                  className="rounded-3xl border bg-white/85 p-5 sm:p-6 shadow-sm"
+                  style={{ borderColor: `${COLOR_DORADO}2B` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border"
+                      style={{
+                        backgroundColor: "#FFF7E6",
+                        borderColor: `${COLOR_DORADO}40`,
+                      }}
+                    >
+                      <FiHelpCircle
+                        className="w-5 h-5"
+                        style={{ color: COLOR_DORADO }}
+                      />
+                    </span>
+
+                    <div className="min-w-0">
+                      <h4 className="text-lg font-semibold text-slate-900">
+                        Preguntas frecuentes
+                      </h4>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        Respuestas rápidas para tus invitados.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-y-3">
+                    {faqs.map((q) => {
+                      const id = q.id ?? q._id ?? (q.pregunta || q.question);
+                      const opened = openFaq === id;
+
+                      return (
+                        <div
+                          key={id}
+                          className="rounded-2xl border bg-white/80 overflow-hidden"
+                          style={{ borderColor: `${COLOR_DORADO}2B` }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setOpenFaq(opened ? null : id)}
+                            className="w-full text-left px-4 py-3 flex items-center justify-between gap-3"
+                            aria-expanded={opened}
+                          >
+                            <div className="text-sm font-semibold text-slate-900">
+                              {q.pregunta || q.question}
+                            </div>
+                            <FiChevronDown
+                              className={`w-4 h-4 transition-transform ${
+                                opened ? "rotate-180" : ""
+                              }`}
+                              style={{ color: COLOR_DORADO }}
+                            />
+                          </button>
+
+                          <div
+                            className={`grid transition-all duration-200 ease-out ${
+                              opened ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                            }`}
+                          >
+                            <div className="overflow-hidden">
+                              <div className="px-4 pb-4 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
+                                {q.respuesta || q.answer}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
         </div>
-      </div>
-    )}
-  </section>
-</div>
-
-
-        </div>
-
-        
       </div>
     </section>
   );

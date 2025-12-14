@@ -298,44 +298,40 @@ export function BodaInvitadosPage() {
   };
 
   // --------- WHATSAPP ----------
-  const handleEnviarWhatsapp = (invitado) => {
-    const celular = invitado.celular ?? invitado.telefono;
-    if (!celular) {
-      alert("Este invitado no tiene número de teléfono registrado.");
-      return;
-    }
+ const handleEnviarWhatsapp = (invitado) => {
+  const celular = invitado.celular ?? invitado.telefono;
+  if (!celular) return alert("Este invitado no tiene número de teléfono registrado.");
 
-    const telefonoLimpio = String(celular).replace(/\D/g, "");
-    if (!telefonoLimpio) {
-      alert("El número de teléfono no es válido.");
-      return;
-    }
+  let telefonoLimpio = String(celular).replace(/\D/g, "");
 
-    const base = window.location.origin;
-    const sub = boda?.subdominio;
-    let enlaceRsvp = "";
+  // ✅ Evita duplicar 51 si ya lo pusieron
+  if (telefonoLimpio.startsWith("51")) {
+    telefonoLimpio = telefonoLimpio.slice(2);
+  }
+  if (telefonoLimpio.length < 9) return alert("El número de teléfono no es válido.");
 
-    if (sub && invitado.codigo_clave) {
-      enlaceRsvp = `${base}/boda/${sub}/rsvp/${invitado.codigo_clave}`;
-    }
+  const base = window.location.origin;
+  const sub = boda?.subdominio;
+  const codigo = invitado.codigo_clave;
 
-    const nombrePareja = boda?.nombre_pareja || "nuestra boda";
-    const fecha = boda?.fecha_boda || "";
-    const mensaje = [
-      `¡Hola ${invitado.nombre_invitado}! 💍`,
-      `Te invitamos a acompañarnos en ${nombrePareja}${
-        fecha ? ` el ${fecha}` : ""
-      }.`,
-      enlaceRsvp
-        ? `Por favor confirma tu asistencia en este enlace: ${enlaceRsvp}`
-        : "Te agradecemos que nos confirmes tu asistencia.",
-    ].join("\n\n");
+  const enlaceRsvp =
+    sub && codigo ? `${base}/boda/${sub}?rsvp=${encodeURIComponent(codigo)}` : "";
 
-    const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
-      mensaje
-    )}`;
-    window.open(url, "_blank");
-  };
+  const nombrePareja = boda?.nombre_pareja || "nuestra boda";
+  const fecha = boda?.fecha_boda || "";
+
+  const mensaje = [
+    `¡Hola ${invitado.nombre_invitado}! 💍`,
+    `Te invitamos a acompañarnos en ${nombrePareja}${fecha ? ` el ${fecha}` : ""}.`,
+    enlaceRsvp
+      ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
+      : "Te agradecemos que nos confirmes tu asistencia.",
+  ].join("\n\n");
+
+  const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, "_blank");
+};
+
 
   // --------- FILTRO BUSCADOR ----------
   const invitadosFiltrados = useMemo(() => {

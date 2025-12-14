@@ -1,5 +1,5 @@
 // src/features/public/templates/Plantilla01.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useMemo as useReactMemo } from "react";
 import anillosBoda from "../../../../public/img/anillos-boda.png";
 import parejaBoda from "../../../../public/img/pareja-boda.png";
@@ -17,6 +17,8 @@ import { LuFlower2, LuSparkles } from "react-icons/lu";
 import { GiPeaceDove } from "react-icons/gi";
 import { ConfirmationSuccess } from "../components/ConfirmationSuccess";
 import { PostConfirmationDetails } from "../components/PostConfirmationDetails";
+import { useFaqs } from "../../faqs/hooks/useFaqs";
+import { useBodaFaqs } from "../../faqs/hooks/useBodaFaqs";
 import { RsvpModal } from "../components/RsvpModal";
 import {
   COLOR_AZUL,
@@ -100,6 +102,116 @@ function useFade(delayMs = 0) {
     return () => clearTimeout(t);
   }, [delayMs]);
   return visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4";
+}
+
+/**
+ * Componente que muestra un fondo para hero usando la misma imagen.
+ * Si la imagen es vertical, renderiza un fondo difuminado (cover) y la
+ * imagen centrada sin deformar; si es horizontal usa background-size: cover.
+ */
+function HeroBackground({
+  url,
+  position = "center",
+  zClass = "-z-20",
+  extraClass = "",
+}) {
+  const [isVertical, setIsVertical] = useState(false);
+  const [ratio, setRatio] = useState(null); // naturalWidth/naturalHeight
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    if (!url) return;
+    let mounted = true;
+    const img = new Image();
+    img.src = url;
+    img.onload = () => {
+      if (!mounted) return;
+      const vertical = img.naturalHeight > img.naturalWidth;
+      setIsVertical(vertical);
+      setRatio(img.naturalWidth / img.naturalHeight);
+    };
+
+    img.onerror = () => {
+      if (!mounted) return;
+      setIsVertical(false);
+    };
+    return () => {
+      mounted = false;
+    };
+  }, [url]);
+
+  const TARGET_VW = 0.93; // 0.90–0.96
+  const MAX_SCALE = 1.75; // 1.55–1.90
+
+  useEffect(() => {
+    if (!isVertical || !ratio) return;
+
+    const compute = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // Si dibujas la imagen con h = vh, su ancho base sería:
+      const baseW = vh * ratio;
+
+      // Queremos que ocupe aprox. 88% del ancho del viewport
+      const targetW = vw * TARGET_VW;
+
+      // Scale necesario (limitado para no exagerar)
+      const raw = targetW / baseW;
+      const next = Math.max(1, Math.min(raw, MAX_SCALE));
+
+      setScale(next);
+    };
+
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, [isVertical, ratio]);
+
+  if (!url) return null;
+
+  if (isVertical) {
+    return (
+      <div
+        className={`absolute inset-0 ${zClass} overflow-hidden ${extraClass}`}
+      >
+        {/* Fondo blur full */}
+        <img
+          src={url}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover blur-3xl"
+          style={{ transform: "scale(1.18)" }}
+        />
+
+        {/* Foto principal: alto completo + zoom para “ensanchar” (sin deformar) */}
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+          <img
+            src={url}
+            alt=""
+            className="h-[92svh] w-auto object-contain"
+            style={{
+              objectPosition: position, // ej: "center 35%"
+              transform: `scale(${scale})`, // ensancha sin deformar
+              willChange: "transform",
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`absolute inset-0 ${zClass} ${extraClass}`}
+      style={{
+        backgroundImage: `url('${url}')`,
+        backgroundSize: "cover",
+        backgroundPosition: position,
+        backgroundRepeat: "no-repeat",
+      }}
+    />
+  );
 }
 
 /** Wrapper animado */
@@ -206,6 +318,38 @@ export default function Plantilla01({
   fotos,
   invitadosResumen,
 }) {
+  // ====================== AUDIO ======================
+  const audioRef = useRef(null);
+
+  const playCelebration = () => {
+    const a = audioRef.current;
+    if (!a) return;
+
+    try {
+      a.pause(); // por si ya estaba sonando
+      a.currentTime = 0; // reinicia
+      a.muted = false;
+      a.volume = 1;
+
+      const p = a.play(); // importante: debe dispararse por un click del usuario
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } catch (e) {}
+  };
+
+const stopCelebration = () => {
+  const a = audioRef.current;
+  if (!a) return;
+
+  try {
+    a.pause();
+    a.currentTime = 0; // opcional: reinicia para la próxima vez
+  } catch (e) {}
+};
+  // (Opcional pero recomendado) fuerza preload real
+  useEffect(() => {
+    audioRef.current?.load?.();
+  }, []);
+
   // ===================== COUNTDOWN =====================
   const [countdown, setCountdown] = useState({
     dias: "--",
@@ -279,8 +423,11 @@ export default function Plantilla01({
 
   const lugarCeremonia =
     configuracion?.localReligioso ||
+    configuracion?.local_religioso ||
     configuracion?.lugar_ceremonia ||
-    configuracion?.lugar_evento;
+    configuracion?.lugar_evento ||
+    "";
+
   const direccionCeremonia =
     configuracion?.direccion_ceremonia || configuracion?.direccion_evento;
   const horaCeremonia = configuracion?.hora_ceremonia
@@ -288,7 +435,11 @@ export default function Plantilla01({
     : "";
 
   const lugarRecepcion =
-    configuracion?.localRecepcion || configuracion?.lugar_recepcion;
+    configuracion?.localRecepcion ||
+    configuracion?.local_recepcion ||
+    configuracion?.lugar_recepcion ||
+    "";
+
   const direccionRecepcion = configuracion?.direccion_recepcion;
   const horaRecepcion = configuracion?.hora_recepcion
     ? formatHoraCorta(configuracion.hora_recepcion)
@@ -385,6 +536,21 @@ export default function Plantilla01({
       return (a.id || 0) - (b.id || 0);
     });
   }, [fotos]);
+  const fotosPrivadas = useMemo(() => {
+    const arr = Array.isArray(fotos) ? fotos : [];
+
+    const privadas = arr.filter((f) => {
+      const v = f?.es_galeria_privada;
+      return v === 1 || v === "1" || v === true;
+    });
+
+    return privadas.slice().sort((a, b) => {
+      const ordenA = a.orden ?? 999;
+      const ordenB = b.orden ?? 999;
+      if (ordenA !== ordenB) return ordenA - ordenB;
+      return (a.id || 0) - (b.id || 0);
+    });
+  }, [fotos]);
 
   const heroSlides = useMemo(() => {
     if (fotosPublicas.length > 0) {
@@ -423,10 +589,19 @@ export default function Plantilla01({
 
   // Foto para "Nuestra historia": evita repetir el hero
   const historiaFoto = useMemo(() => {
+    // 1) PRIORIDAD: una foto marcada como “galeria privada” (no se usa en el hero)
+    if (fotosPrivadas.length > 0) {
+      const f = fotosPrivadas[0];
+      return resolveFotoUrl(
+        f.url_publica || f.url || f.ruta || f.url_imagen || ""
+      );
+    }
+
+    // 2) Fallback: como estaba antes (2da/3ra del hero o portada)
     const segunda = heroSlides?.[1]?.image;
     const tercera = heroSlides?.[2]?.image;
     return tercera || segunda || urlHero || "";
-  }, [heroSlides, urlHero]);
+  }, [fotosPrivadas, heroSlides, urlHero]);
 
   // Permite posición configurable (si lo guardas en BD)
   const heroPosicion = configuracion?.heroPosicion || "center 35%";
@@ -448,32 +623,40 @@ export default function Plantilla01({
   // ===================== RSVP =====================
   const [mostrarModalRsvp, setMostrarModalRsvp] = useState(false);
   const [mostrarCelebracion, setMostrarCelebracion] = useState(false);
-  const [mostrarDetalles, setMostrarDetalles] = useState(false);
+
   const [datosConfirmacion, setDatosConfirmacion] = useState(null);
 
-  const manejadorExitoRsvp = (datos) => {
-    setDatosConfirmacion(datos);
-    setMostrarModalRsvp(false);
-    setMostrarCelebracion(true);
-  };
+ const manejadorExitoRsvp = (datos) => {
+  stopCelebration();               
+  setDatosConfirmacion(datos);
+  setMostrarModalRsvp(false);
+  setMostrarCelebracion(true);
+};
 
   const manejadorCerrarCelebracion = () => {
     setMostrarCelebracion(false);
-    setMostrarDetalles(true);
-    // Scroll suave hacia el contenedor de detalles una vez renderice
+
+    // Scroll suave hacia la sección pública de detalles (siempre renderizada)
     setTimeout(() => {
-      const el = document.getElementById("post-confirmation-details");
+      const el = document.getElementById("detalles-celebracion");
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
       } else {
         window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
       }
-    }, 300);
+    }, 250);
   };
+
+  // Cargar FAQs (plataforma/public) y las específicas de la boda
+  const { faqs: platformFaqs } = useFaqs();
+  const { faqs: bodaFaqs } = useBodaFaqs(
+    boda?.id ?? boda?.id_boda ?? boda?.bodaId
+  );
 
   // ===================== RENDER =====================
   return (
     <div className="min-h-screen bg-marfil text-slate-900 overflow-x-hidden">
+      <audio ref={audioRef} src="/sounds/marcha-nupcial-rock.mp3" preload="auto" loop/>
       {/* ================= HERO ================= */}
       <section className="relative min-h-[92svh] lg:min-h-[100vh] flex items-center justify-center">
         {/* Animación del corazón */}
@@ -511,33 +694,43 @@ export default function Plantilla01({
 
         {/* Fondo anterior (debajo) */}
         {heroPrevIndex !== null && heroSlides?.[heroPrevIndex]?.image && (
-          <div
-            className="absolute inset-0 -z-30"
-            style={{
-              backgroundImage: `url('${heroSlides[heroPrevIndex].image}')`,
-              backgroundSize: "cover",
-              backgroundPosition: heroPosicion,
-              backgroundRepeat: "no-repeat",
-            }}
+          <HeroBackground
+            url={heroSlides[heroPrevIndex].image}
+            position={heroPosicion}
+            zClass="-z-30"
           />
         )}
 
         {/* Fondo actual (fade arriba) */}
         {urlHero && (
-          <div
+          <HeroBackground
             key={urlHero}
-            className="absolute inset-0 -z-20 hero-fade"
-            style={{
-              backgroundImage: `url('${urlHero}')`,
-              backgroundSize: "cover",
-              backgroundPosition: heroPosicion,
-              backgroundRepeat: "no-repeat",
-            }}
+            url={urlHero}
+            position={heroPosicion}
+            zClass="-z-20"
+            extraClass="hero-fade"
           />
         )}
 
         {/* Overlay premium: asegura contraste siempre */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/20 via-black/35 to-black/65" />
+        <div
+          className="absolute inset-0 -z-10 pointer-events-none"
+          style={{
+            background: `
+      radial-gradient(ellipse at center,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0) 58%,
+        rgba(0,0,0,0.22) 75%,
+        rgba(0,0,0,0.55) 100%
+      ),
+      linear-gradient(180deg,
+        rgba(0,0,0,0.14) 0%,
+        rgba(0,0,0,0.06) 40%,
+        rgba(0,0,0,0.16) 100%
+      )
+    `,
+          }}
+        />
 
         {/* SEPARADOR INFERIOR EN FORMA DE OLA */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden">
@@ -570,73 +763,67 @@ export default function Plantilla01({
             {/* ===== BLOQUE SUPERIOR: CORAZÓN + TÍTULO + “NOS CASAMOS” ===== */}
             <div className="flex flex-col items-center text-center">
               {/* Corazón animado */}
-              <div className="inline-flex items-center justify-center mb-4">
-                <span
-                  className="heartbeat-soft inline-flex h-10 w-10 items-center justify-center rounded-full
-                 bg-black/35 border border-white/35 backdrop-blur"
-                >
-                  <span className="text-white text-lg">♥</span>
-                </span>
-              </div>
 
               {/* PLACA PREMIUM (glass) */}
               {/* NOMBRES (SIN GLASS, con halo sutil y sin recorte) */}
-<div className="relative inline-flex flex-col items-center px-2 sm:px-3 py-2 overflow-visible">
-  {/* Halo sutil SOLO detrás del texto (no es panel / no es glass) */}
-  <div
-    className="pointer-events-none absolute -inset-x-12 -inset-y-8 blur-2xl opacity-60"
-    style={{
-      background:
-        "radial-gradient(closest-side, rgba(0,0,0,0.60), rgba(0,0,0,0.00))",
-    }}
-  />
+              <div className="relative inline-flex flex-col items-center px-2 sm:px-3 py-2 overflow-visible">
+                {/* Halo sutil SOLO detrás del texto (no es panel / no es glass) */}
+                <div
+                  className="pointer-events-none absolute -inset-x-12 -inset-y-8 blur-2xl opacity-60"
+                  style={{
+                    background:
+                      "radial-gradient(closest-side, rgba(0,0,0,0.60), rgba(0,0,0,0.00))",
+                  }}
+                />
 
-  {/* Nombres (mantiene el color dorado, mejora contraste, no recorta) */}
-  <h1
-    className="text-4xl sm:text-5xl lg:text-[4.4rem] leading-[1.15] font-normal text-center"
-    style={{
-  fontFamily: "'Great Vibes','Cormorant Garamond','Times New Roman',serif",
-  letterSpacing: "0.04em",
-  backgroundImage:
-    "linear-gradient(90deg, #FFF7D1 0%, #FDE68A 35%, #FFD86B 70%, #D4AF37 100%)",
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  color: "transparent",
+                {/* Nombres (mantiene el color dorado, mejora contraste, no recorta) */}
+                <h1
+                  className="text-4xl sm:text-5xl lg:text-[4.4rem] leading-[1.15] font-normal text-center"
+                  style={{
+                    fontFamily:
+                      "'Great Vibes','Cormorant Garamond','Times New Roman',serif",
+                    letterSpacing: "0.04em",
 
-  // Contraste real (clave en fotos con textura)
-WebkitTextStroke: "2px rgba(0,0,0,0.55)",
+                    // Blanco elegante
+                    color: "#FFFFFF",
 
-  // Sombras: una corta (definición) + una larga (profundidad) + un glow dorado (premium)
-  textShadow:
-    "0 2px 2px rgba(0,0,0,0.60), 0 14px 34px rgba(0,0,0,0.45), 0 0 18px rgba(253,230,138,0.35)",
+                    // Contorno sutil para que no se pierda en fondos claros
+                    WebkitTextStroke: "1.2px rgba(0,0,0,0.40)",
 
-  // Glow adicional sin panel
-  filter: "drop-shadow(0 0 10px rgba(253,230,138,0.18))",
+                    // Sombra profunda (define bien el trazo en cualquier foto)
+                    textShadow:
+                      "0 2px 2px rgba(0,0,0,0.55), 0 18px 42px rgba(0,0,0,0.45)",
 
-  // Anti-recorte
-  paddingTop: "0.25rem",
-  paddingBottom: "0.32rem",
-}}
+                    // Anti-recorte
+                    paddingTop: "0.25rem",
+                    paddingBottom: "0.32rem",
+                  }}
+                >
+                  {tituloPrincipal}
+                </h1>
 
-  >
-    {tituloPrincipal}
-  </h1>
+                {/* Ornamento minimal */}
+                <div className="mt-1 mb-2 flex items-center gap-3 opacity-90">
+                  <span className="h-px w-14 bg-white/70 rounded-full" />
+                  <span className="heartbeat-soft inline-flex items-center justify-center">
+                    <span
+                      className="text-white text-2xl sm:text-3xl leading-none"
+                      style={{
+                        textShadow:
+                          "0 2px 6px rgba(0,0,0,0.55), 0 0 18px rgba(255,255,255,0.20)",
+                        filter: "drop-shadow(0 10px 22px rgba(0,0,0,0.25))",
+                      }}
+                    >
+                      ♥
+                    </span>
+                  </span>
+                  <span className="h-px w-14 bg-white/70 rounded-full" />
+                </div>
 
-  {/* Ornamento minimal */}
-  <div className="mt-1 mb-2 flex items-center gap-3 opacity-90">
-    <span className="h-px w-14 bg-white/70 rounded-full" />
-    <span
-      className="w-2 h-2 rotate-45 rounded-[2px]"
-      style={{ backgroundColor: "#FDE68A" }}
-    />
-    <span className="h-px w-14 bg-white/70 rounded-full" />
-  </div>
-
-  <p className="text-sm sm:text-base text-white/90">
-    {configuracion?.subtituloHero || "¡Nos casamos!"}
-  </p>
-</div>
-
+                <p className="text-sm sm:text-base text-white/90">
+                  {configuracion?.subtituloHero || "¡Nos casamos!"}
+                </p>
+              </div>
             </div>
 
             {/* ===== BLOQUE INFERIOR: FECHA + COUNTDOWN + BOTÓN ===== */}
@@ -680,7 +867,10 @@ WebkitTextStroke: "2px rgba(0,0,0,0.55)",
               {/* Botón Confirmar asistencia */}
               <button
                 type="button"
-                onClick={() => setMostrarModalRsvp(true)}
+                onClick={() => {
+                  playCelebration();  
+                  setMostrarModalRsvp(true);
+                }}
                 className="mt-2 inline-flex items-center gap-2 rounded-full text-[#111827] text-sm font-semibold px-7 py-2.5 shadow-md transition-colors"
                 style={{ backgroundColor: COLOR_DORADO }}
                 onMouseEnter={(e) =>
@@ -812,7 +1002,8 @@ WebkitTextStroke: "2px rgba(0,0,0,0.55)",
                         {historiaFoto ? (
                           <img
                             src={historiaFoto}
-                            alt="Momentos de la pareja"
+                            alt=""
+                            aria-hidden
                             className="absolute inset-0 w-full h-full object-cover"
                             style={{ objectPosition: "center 35%" }}
                             loading="lazy"
@@ -1120,18 +1311,16 @@ WebkitTextStroke: "2px rgba(0,0,0,0.55)",
             </section>
           </FadeIn>
 
-          {mostrarDetalles && (
-            <FadeIn delay={280}>
-              <div id="post-confirmation-details">
-                <PostConfirmationDetails
-                  boda={boda}
-                  configuracion={configuracion}
-                  faqs={[]}
-                  invitadosResumen={invitadosResumen}
-                />
-              </div>
-            </FadeIn>
-          )}
+          <FadeIn delay={280}>
+            <section id="detalles-celebracion" className="scroll-mt-24">
+              <PostConfirmationDetails
+                boda={boda}
+                configuracion={configuracion}
+                faqs={bodaFaqs && bodaFaqs.length ? bodaFaqs : platformFaqs}
+                invitadosResumen={invitadosResumen}
+              />
+            </section>
+          </FadeIn>
         </div>
 
         {/* FLORES: SOLO EN LOS MÁRGENES (CENTRO ENMASCARADO) */}
@@ -1232,15 +1421,19 @@ WebkitTextStroke: "2px rgba(0,0,0,0.55)",
       </FadeIn>
 
       {/* ================= MODAL RSVP NUEVO ================= */}
-      <RsvpModal
-        isOpen={mostrarModalRsvp}
-        onClose={() => setMostrarModalRsvp(false)}
-        bodaNombre={
-          boda?.nombre_pareja ||
-          `${boda?.nombre_novio_1 ?? ""} ${boda?.nombre_novio_2 ?? ""}`
-        }
-        onSuccess={manejadorExitoRsvp}
-      />
+   <RsvpModal
+  isOpen={mostrarModalRsvp}
+  onClose={() => {
+    stopCelebration();            
+    setMostrarModalRsvp(false);
+  }}
+  bodaNombre={
+    boda?.nombre_pareja ||
+    `${boda?.nombre_novio_1 ?? ""} ${boda?.nombre_novio_2 ?? ""}`
+  }
+  onSuccess={manejadorExitoRsvp}
+  onPlayCelebration={playCelebration}
+/>
 
       {/* ================= OVERLAY CELEBRACIÓN NUEVO ================= */}
       {mostrarCelebracion && (

@@ -123,4 +123,28 @@ class PublicBodaController extends Controller
     ]);
 }
 
+    /**
+     * Devuelve las FAQs públicas (activas) de una boda por ID o slug.
+     * Ruta pública: GET /api/public/bodas/{boda}/faqs
+     */
+    public function faqs($bodaId)
+    {
+        // Intentamos encontrar por ID numérico o por subdominio (slug)
+        $boda = null;
+
+        if (is_numeric($bodaId)) {
+            $boda = Boda::with('faqs')->where('id', $bodaId)->first();
+        } else {
+            $boda = Boda::with('faqs')->where('subdominio', $bodaId)->first();
+        }
+
+        if (! $boda) {
+            return response()->json(['message' => 'Boda no encontrada.'], 404);
+        }
+
+        $faqs = $boda->faqs()->where('es_activa', true)->orderBy('orden')->get();
+
+        return response()->json($faqs);
+    }
+
 }
