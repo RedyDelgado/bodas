@@ -15,36 +15,32 @@ function mapConfigFromApi(cfg) {
     id: cfg.id,
     bodaId: cfg.boda_id,
 
-    // Portada / fechas
     frasePrincipal: cfg.frase_principal ?? "",
     textoFechaReligioso: cfg.texto_fecha_religioso ?? "",
     textoFechaCivil: cfg.texto_fecha_civil ?? "",
 
-    // Cronograma
-    cronogramaTexto: cfg.cronograma_texto ?? "",
-
-    // Locales
     localReligioso: cfg.local_religioso ?? "",
     localRecepcion: cfg.local_recepcion ?? "",
 
-    // Padres y padrinos
+    cronogramaTexto: cfg.cronograma_texto ?? "",
+
     textoPadresNovio: cfg.texto_padres_novio ?? "",
     textoPadresNovia: cfg.texto_padres_novia ?? "",
     textoPadrinosMayores: cfg.texto_padrinos_mayores ?? "",
     textoPadrinosCiviles: cfg.texto_padrinos_civiles ?? "",
 
-    // Regalos / cuentas
     textoCuentasBancarias: cfg.texto_cuentas_bancarias ?? "",
     textoYape: cfg.texto_yape ?? "",
 
-    // Historia / mensaje final
     textoHistoriaPareja: cfg.texto_historia_pareja ?? "",
     textoMensajeFinal: cfg.texto_mensaje_final ?? "",
 
-    // Intro FAQs (si existe en BD)
-    textoPreguntasFrecuentes: cfg.texto_preguntas_frecuentes ?? "",
+    // 🔥 ESTOS SON LOS QUE TE FALTAN
+    ceremoniaMapsUrl: cfg.ceremonia_maps_url ?? "",
+    recepcionMapsUrl: cfg.recepcion_maps_url ?? "",
   };
 }
+
 
 /**
  * Frontend (camelCase o snake_case) → API (snake_case)

@@ -1,5 +1,5 @@
 // src/features/bodas/pages/BodaConfigPage.jsx
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMiBodaActual } from "../hooks/useBodas";
 import { useConfiguracionBoda } from "../hooks/useConfiguracionBoda";
@@ -18,13 +18,14 @@ import {
 // Paloma de paz
 import { GiPeaceDove } from "react-icons/gi";
 
-const MAX_MB = 3;
+const MAX_MB = 10;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
 
 /**
  * Parsea el cronograma texto guardado en BD y lo separa en:
  * MATRIMONIO, RECEPCIÓN, BODA CIVIL, CENA, CELEBRACIÓN y resto (libre).
  */
+
 function parseCronograma(cronogramaTexto) {
   if (!cronogramaTexto) {
     return {
@@ -56,7 +57,10 @@ function parseCronograma(cronogramaTexto) {
 
     if (upper.startsWith("MATRIMONIO:")) {
       matrimonio = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
-    } else if (upper.startsWith("RECEPCIÓN:") || upper.startsWith("RECEPCION:")) {
+    } else if (
+      upper.startsWith("RECEPCIÓN:") ||
+      upper.startsWith("RECEPCION:")
+    ) {
       recepcion = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
     } else if (upper.startsWith("BODA CIVIL:")) {
       civil = sinBullet.slice(sinBullet.indexOf(":") + 1).trim();
@@ -86,22 +90,12 @@ export function BodaConfigPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const {
-    boda,
-    cargando: cargandoBoda,
-    error: errorBoda,
-  } = useMiBodaActual();
+  const { boda, cargando: cargandoBoda, error: errorBoda } = useMiBodaActual();
 
   const bodaId = boda?.id ?? searchParams.get("boda") ?? null;
 
-  const {
-    config,
-    cargando,
-    guardando,
-    error,
-    mensajeOk,
-    guardar,
-  } = useConfiguracionBoda(bodaId);
+  const { config, cargando, guardando, error, mensajeOk, guardar } =
+    useConfiguracionBoda(bodaId);
 
   // -------- FOTOS BODA ----------
   const [fotos, setFotos] = useState([]);
@@ -117,7 +111,7 @@ export function BodaConfigPage() {
 
   // NUEVO: previews de las imágenes
   const [filePreviews, setFilePreviews] = useState([]);
-
+  const fileInputRef = useRef(null);
   useEffect(() => {
     if (!filesToUpload.length) {
       setFilePreviews([]);
@@ -138,45 +132,23 @@ export function BodaConfigPage() {
     };
   }, [filesToUpload]);
 
-  const cargarFotos = useCallback(
-    async (id) => {
-      if (!id) return;
-      try {
-        setCargandoFotos(true);
-        setErrorFotos("");
-        const res = await axiosClient.get(`/mis-bodas/${id}/fotos`);
-        const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
-        setFotos(data);
-      } catch (e) {
-        console.error(e);
-        setErrorFotos("No se pudieron cargar las fotos de la boda.");
-      } finally {
-        setCargandoFotos(false);
-      }
-    },
-    []
-  );
-
-  const handleSelectFiles = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length || !bodaId) return;
-
-    // Validación tamaño 3MB
-    const tooBig = files.find((f) => f.size > MAX_BYTES);
-    if (tooBig) {
-      setErrorFotos(
-        `La imagen "${tooBig.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
-      );
-      e.target.value = "";
-      return;
+  const cargarFotos = useCallback(async (id) => {
+    if (!id) return;
+    try {
+      setCargandoFotos(true);
+      setErrorFotos("");
+      const res = await axiosClient.get(`/mis-bodas/${id}/fotos`);
+      const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      setFotos(data);
+    } catch (e) {
+      console.error(e);
+      setErrorFotos("No se pudieron cargar las fotos de la boda.");
+    } finally {
+      setCargandoFotos(false);
     }
+  }, []);
 
-    setFilesToUpload(files);
-    setTituloFoto("");
-    setDescripcionFoto("");
-    setShowUploadModal(true);
-    e.target.value = "";
-  };
+ 
 
   // -------- FAQs (tabla faqs_boda) ----------
   const [faqs, setFaqs] = useState([{ pregunta: "", respuesta: "" }]);
@@ -184,35 +156,32 @@ export function BodaConfigPage() {
   const [guardandoFaqs, setGuardandoFaqs] = useState(false);
   const [errorFaqs, setErrorFaqs] = useState("");
 
-  const cargarFaqs = useCallback(
-    async (id) => {
-      if (!id) return;
-      try {
-        setCargandoFaqs(true);
-        setErrorFaqs("");
-        const res = await axiosClient.get(`/mis-bodas/${id}/faqs`);
-        const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
+  const cargarFaqs = useCallback(async (id) => {
+    if (!id) return;
+    try {
+      setCargandoFaqs(true);
+      setErrorFaqs("");
+      const res = await axiosClient.get(`/mis-bodas/${id}/faqs`);
+      const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
 
-        if (!data.length) {
-          setFaqs([{ pregunta: "", respuesta: "" }]);
-        } else {
-          setFaqs(
-            data.map((f) => ({
-              pregunta: f.pregunta || "",
-              respuesta: f.respuesta || "",
-            }))
-          );
-        }
-      } catch (e) {
-        console.error(e);
-        setErrorFaqs("No se pudieron cargar las preguntas frecuentes.");
+      if (!data.length) {
         setFaqs([{ pregunta: "", respuesta: "" }]);
-      } finally {
-        setCargandoFaqs(false);
+      } else {
+        setFaqs(
+          data.map((f) => ({
+            pregunta: f.pregunta || "",
+            respuesta: f.respuesta || "",
+          }))
+        );
       }
-    },
-    []
-  );
+    } catch (e) {
+      console.error(e);
+      setErrorFaqs("No se pudieron cargar las preguntas frecuentes.");
+      setFaqs([{ pregunta: "", respuesta: "" }]);
+    } finally {
+      setCargandoFaqs(false);
+    }
+  }, []);
 
   // Cargar fotos + faqs cuando tengamos bodaId
   useEffect(() => {
@@ -275,7 +244,7 @@ export function BodaConfigPage() {
       console.error(e);
       if (e.response?.status === 422) {
         setErrorFotos(
-          "La imagen no es válida o excede el tamaño permitido (máx. 3 MB)."
+          "La imagen no es válida o excede el tamaño permitido (máx. 10 MB)."
         );
       } else {
         setErrorFotos(
@@ -349,6 +318,9 @@ export function BodaConfigPage() {
     textoMensajeFinal: "",
     // Preguntas frecuentes (intro)
     textoPreguntasFrecuentes: "",
+    // Google Maps URL (solo link)
+    ceremoniaMapsUrl: "",
+    recepcionMapsUrl: "",
   });
 
   // efecto para config (solo config, ya no faqs)
@@ -395,6 +367,10 @@ export function BodaConfigPage() {
           config.textoPreguntasFrecuentes ||
           config.texto_preguntas_frecuentes ||
           "",
+        ceremoniaMapsUrl:
+          config.ceremoniaMapsUrl || config.ceremonia_maps_url || "",
+        recepcionMapsUrl:
+          config.recepcionMapsUrl || config.recepcion_maps_url || "",
       }));
     }
   }, [config]);
@@ -421,80 +397,80 @@ export function BodaConfigPage() {
     setFaqs((prev) => prev.filter((_, i) => i !== index));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!bodaId) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!bodaId) return;
 
-  // Componemos el cronograma en un solo string
-  const partesCronograma = [
-    form.cronogramaMatrimonio &&
-      `MATRIMONIO: ${form.cronogramaMatrimonio.trim()}`,
-    form.cronogramaRecepcion &&
-      `RECEPCIÓN: ${form.cronogramaRecepcion.trim()}`,
-    form.cronogramaBodaCivil &&
-      `BODA CIVIL: ${form.cronogramaBodaCivil.trim()}`,
-    form.cronogramaCena && `CENA: ${form.cronogramaCena.trim()}`,
-    form.cronogramaCelebracion &&
-      `CELEBRACIÓN: ${form.cronogramaCelebracion.trim()}`,
-    form.cronogramaTextoLibre?.trim(),
-  ].filter(Boolean);
+    // Componemos el cronograma en un solo string
+    const partesCronograma = [
+      form.cronogramaMatrimonio &&
+        `MATRIMONIO: ${form.cronogramaMatrimonio.trim()}`,
+      form.cronogramaRecepcion &&
+        `RECEPCIÓN: ${form.cronogramaRecepcion.trim()}`,
+      form.cronogramaBodaCivil &&
+        `BODA CIVIL: ${form.cronogramaBodaCivil.trim()}`,
+      form.cronogramaCena && `CENA: ${form.cronogramaCena.trim()}`,
+      form.cronogramaCelebracion &&
+        `CELEBRACIÓN: ${form.cronogramaCelebracion.trim()}`,
+      form.cronogramaTextoLibre?.trim(),
+    ].filter(Boolean);
 
-  const cronogramaTexto = partesCronograma.join("\n");
+    const cronogramaTexto = partesCronograma.join("\n");
 
-  // FAQs limpias (sin filas totalmente vacías)
-  const faqsLimpias = faqs
-    .map((f) => ({
-      pregunta: (f.pregunta || "").trim(),
-      respuesta: (f.respuesta || "").trim(),
-    }))
-    .filter((f) => f.pregunta || f.respuesta);
+    // FAQs limpias (sin filas totalmente vacías)
+    const faqsLimpias = faqs
+      .map((f) => ({
+        pregunta: (f.pregunta || "").trim(),
+        respuesta: (f.respuesta || "").trim(),
+      }))
+      .filter((f) => f.pregunta || f.respuesta);
 
-// OJO: aquí ya usamos SNAKE_CASE para que coincida con Laravel
-const payload = {
-  frase_principal: form.frasePrincipal,
-  texto_fecha_religioso: form.textoFechaReligioso,
-  texto_fecha_civil: form.textoFechaCivil,
-  local_religioso: form.localReligioso,
-  local_recepcion: form.localRecepcion,
-  cronograma_texto: cronogramaTexto,
+    // OJO: aquí ya usamos SNAKE_CASE para que coincida con Laravel
+    const payload = {
+      frase_principal: form.frasePrincipal,
+      texto_fecha_religioso: form.textoFechaReligioso,
+      texto_fecha_civil: form.textoFechaCivil,
+      local_religioso: form.localReligioso,
+      local_recepcion: form.localRecepcion,
+      cronograma_texto: cronogramaTexto,
 
-  // Padres y padrinos
-  texto_padres_novio: form.textoPadresNovio,
-  texto_padres_novia: form.textoPadresNovia,
-  texto_padrinos_mayores: form.textoPadrinosMayores,
-  texto_padrinos_civiles: form.textoPadrinosCiviles,
+      // Padres y padrinos
+      texto_padres_novio: form.textoPadresNovio,
+      texto_padres_novia: form.textoPadresNovia,
+      texto_padrinos_mayores: form.textoPadrinosMayores,
+      texto_padrinos_civiles: form.textoPadrinosCiviles,
 
-  // Regalos / cuentas
-  texto_cuentas_bancarias: form.textoCuentasBancarias,
-  texto_yape: form.textoYape,
+      // Regalos / cuentas
+      texto_cuentas_bancarias: form.textoCuentasBancarias,
+      texto_yape: form.textoYape,
 
-  // Historia / mensaje final
-  texto_historia_pareja: form.textoHistoriaPareja,
-  texto_mensaje_final: form.textoMensajeFinal,
+      // Historia / mensaje final
+      texto_historia_pareja: form.textoHistoriaPareja,
+      texto_mensaje_final: form.textoMensajeFinal,
 
-  // Intro preguntas frecuentes (si algún día lo usas)
-  texto_preguntas_frecuentes: form.textoPreguntasFrecuentes,
-};
+      // Intro preguntas frecuentes (si algún día lo usas)
+      texto_preguntas_frecuentes: form.textoPreguntasFrecuentes,
+      ceremonia_maps_url: form.ceremoniaMapsUrl?.trim() || null,
+      recepcion_maps_url: form.recepcionMapsUrl?.trim() || null,
+    };
 
+    try {
+      setGuardandoFaqs(true);
+      setErrorFaqs("");
 
-  try {
-    setGuardandoFaqs(true);
-    setErrorFaqs("");
+      await Promise.all([
+        guardar(payload), // config de la boda
+        axiosClient.put(`/mis-bodas/${bodaId}/faqs`, { faqs: faqsLimpias }),
+      ]);
 
-    await Promise.all([
-      guardar(payload), // config de la boda
-      axiosClient.put(`/mis-bodas/${bodaId}/faqs`, { faqs: faqsLimpias }),
-    ]);
-
-    await cargarFaqs(bodaId);
-  } catch (e) {
-    console.error(e);
-    setErrorFaqs("No se pudieron guardar las preguntas frecuentes.");
-  } finally {
-    setGuardandoFaqs(false);
-  }
-};
-
+      await cargarFaqs(bodaId);
+    } catch (e) {
+      console.error(e);
+      setErrorFaqs("No se pudieron guardar las preguntas frecuentes.");
+    } finally {
+      setGuardandoFaqs(false);
+    }
+  };
 
   const handleIrDashboard = () => {
     if (!bodaId) return;
@@ -510,7 +486,9 @@ const payload = {
     if (!boda?.subdominio) return;
     window.open(`/boda/${boda.subdominio}`, "_blank");
   };
-
+const publicUrl = boda?.subdominio
+  ? `${window.location.origin}/boda/${boda.subdominio}`
+  : "";
   // -------- ESTADOS GENERALES --------
   if (cargandoBoda && !boda) {
     return (
@@ -533,65 +511,106 @@ const payload = {
     );
   }
 
-  const handleConfirmUpload = async () => {
-    if (!filesToUpload.length || !bodaId) {
-      setShowUploadModal(false);
-      return;
-    }
+const triggerFilePicker = () => {
+  setErrorFotos("");
+  if (fileInputRef.current) {
+    // para permitir seleccionar el MISMO archivo otra vez
+    fileInputRef.current.value = "";
+    fileInputRef.current.click();
+  }
+};
 
-    try {
-      setSubiendoFoto(true);
-      setErrorFotos("");
+const openUploadModal = () => {
+  setErrorFotos("");
+  setShowUploadModal(true);
 
-      for (const file of filesToUpload) {
-        if (file.size > MAX_BYTES) {
-          setErrorFotos(
-            `La imagen "${file.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
-          );
-          continue;
-        }
+  // reset de campos (como tu lógica original)
+  setFilesToUpload([]);
+  setTituloFoto("");
+  setDescripcionFoto("");
 
-        const formData = new FormData();
-        formData.append("imagen", file);
-        if (tituloFoto.trim()) {
-          formData.append("titulo", tituloFoto.trim());
-        }
-        if (descripcionFoto.trim()) {
-          formData.append("descripcion", descripcionFoto.trim());
-        }
+  // ABRE el selector de archivo inmediatamente (misma interacción del click)
+  triggerFilePicker();
+};
 
-        await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-      }
+const handleSelectFiles = (e) => {
+  const file = (e.target.files && e.target.files[0]) || null;
+  if (!file) return;
 
-      await cargarFotos(bodaId);
-      setShowUploadModal(false);
-      setFilesToUpload([]);
-      setTituloFoto("");
-      setDescripcionFoto("");
-    } catch (e) {
-      console.error(e);
-      if (e.response?.status === 422) {
-        setErrorFotos(
-          "La imagen no es válida o excede el tamaño permitido (máx. 3 MB)."
-        );
-      } else {
-        setErrorFotos(
-          "Ocurrió un problema al subir las fotos. Inténtalo nuevamente."
-        );
-      }
-    } finally {
-      setSubiendoFoto(false);
-    }
-  };
+  if (file.size > MAX_BYTES) {
+    setErrorFotos(
+      `La imagen "${file.name}" supera el tamaño máximo permitido de ${MAX_MB} MB.`
+    );
+    e.target.value = "";
+    return;
+  }
 
-  const handleCancelUpload = () => {
+  setErrorFotos("");
+  setFilesToUpload([file]); // SIEMPRE 1 foto
+  // el modal ya está abierto; si vinieras desde otro flujo, asegura esto:
+  setShowUploadModal(true);
+
+  e.target.value = "";
+};
+
+const handleConfirmUpload = async () => {
+  if (!bodaId) return;
+
+  const file = filesToUpload?.[0] || null;
+  if (!file) {
+    setErrorFotos("Selecciona una foto antes de subir.");
+    return;
+  }
+
+  try {
+    setSubiendoFoto(true);
+    setErrorFotos("");
+
+    const formData = new FormData();
+    formData.append("imagen", file);
+
+    if (tituloFoto.trim()) formData.append("titulo", tituloFoto.trim());
+    if (descripcionFoto.trim())
+      formData.append("descripcion", descripcionFoto.trim());
+
+    await axiosClient.post(`/mis-bodas/${bodaId}/fotos`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    await cargarFotos(bodaId);
+
+    // reset + cerrar
     setShowUploadModal(false);
     setFilesToUpload([]);
     setTituloFoto("");
     setDescripcionFoto("");
-  };
+  } catch (e) {
+    console.error(e);
+    if (e.response?.status === 422) {
+      setErrorFotos(
+        `La imagen no es válida o excede el tamaño permitido (máx. ${MAX_MB} MB).`
+      );
+    } else {
+      setErrorFotos("Ocurrió un problema al subir la foto. Inténtalo nuevamente.");
+    }
+  } finally {
+    setSubiendoFoto(false);
+  }
+};
+
+const handleCancelUpload = () => {
+  setShowUploadModal(false);
+  setFilesToUpload([]);
+  setTituloFoto("");
+  setDescripcionFoto("");
+  setErrorFotos("");
+
+  if (fileInputRef.current) fileInputRef.current.value = "";
+};
+
+
+
+ 
 
   return (
     <div className="space-y-6">
@@ -627,10 +646,27 @@ const payload = {
                   {boda.subdominio}
                 </span>
               )}
+              {publicUrl && (
+  <div className="flex items-center gap-2 text-xs">
+    <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+      {publicUrl}
+    </span>
+    <button
+      type="button"
+      onClick={() => navigator.clipboard.writeText(publicUrl)}
+      className="px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800"
+    >
+      Copiar link
+    </button>
+  </div>
+)}
+
+
             </div>
             {boda?.ciudad && (
               <p className="mt-1 text-xs text-slate-500">{boda.ciudad}</p>
             )}
+            
           </div>
         </div>
 
@@ -839,6 +875,48 @@ const payload = {
                   className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
                 />
               </div>
+
+              {/* CEREMONIA MAPS URL */}
+<div className="space-y-1.5">
+  <label className="block text-xs font-medium text-slate-700">
+    Link de Google Maps (Ceremonia)
+  </label>
+
+  {/* INDICACIÓN CLARA PARA EL USUARIO */}
+  <p className="text-[11px] text-slate-500">
+    Cómo obtenerlo: Google Maps → <b>Compartir</b> → <b>Copiar enlace</b> y pégalo aquí.
+  </p>
+
+  <input
+    type="url"
+    name="ceremoniaMapsUrl"
+    value={form.ceremoniaMapsUrl}
+    onChange={handleChange}
+    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+    placeholder="Pega aquí el link de Google Maps (Compartir → Copiar enlace)"
+  />
+</div>
+
+{/* RECEPCIÓN MAPS URL */}
+<div className="space-y-1.5">
+  <label className="block text-xs font-medium text-slate-700">
+    Link de Google Maps (Recepción)
+  </label>
+
+  <p className="text-[11px] text-slate-500">
+    Cómo obtenerlo: Google Maps → <b>Compartir</b> → <b>Copiar enlace</b> y pégalo aquí.
+  </p>
+
+  <input
+    type="url"
+    name="recepcionMapsUrl"
+    value={form.recepcionMapsUrl}
+    onChange={handleChange}
+    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+    placeholder="Pega aquí el link de Google Maps (Compartir → Copiar enlace)"
+  />
+</div>
+
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -1062,29 +1140,30 @@ const payload = {
                   Fotos de la boda
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Sube fotos para la portada y la galería. Puedes marcarlas
-                  como portada, eliminarlas y reordenarlas arrastrando con el
-                  mouse.
+                  Sube fotos para la portada y la galería. Puedes marcarlas como
+                  portada, eliminarlas y reordenarlas arrastrando con el mouse.
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={handleSelectFiles}
-                />
-                <span>Subir fotos</span>
-                {subiendoFoto && (
-                  <span className="text-[11px] text-slate-500">
-                    Subiendo...
-                  </span>
-                )}
-              </label>
+<input
+  ref={fileInputRef}
+  type="file"
+  accept="image/*"
+  className="hidden"
+  onChange={handleSelectFiles}
+/>
+
+
+             <button
+  type="button"
+  onClick={openUploadModal}
+  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+>
+  <span>Subir fotos</span>
+</button>
+
               {cargandoFotos && (
                 <p className="text-xs text-slate-500">
                   Cargando fotos existentes...
@@ -1192,9 +1271,7 @@ const payload = {
                         redimensionarán automáticamente
                       </span>{" "}
                       a un máximo de{" "}
-                      <span className="font-semibold">
-                        1920 × 1280 píxeles
-                      </span>
+                      <span className="font-semibold">1920 × 1280 píxeles</span>
                       , se{" "}
                       <span className="font-semibold">
                         convertirán a JPG optimizado
@@ -1216,8 +1293,7 @@ const payload = {
                       <ul className="max-h-24 overflow-auto text-[11px] text-slate-700 list-disc list-inside bg-slate-50 rounded-xl px-3 py-2">
                         {filesToUpload.map((f) => (
                           <li key={f.name}>
-                            {f.name} (
-                            {(f.size / 1024 / 1024).toFixed(2)} MB)
+                            {f.name} ({(f.size / 1024 / 1024).toFixed(2)} MB)
                           </li>
                         ))}
                       </ul>
@@ -1358,8 +1434,6 @@ const payload = {
                 {errorFaqs}
               </p>
             )}
-
-         
 
             <div className="space-y-3">
               {faqs.map((faq, index) => (

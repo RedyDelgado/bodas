@@ -129,13 +129,13 @@ protected function buildPublicUrl(FotoBoda $foto): ?string
    public function storePropia(Request $request, Boda $boda)
 {
     $request->validate([
-        'imagen'      => 'required|image|max:3072', // 3MB
+        'imagen'      => 'required|image|max:10240', // 10MB
         'titulo'      => 'nullable|string|max:150',
         'descripcion' => 'nullable|string|max:255',
     ], [
         'imagen.required' => 'Debes seleccionar una imagen.',
         'imagen.image'    => 'El archivo debe ser una imagen válida.',
-        'imagen.max'      => 'La imagen supera el tamaño máximo permitido (3 MB).',
+        'imagen.max'      => 'La imagen supera el tamaño máximo permitido (10 MB).',
     ]);
 
     if (! $request->hasFile('imagen')) {

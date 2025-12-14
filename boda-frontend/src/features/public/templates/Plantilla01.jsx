@@ -4,7 +4,6 @@ import { useMemo as useReactMemo } from "react";
 import anillosBoda from "../../../../public/img/anillos-boda.png";
 import parejaBoda from "../../../../public/img/pareja-boda.png";
 import parejaBoda2 from "../../../../public/img/pareja-boda_2.png";
-
 import {
   FiCalendar,
   FiMapPin,
@@ -26,7 +25,7 @@ import {
   COLOR_CORAL,
   COLOR_AZUL_OSCURO_FONDO,
 } from "../../../shared/styles/colors";
-
+const FLORES_LATERAL = "/img/flores.png"; //
 /** =================== BASE URL PARA FOTOS =================== */
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const STORAGE_BASE_URL =
@@ -201,8 +200,12 @@ function CelebrationOverlay({ nombres, onClose }) {
 }
 
 /** ====================== COMPONENTE PRINCIPAL ====================== */
-export default function Plantilla01({ boda, configuracion, fotos, invitadosResumen }) {
-
+export default function Plantilla01({
+  boda,
+  configuracion,
+  fotos,
+  invitadosResumen,
+}) {
   // ===================== COUNTDOWN =====================
   const [countdown, setCountdown] = useState({
     dias: "--",
@@ -338,14 +341,10 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
 
   // ===================== MÉTRICAS DE INVITADOS (PÚBLICO) =====================
   const totalInvitadosPublic =
-    invitadosResumen?.total_invitados ??
-    boda?.total_invitados ??
-    0;
+    invitadosResumen?.total_invitados ?? boda?.total_invitados ?? 0;
 
   const totalConfirmadosPublic =
-    invitadosResumen?.total_confirmados ??
-    boda?.total_confirmados ??
-    0;
+    invitadosResumen?.total_confirmados ?? boda?.total_confirmados ?? 0;
 
   const porcentajeConfirmadosPublic =
     invitadosResumen?.porcentaje_confirmados ??
@@ -353,63 +352,68 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
       ? Math.round((totalConfirmadosPublic * 100) / totalInvitadosPublic)
       : 0);
 
+  // ===================== FOTOS / HERO CARRUSEL (PREMIUM) =====================
+  const fotosPublicas = useMemo(() => {
+    const limpias = Array.isArray(fotos) ? fotos : [];
 
+    // Primero intentamos filtrar públicas
+    const publicas = limpias.filter((f) => {
+      if (!f) return false;
+      const v = f.es_galeria_privada;
+      return (
+        v === 0 ||
+        v === "0" ||
+        v === false ||
+        v === null ||
+        typeof v === "undefined"
+      );
+    });
 
-  // ===================== FOTOS / HERO CARRUSEL =====================
-  const fotosLimpias = Array.isArray(fotos) ? fotos : [];
+    // Si no hay públicas, usamos todo
+    const base = publicas.length ? publicas : limpias;
 
-  let fotosPublicas = fotosLimpias.filter((f) => {
-    if (!f) return false;
-    const valor = f.es_galeria_privada;
-    return (
-      valor === 0 ||
-      valor === "0" ||
-      valor === false ||
-      valor === null ||
-      typeof valor === "undefined"
-    );
-  });
+    // IMPORTANTE: no mutar (slice)
+    return base.slice().sort((a, b) => {
+      const portadaA = a.es_portada ? 1 : 0;
+      const portadaB = b.es_portada ? 1 : 0;
+      if (portadaA !== portadaB) return portadaB - portadaA;
 
-  if (!fotosPublicas.length) {
-    fotosPublicas = fotosLimpias;
-  }
+      const ordenA = a.orden ?? 999;
+      const ordenB = b.orden ?? 999;
+      if (ordenA !== ordenB) return ordenA - ordenB;
 
-  fotosPublicas.sort((a, b) => {
-    const portadaA = a.es_portada ? 1 : 0;
-    const portadaB = b.es_portada ? 1 : 0;
-    if (portadaA !== portadaB) return portadaB - portadaA;
-    const ordenA = a.orden ?? 999;
-    const ordenB = b.orden ?? 999;
-    if (ordenA !== ordenB) return ordenA - ordenB;
-    return (a.id || 0) - (b.id || 0);
-  });
+      return (a.id || 0) - (b.id || 0);
+    });
+  }, [fotos]);
 
-  const heroSlides =
-    fotosPublicas.length > 0
-      ? fotosPublicas.map((f, idx) => {
-          const img = resolveFotoUrl(
-            f.url_publica || f.url || f.ruta || f.url_imagen || ""
-          );
-          console.log("HERO URL RESUELTA =>", img);
-          return {
-            id: f.id ?? idx,
-            title: tituloPrincipal || "Un día para celebrar el amor",
-            subtitle:
-              fechaLarga ||
-              boda?.ciudad ||
-              "Quillabamba, clima tropical y gente que queremos.",
-            image: img,
-          };
-        })
-      : [
-          {
-            id: 1,
-            title: "Un día para celebrar el amor",
-            subtitle: "Quillabamba, clima tropical y gente que queremos.",
-            image:
-              "https://images.pexels.com/photos/3137077/pexels-photo-3137077.jpeg?auto=compress&cs=tinysrgb&w=1600",
-          },
-        ];
+  const heroSlides = useMemo(() => {
+    if (fotosPublicas.length > 0) {
+      return fotosPublicas.map((f, idx) => {
+        const img = resolveFotoUrl(
+          f.url_publica || f.url || f.ruta || f.url_imagen || ""
+        );
+        return {
+          id: f.id ?? idx,
+          title: tituloPrincipal || "Un día para celebrar el amor",
+          subtitle:
+            fechaLarga ||
+            boda?.ciudad ||
+            "Quillabamba, clima tropical y gente que queremos.",
+          image: img,
+        };
+      });
+    }
+
+    return [
+      {
+        id: 1,
+        title: "Un día para celebrar el amor",
+        subtitle: "Quillabamba, clima tropical y gente que queremos.",
+        image:
+          "https://images.pexels.com/photos/3137077/pexels-photo-3137077.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      },
+    ];
+  }, [fotosPublicas, tituloPrincipal, fechaLarga, boda?.ciudad]);
 
   const [heroIndex, setHeroIndex] = useState(0);
   const [heroPrevIndex, setHeroPrevIndex] = useState(null);
@@ -417,18 +421,15 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
   const heroActual = heroSlides[heroIndex] || heroSlides[0];
   const urlHero = heroActual?.image || "";
 
-  // Permite posición configurable, si algún día la guardas en BD
-  const heroPosicion = configuracion?.heroPosicion || "center 42%";
-  // 42% = centrado un poquito hacia arriba, para que no corte tanto la parte baja
+  // Foto para "Nuestra historia": evita repetir el hero
+  const historiaFoto = useMemo(() => {
+    const segunda = heroSlides?.[1]?.image;
+    const tercera = heroSlides?.[2]?.image;
+    return tercera || segunda || urlHero || "";
+  }, [heroSlides, urlHero]);
 
-  const heroBgStyle = urlHero
-    ? {
-        backgroundImage: `url('${urlHero}')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center 30%", // 30% desde arriba
-        backgroundRepeat: "no-repeat",
-      }
-    : { backgroundColor: "#111827" };
+  // Permite posición configurable (si lo guardas en BD)
+  const heroPosicion = configuracion?.heroPosicion || "center 35%";
 
   useEffect(() => {
     if (!heroSlides.length) return;
@@ -436,10 +437,10 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
     const id = setInterval(() => {
       setHeroIndex((prev) => {
         const next = (prev + 1) % heroSlides.length;
-        setHeroPrevIndex(prev); // recuerda cuál era la foto anterior
+        setHeroPrevIndex(prev);
         return next;
       });
-    }, 9000); // antes 6000
+    }, 9000);
 
     return () => clearInterval(id);
   }, [heroSlides.length]);
@@ -459,18 +460,22 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
   const manejadorCerrarCelebracion = () => {
     setMostrarCelebracion(false);
     setMostrarDetalles(true);
-    // Scroll suave hacia abajo
+    // Scroll suave hacia el contenedor de detalles una vez renderice
     setTimeout(() => {
-      window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
+      const el = document.getElementById("post-confirmation-details");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
+      }
     }, 300);
   };
 
   // ===================== RENDER =====================
   return (
-     <div className="min-h-screen bg-marfil text-slate-900 overflow-x-hidden">
-            {/* ================= HERO ================= */}
-          {/* ================= HERO ================= */}
-      <section className="relative min-h-[92vh] lg:min-h-[100vh] flex items-center justify-center">
+    <div className="min-h-screen bg-marfil text-slate-900 overflow-x-hidden">
+      {/* ================= HERO ================= */}
+      <section className="relative min-h-[92svh] lg:min-h-[100vh] flex items-center justify-center">
         {/* Animación del corazón */}
         <style>{`
           @keyframes heartbeat-soft {
@@ -496,20 +501,43 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
           }
         `}</style>
 
-        {/* FONDO CON LA FOTO PRINCIPAL */}
-        {urlHero && (
+        <style>{`
+          @keyframes heroFade {
+            from { opacity: 0; transform: scale(1.02); }
+            to   { opacity: 1; transform: scale(1); }
+          }
+          .hero-fade { animation: heroFade 1100ms ease-out both; }
+        `}</style>
+
+        {/* Fondo anterior (debajo) */}
+        {heroPrevIndex !== null && heroSlides?.[heroPrevIndex]?.image && (
           <div
-            className="absolute inset-0 -z-20"
+            className="absolute inset-0 -z-30"
             style={{
-              backgroundImage: `url('${urlHero}')`,
+              backgroundImage: `url('${heroSlides[heroPrevIndex].image}')`,
               backgroundSize: "cover",
-              backgroundPosition: "center",
+              backgroundPosition: heroPosicion,
               backgroundRepeat: "no-repeat",
-              filter: "none",
-              transform: "scale(1)",
             }}
           />
         )}
+
+        {/* Fondo actual (fade arriba) */}
+        {urlHero && (
+          <div
+            key={urlHero}
+            className="absolute inset-0 -z-20 hero-fade"
+            style={{
+              backgroundImage: `url('${urlHero}')`,
+              backgroundSize: "cover",
+              backgroundPosition: heroPosicion,
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+        )}
+
+        {/* Overlay premium: asegura contraste siempre */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/20 via-black/35 to-black/65" />
 
         {/* SEPARADOR INFERIOR EN FORMA DE OLA */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden">
@@ -538,52 +566,77 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
 
         {/* CONTENEDOR PRINCIPAL: DOS BLOQUES VERTICALES */}
         <div className="relative z-10 w-full max-w-3xl mx-auto px-4 py-10">
-          <div className="flex flex-col items-center justify-between h-[72vh] sm:h-[70vh]">
+          <div className="flex flex-col items-center justify-between h-[72svh] sm:h-[70vh]">
             {/* ===== BLOQUE SUPERIOR: CORAZÓN + TÍTULO + “NOS CASAMOS” ===== */}
             <div className="flex flex-col items-center text-center">
               {/* Corazón animado */}
               <div className="inline-flex items-center justify-center mb-4">
                 <span
-                  className="
-                    heartbeat-soft
-                    inline-flex h-9 w-9 items-center justify-center
-                    rounded-full bg-black/30 border border-white/40
-                  "
+                  className="heartbeat-soft inline-flex h-10 w-10 items-center justify-center rounded-full
+                 bg-black/35 border border-white/35 backdrop-blur"
                 >
                   <span className="text-white text-lg">♥</span>
                 </span>
               </div>
-{/* Nombres: estilo fino, sin contorno y sin recorte */}
-<h1
-  className="
-    mb-4
-    text-4xl sm:text-5xl lg:text-[3.7rem]
-    leading-[1.3]          /* más alto para que no corte las letras */
-    font-normal            /* quitamos el semibold, se ve más delicado */
-    text-center
-  "
-  style={{
-    fontFamily:
-      "'Great Vibes', 'Cormorant Garamond', 'Times New Roman', serif",
-    letterSpacing: "0.06em",
-    color: "#FDF5D9",       // dorado claro / marfil
-    textShadow: "0 2px 6px rgba(0,0,0,0.45)", // sombra suave, sin mancha
-    paddingTop: "0.4rem",   // un poquito de aire arriba
-    paddingBottom: "0.2rem" // y abajo, para que nada se recorte
-  }}
->
-  {tituloPrincipal}
-</h1>
 
+              {/* PLACA PREMIUM (glass) */}
+              {/* NOMBRES (SIN GLASS, con halo sutil y sin recorte) */}
+<div className="relative inline-flex flex-col items-center px-2 sm:px-3 py-2 overflow-visible">
+  {/* Halo sutil SOLO detrás del texto (no es panel / no es glass) */}
+  <div
+    className="pointer-events-none absolute -inset-x-12 -inset-y-8 blur-2xl opacity-60"
+    style={{
+      background:
+        "radial-gradient(closest-side, rgba(0,0,0,0.60), rgba(0,0,0,0.00))",
+    }}
+  />
 
+  {/* Nombres (mantiene el color dorado, mejora contraste, no recorta) */}
+  <h1
+    className="text-4xl sm:text-5xl lg:text-[4.4rem] leading-[1.15] font-normal text-center"
+    style={{
+  fontFamily: "'Great Vibes','Cormorant Garamond','Times New Roman',serif",
+  letterSpacing: "0.04em",
+  backgroundImage:
+    "linear-gradient(90deg, #FFF7D1 0%, #FDE68A 35%, #FFD86B 70%, #D4AF37 100%)",
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  color: "transparent",
 
-              {/* Línea decorativa */}
-              <div className="h-[2px] w-16 bg-white/85 mx-auto mb-4 rounded-full" />
+  // Contraste real (clave en fotos con textura)
+WebkitTextStroke: "2px rgba(0,0,0,0.55)",
 
-              {/* Frase “¡Nos casamos!” */}
-              <p className="text-base sm:text-lg text-white/90">
-                {configuracion?.subtituloHero || "¡Nos casamos!"}
-              </p>
+  // Sombras: una corta (definición) + una larga (profundidad) + un glow dorado (premium)
+  textShadow:
+    "0 2px 2px rgba(0,0,0,0.60), 0 14px 34px rgba(0,0,0,0.45), 0 0 18px rgba(253,230,138,0.35)",
+
+  // Glow adicional sin panel
+  filter: "drop-shadow(0 0 10px rgba(253,230,138,0.18))",
+
+  // Anti-recorte
+  paddingTop: "0.25rem",
+  paddingBottom: "0.32rem",
+}}
+
+  >
+    {tituloPrincipal}
+  </h1>
+
+  {/* Ornamento minimal */}
+  <div className="mt-1 mb-2 flex items-center gap-3 opacity-90">
+    <span className="h-px w-14 bg-white/70 rounded-full" />
+    <span
+      className="w-2 h-2 rotate-45 rounded-[2px]"
+      style={{ backgroundColor: "#FDE68A" }}
+    />
+    <span className="h-px w-14 bg-white/70 rounded-full" />
+  </div>
+
+  <p className="text-sm sm:text-base text-white/90">
+    {configuracion?.subtituloHero || "¡Nos casamos!"}
+  </p>
+</div>
+
             </div>
 
             {/* ===== BLOQUE INFERIOR: FECHA + COUNTDOWN + BOTÓN ===== */}
@@ -597,7 +650,6 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
                   </p>
                 </div>
               )}
-
               {/* COUNTDOWN */}
               {fechaBoda && (
                 <div className="inline-flex rounded-2xl bg-black/65 border border-white/25 px-4 py-3 backdrop-blur-sm mx-auto">
@@ -629,7 +681,12 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
               <button
                 type="button"
                 onClick={() => setMostrarModalRsvp(true)}
-                className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] text-[#111827] text-sm font-semibold px-7 py-2.5 shadow-md hover:bg-[#e0be4d] transition-colors"
+                className="mt-2 inline-flex items-center gap-2 rounded-full text-[#111827] text-sm font-semibold px-7 py-2.5 shadow-md transition-colors"
+                style={{ backgroundColor: COLOR_DORADO }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.filter = "brightness(1.06)")
+                }
+                onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
               >
                 <FiCheckCircle className="w-4 h-4" />
                 Confirmar asistencia
@@ -645,243 +702,522 @@ export default function Plantilla01({ boda, configuracion, fotos, invitadosResum
         </div>
       </section>
 
+      {/* ====== CONTENIDO CON MARCO (DESDE AQUÍ HASTA ANTES DEL FOOTER) ====== */}
+      <main className="relative">
+        {/* Contenido real */}
+        <div className="relative z-20">
+          {/* AQUÍ VA TODO: NUESTRA HISTORIA, PADRES, mostrarDetalles, etc. */}
 
+          {/* ================= NUESTRA HISTORIA (PREMIUM) ================= */}
+          <FadeIn delay={240}>
+            <section
+              className="relative pt-24 pb-16 sm:pt-28 sm:pb-20 overflow-hidden"
+              style={{ backgroundColor: COLOR_MARFIL, color: COLOR_AZUL }}
+            >
+              {/* “Luz” superior suave (sin línea) */}
 
-      {/* ================= NUESTRA HISTORIA ================= */}
-      <FadeIn delay={240}>
-        <section className="relative bg-[#F8F4E3] text-[#111827] py-12 px-4">
-          {/* ÍCONO DE ANILLOS FLOTANDO ENTRE HERO Y HISTORIA */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 translate-y-[-10%]">
-            <img
-              src={anillosBoda}
-              alt="Anillos de boda"
-              className="w-20 h-20 opacity-90 drop-shadow-md"
-            />
-          </div>
+              {/* Anillos en medallón (mismo estilo que el de novios) */}
+              <div className="absolute top-10 sm:top-12 left-1/2 -translate-x-1/2 z-30">
+                <div
+                  className="h-16 w-16 rounded-3xl bg-white/95 border shadow-lg flex items-center justify-center"
+                  style={{ borderColor: `${COLOR_DORADO}40` }}
+                >
+                  <img
+                    src={anillosBoda}
+                    alt="Anillos de boda"
+                    className="w-10 h-10 sm:w-11 sm:h-11 opacity-95"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
 
-          {/* CONTENEDOR EN COLUMNAS (UNA FILA PARA HISTORIA, OTRA PARA LA CARD) */}
-          <div className="max-w-5xl mx-auto flex flex-col gap-8">
-            {/* === FILA 1: TÍTULO + TEXTO DE HISTORIA === */}
-            <div>
-              <h2
-                className="
-                  text-3xl sm:text-4xl lg:text-[2.5rem]
-                  text-[#111827]
-                  mb-3
-                  font-serif
-                  flex items-center gap-3
-                "
-              >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF7E6]">
-                  <LuFlower2 className="w-5 h-5 text-[#D4AF37]" />
-                </span>
-                <span>Nuestra historia</span>
-              </h2>
-
-              <p className="text-base sm:text-lg text-slate-700 max-w-2xl">
-                {textoHistoria}
-              </p>
-            </div>
-
-           
-          </div>
-        </section>
-      </FadeIn>
-
-
-      {/* ================= PADRES Y PADRINOS ================= */}
-      <FadeIn delay={280}>
-        <section className="bg-[#F1E5D3] py-12 px-4">
-          <div className="relative max-w-5xl mx-auto bg-white/95 backdrop-blur rounded-3xl border border-[#F1E5D3] shadow-md pt-10 md:pt-12 pb-6 md:pb-8 px-6 md:px-8">
-            {/* ÍCONO DE PAREJA FLOTANDO SOBRE EL CARD */}
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-              <img
-                 src={parejaBoda2}
-                alt="Pareja de novios"
-                className="w-20 h-20 opacity-90 drop-shadow-md"
+              {/* Glows suaves (como “luces” de tu modal pero en versión marfil) */}
+              <div
+                className="pointer-events-none absolute -right-24 top-10 w-[520px] h-[520px] rounded-full blur-3xl opacity-40"
+                style={{ background: `${COLOR_DORADO}22` }}
               />
-            </div>
-            <h2 className="text-2xl text-[#111827] mb-4 text-center font-serif">
-              Nuestros padres y padrinos
-            </h2>
-            <p className="text-xs text-slate-600 text-center mb-6 max-w-2xl mx-auto">
-              Queremos compartir también con ustedes a las personas que nos han
-              acompañado, cuidado y guiado hasta este momento tan especial.
-            </p>
-            <div className="grid gap-6 md:grid-cols-2 text-sm text-slate-800">
-              <div className="space-y-3">
-                <p className="font-semibold text-[#111827]">Novios</p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
-                  <li>
-                    {boda?.nombre_pareja ||
-                      `${boda?.nombre_novio_1 ?? ""} ${
-                        boda?.nombre_novio_2 ?? ""
-                      }`}
-                  </li>
-                </ul>
+              <div
+                className="pointer-events-none absolute -left-28 bottom-0 w-[520px] h-[520px] rounded-full blur-3xl opacity-30"
+                style={{ background: `${COLOR_CORAL}18` }}
+              />
 
-                <p className="font-semibold text-[#111827] mt-3">
-                  Padres del novio
-                </p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
-                  <li>
-                    {textoPadresNovio ? (
-                      <TextoConPaloma texto={textoPadresNovio} />
-                    ) : (
-                      "Por definir"
-                    )}
-                  </li>
-                </ul>
-
-                <p className="font-semibold text-[#111827] mt-3">
-                  Padres de la novia
-                </p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
-                  <li>
-                    {textoPadresNovia ? (
-                      <TextoConPaloma texto={textoPadresNovia} />
-                    ) : (
-                      "Por definir"
-                    )}
-                  </li>
-                </ul>
-              </div>
-              <div className="space-y-3">
-                <p className="font-semibold text-[#111827]">Padrinos</p>
-                {/* CAMBIO: list-disc list-inside a list-none */}
-                <ul className="list-none space-y-1">
-                  <li>
-                    {textoPadrinosMayores ? (
-                      <TextoConPaloma texto={textoPadrinosMayores} />
-                    ) : (
-                      "Padrinos principales"
-                    )}
-                  </li>
-                  <li>
-                    {textoPadrinosCiviles ? (
-                      <TextoConPaloma texto={textoPadrinosCiviles} />
-                    ) : (
-                      "Padrinos civiles"
-                    )}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-      </FadeIn>
-
-
-      {/* === FILA 2: CARD DE INVITADOS, EN SU PROPIO ROW === */}
-      {mostrarDetalles && (
-        <FadeIn delay={280}>
-          <section className="bg-[#FFF7E6] py-12 px-4">
-          <div className="max-w-5xl mx-auto flex justify-center">
-            <div className="w-full md:max-w-lg">
-              <div className="bg-white rounded-3xl border border-[#FDE7C5] shadow-md p-6 flex flex-col gap-4">
-                {/* Cabecera de la tarjeta */}
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase mb-1 flex items-center gap-1.5">
-                      <FiUsers className="w-4 h-4 text-[#D4AF37]" />
-                      Invitados
-                    </p>
-                    <h3 className="font-serif text-lg text-[#111827]">
-                      Nuestra lista de invitados
-                    </h3>
-                  </div>
-
-                  {totalInvitadosPublic > 0 && (
-                    <span className="inline-flex items-center justify-center rounded-full bg-[#FFF3C4] border border-[#FACC15]/40 px-3 py-1 text-[11px] font-medium text-slate-700">
-                      {porcentajeConfirmadosPublic}% confirmados
-                    </span>
-                  )}
-                </div>
-
-                {/* Dos tarjetas: totales y confirmados */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  {/* Invitados totales */}
-                  <div className="rounded-2xl border border-slate-100 bg-[#FFFCF6] p-3 flex flex-col gap-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-semibold text-slate-500 uppercase">
-                        Invitados totales
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                  {/* ===== IZQUIERDA: Texto en card editorial ===== */}
+                  <div className="lg:col-span-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border"
+                        style={{
+                          backgroundColor: "#FFF7E6",
+                          borderColor: `${COLOR_DORADO}40`,
+                        }}
+                      >
+                        <LuFlower2
+                          className="w-5 h-5"
+                          style={{ color: COLOR_DORADO }}
+                        />
                       </span>
-                      <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-slate-50 text-slate-700">
-                        <FiUsers className="w-3.5 h-3.5" />
-                      </span>
+
+                      <div>
+                        <h2
+                          className="text-3xl sm:text-4xl font-serif leading-tight"
+                          style={{ color: COLOR_AZUL }}
+                        >
+                          Nuestra historia
+                        </h2>
+                        <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                          Un pedacito de nosotros, contado con cariño.
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-xl font-semibold text-slate-900">
-                      {totalInvitadosPublic}
-                    </p>
-                    <p className="text-[11px] text-slate-500">
-                      Personas a las que llega esta invitación.
-                    </p>
-                  </div>
 
-                  {/* Confirmados */}
-                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3 flex flex-col gap-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-semibold text-emerald-700 uppercase">
-                        Confirmados
-                      </span>
-                      <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-white text-emerald-700 border border-emerald-200">
-                        <FiCheckCircle className="w-3.5 h-3.5" />
-                      </span>
+                    <div
+                      className="rounded-3xl border bg-white/85 backdrop-blur-sm shadow-sm p-6 sm:p-7"
+                      style={{ borderColor: `${COLOR_DORADO}2B` }}
+                    >
+                      <p className="text-base sm:text-lg leading-relaxed text-slate-700 whitespace-pre-line">
+                        {textoHistoria}
+                      </p>
+
+                      {/* Firma + línea fina (premium) */}
+                      <div className="mt-6 flex items-center gap-2 text-[11px] text-slate-500">
+                        <span
+                          className="inline-block w-10 h-px"
+                          style={{ background: `${COLOR_DORADO}80` }}
+                        />
+                        <span className="tracking-[0.30em] uppercase">
+                          Con amor
+                        </span>
+                        <span
+                          className="inline-block w-10 h-px"
+                          style={{ background: `${COLOR_DORADO}80` }}
+                        />
+                      </div>
                     </div>
-                    <p className="text-xl font-semibold text-emerald-800">
-                      {totalConfirmadosPublic}
-                    </p>
-                    <p className="text-[11px] text-emerald-700">
-                      Ya nos dijeron que estarán presentes.
-                    </p>
                   </div>
-                </div>
 
-                {/* Barra de progreso */}
-                {totalInvitadosPublic > 0 && (
-                  <div className="mt-1">
-                    <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+                  {/* ===== DERECHA: Foto REAL + overlay estilo modal ===== */}
+                  <div className="lg:col-span-6">
+                    <div
+                      className="relative overflow-hidden rounded-3xl border shadow-lg"
+                      style={{
+                        borderColor: `${COLOR_DORADO}33`,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      {/* Foto */}
+                      <div className="relative h-[320px] sm:h-[380px] lg:h-[440px]">
+                        {historiaFoto ? (
+                          <img
+                            src={historiaFoto}
+                            alt="Momentos de la pareja"
+                            className="absolute inset-0 w-full h-full object-cover"
+                            style={{ objectPosition: "center 35%" }}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-slate-200" />
+                        )}
+
+                        {/* Overlay premium (consistente con tu modal: oscuro + dorado/coral) */}
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            background:
+                              `linear-gradient(180deg, rgba(10,19,32,0.10) 0%, rgba(10,19,32,0.70) 100%),` +
+                              `radial-gradient(900px 420px at 70% 20%, ${COLOR_DORADO}20, transparent 55%),` +
+                              `radial-gradient(900px 420px at 30% 85%, ${COLOR_CORAL}16, transparent 55%)`,
+                          }}
+                        />
+
+                        {/* Etiqueta (tipo “badge”) */}
+                        <div className="absolute top-5 left-5">
+                          <span
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur"
+                            style={{
+                              backgroundColor: "rgba(255,255,255,0.10)",
+                              borderColor: `${COLOR_DORADO}55`,
+                              color: "#F8F4E3",
+                            }}
+                          >
+                            <LuSparkles
+                              className="w-4 h-4"
+                              style={{ color: COLOR_DORADO }}
+                            />
+                            Un capítulo que recién empieza
+                          </span>
+                        </div>
+
+                        {/* Bloque inferior (mini detalles) */}
+                        <div className="absolute bottom-0 inset-x-0 p-5 sm:p-6">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div
+                              className="rounded-2xl border p-3 backdrop-blur"
+                              style={{
+                                backgroundColor: "rgba(255,255,255,0.08)",
+                                borderColor: "rgba(255,255,255,0.16)",
+                                color: "#F8F4E3",
+                              }}
+                            >
+                              <div className="text-[11px] opacity-80 flex items-center gap-2">
+                                <FiCalendar
+                                  className="w-4 h-4"
+                                  style={{ color: COLOR_DORADO }}
+                                />
+                                Fecha
+                              </div>
+                              <div className="mt-1 text-sm font-semibold">
+                                {fechaLarga || "Por confirmar"}
+                              </div>
+                            </div>
+
+                            <div
+                              className="rounded-2xl border p-3 backdrop-blur"
+                              style={{
+                                backgroundColor: "rgba(255,255,255,0.08)",
+                                borderColor: "rgba(255,255,255,0.16)",
+                                color: "#F8F4E3",
+                              }}
+                            >
+                              <div className="text-[11px] opacity-80 flex items-center gap-2">
+                                <FiMapPin
+                                  className="w-4 h-4"
+                                  style={{ color: COLOR_CORAL }}
+                                />
+                                Ceremonia
+                              </div>
+                              <div className="mt-1 text-sm font-semibold truncate">
+                                {lugarCeremonia || "Por confirmar"}
+                              </div>
+                            </div>
+
+                            <div
+                              className="rounded-2xl border p-3 backdrop-blur"
+                              style={{
+                                backgroundColor: "rgba(255,255,255,0.08)",
+                                borderColor: "rgba(255,255,255,0.16)",
+                                color: "#F8F4E3",
+                              }}
+                            >
+                              <div className="text-[11px] opacity-80 flex items-center gap-2">
+                                <FiMapPin
+                                  className="w-4 h-4"
+                                  style={{ color: COLOR_DORADO }}
+                                />
+                                Recepción
+                              </div>
+                              <div className="mt-1 text-sm font-semibold truncate">
+                                {lugarRecepcion || "Por confirmar"}
+                              </div>
+                            </div>
+
+                            <div
+                              className="rounded-2xl border p-3 backdrop-blur"
+                              style={{
+                                backgroundColor: "rgba(255,255,255,0.08)",
+                                borderColor: "rgba(255,255,255,0.16)",
+                                color: "#F8F4E3",
+                              }}
+                            >
+                              <div className="text-[11px] opacity-80 flex items-center gap-2">
+                                <FiUsers
+                                  className="w-4 h-4"
+                                  style={{ color: "#E5E7EB" }}
+                                />
+                                Dress code
+                              </div>
+                              <div className="mt-1 text-sm font-semibold truncate">
+                                {dressCode || "Elegante / Formal"}
+                              </div>
+                            </div>
+                          </div>
+
+                          <p className="mt-4 text-[12px] text-white/80">
+                            Un día, un lugar y la gente que más queremos. ✨
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Línea inferior decorativa */}
                       <div
-                        className="h-2.5 rounded-full bg-[#D4AF37] transition-all"
-                        style={{ width: `${porcentajeConfirmadosPublic}%` }}
+                        className="h-1"
+                        style={{
+                          background: `linear-gradient(90deg, ${COLOR_CORAL}, ${COLOR_DORADO}, ${COLOR_AZUL})`,
+                        }}
                       />
                     </div>
-                    <p className="mt-1 text-[11px] text-slate-500">
-                      Este indicador se actualiza cada vez que alguien confirma
-                      su asistencia.
+                  </div>
+                </div>
+              </div>
+            </section>
+          </FadeIn>
+          {/* ================= PADRES Y PADRINOS (PREMIUM + CONSISTENTE) ================= */}
+          <FadeIn delay={280}>
+            <section
+              className="relative py-14 sm:py-16 overflow-hidden"
+              style={{
+                background: `linear-gradient(180deg, #F1E5D3 0%, ${COLOR_MARFIL} 70%, ${COLOR_MARFIL} 100%)`,
+              }}
+            >
+              {/* Barra superior premium (igual lenguaje visual que otras secciones) */}
+              {/* <div
+            className="absolute inset-x-0 top-0 h-1"
+            style={{
+              background: `linear-gradient(90deg, ${COLOR_CORAL}, ${COLOR_DORADO}, ${COLOR_AZUL})`,
+            }}
+          /> */}
+
+              {/* Glows sutiles */}
+              <div
+                className="pointer-events-none absolute -right-28 top-10 w-[520px] h-[520px] rounded-full blur-3xl opacity-30"
+                style={{ background: `${COLOR_DORADO}1A` }}
+              />
+              <div
+                className="pointer-events-none absolute -left-28 bottom-0 w-[520px] h-[520px] rounded-full blur-3xl opacity-25"
+                style={{ background: `${COLOR_CORAL}14` }}
+              />
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+                <div
+                  className="relative bg-white/90 backdrop-blur rounded-[2.2rem] border shadow-lg pt-12 sm:pt-14 pb-8 px-5 sm:px-8 lg:px-10"
+                  style={{ borderColor: `${COLOR_DORADO}2B` }}
+                >
+                  {/* Ícono flotante consistente (medallón) */}
+                  <div className="absolute -top-9 left-1/2 -translate-x-1/2">
+                    <div
+                      className="h-16 w-16 rounded-3xl bg-white/95 border shadow-lg flex items-center justify-center"
+                      style={{ borderColor: `${COLOR_DORADO}40` }}
+                    >
+                      <img
+                        src={parejaBoda2}
+                        alt="Pareja de novios"
+                        className="w-10 h-10 opacity-90"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="text-center">
+                    <h2
+                      className="text-2xl sm:text-3xl font-serif leading-tight"
+                      style={{ color: COLOR_AZUL }}
+                    >
+                      Nuestros padres y padrinos
+                    </h2>
+                    <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto">
+                      Queremos compartir también con ustedes a las personas que
+                      nos han acompañado, cuidado y guiado hasta este momento
+                      tan especial.
                     </p>
                   </div>
-                )}
+
+                  {/* Helper visual: separador fino */}
+                  <div
+                    className="mt-7 h-px w-full"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${COLOR_DORADO}55, transparent)`,
+                    }}
+                  />
+
+                  {/* Grid premium: móvil 1 col, desktop 2 col */}
+                  <div className="mt-7 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    {/* NOTA: min-w-0 + break-words evita que texto largo rompa el diseño */}
+                    <div className="min-w-0 space-y-4">
+                      <div
+                        className="rounded-2xl border bg-white/85 p-4 sm:p-5"
+                        style={{ borderColor: `${COLOR_DORADO}2B` }}
+                      >
+                        <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500 mb-2">
+                          Novios
+                        </div>
+                        <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words">
+                          {boda?.nombre_pareja ||
+                            `${(boda?.nombre_novio_1 ?? "").trim()} & ${(
+                              boda?.nombre_novio_2 ?? ""
+                            ).trim()}`.trim() ||
+                            "Por definir"}
+                        </div>
+                      </div>
+
+                      <div
+                        className="rounded-2xl border bg-white/85 p-4 sm:p-5"
+                        style={{ borderColor: `${COLOR_DORADO}2B` }}
+                      >
+                        <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500 mb-2">
+                          Padres del novio
+                        </div>
+                        <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words whitespace-pre-line">
+                          {textoPadresNovio ? (
+                            <TextoConPaloma texto={textoPadresNovio} />
+                          ) : (
+                            "Por definir"
+                          )}
+                        </div>
+                      </div>
+
+                      <div
+                        className="rounded-2xl border bg-white/85 p-4 sm:p-5"
+                        style={{ borderColor: `${COLOR_DORADO}2B` }}
+                      >
+                        <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500 mb-2">
+                          Padres de la novia
+                        </div>
+                        <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words whitespace-pre-line">
+                          {textoPadresNovia ? (
+                            <TextoConPaloma texto={textoPadresNovia} />
+                          ) : (
+                            "Por definir"
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="min-w-0 space-y-4">
+                      <div
+                        className="rounded-2xl border bg-white/85 p-4 sm:p-5"
+                        style={{ borderColor: `${COLOR_DORADO}2B` }}
+                      >
+                        <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500 mb-2">
+                          Padrinos principales
+                        </div>
+                        <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words whitespace-pre-line">
+                          {textoPadrinosMayores ? (
+                            <TextoConPaloma texto={textoPadrinosMayores} />
+                          ) : (
+                            "Por definir"
+                          )}
+                        </div>
+                      </div>
+
+                      <div
+                        className="rounded-2xl border bg-white/85 p-4 sm:p-5"
+                        style={{ borderColor: `${COLOR_DORADO}2B` }}
+                      >
+                        <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500 mb-2">
+                          Padrinos civiles
+                        </div>
+                        <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words whitespace-pre-line">
+                          {textoPadrinosCiviles ? (
+                            <TextoConPaloma texto={textoPadrinosCiviles} />
+                          ) : (
+                            "Por definir"
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Pie premium (opcional pero suma) */}
+                      <div className="text-[12px] text-slate-600 px-1">
+                        Gracias por ser parte de nuestra historia. ✨
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          </section>
-        </FadeIn>
-      )}
+            </section>
+          </FadeIn>
 
+          {mostrarDetalles && (
+            <FadeIn delay={280}>
+              <div id="post-confirmation-details">
+                <PostConfirmationDetails
+                  boda={boda}
+                  configuracion={configuracion}
+                  faqs={[]}
+                  invitadosResumen={invitadosResumen}
+                />
+              </div>
+            </FadeIn>
+          )}
+        </div>
 
+        {/* FLORES: SOLO EN LOS MÁRGENES (CENTRO ENMASCARADO) */}
+        <div
+          className="pointer-events-none absolute inset-0 z-30 overflow-visible"
+          style={{
+            // Ancho del "marco" central: min(7xl, 100% - 2.5rem)
+            "--frameW": "min(80rem, calc(100% - 2.5rem))",
+            // Máscara: negro = visible, transparente = oculto (zona central)
+            WebkitMaskImage: `
+        linear-gradient(to right,
+          rgba(0,0,0,1) 0,
+          rgba(0,0,0,1) calc((100% - var(--frameW)) / 2),
+          rgba(0,0,0,0) calc((100% - var(--frameW)) / 2),
+          rgba(0,0,0,0) calc(100% - (100% - var(--frameW)) / 2),
+          rgba(0,0,0,1) calc(100% - (100% - var(--frameW)) / 2),
+          rgba(0,0,0,1) 100%
+        )
+      `,
+            maskImage: `
+        linear-gradient(to right,
+          rgba(0,0,0,1) 0,
+          rgba(0,0,0,1) calc((100% - var(--frameW)) / 2),
+          rgba(0,0,0,0) calc((100% - var(--frameW)) / 2),
+          rgba(0,0,0,0) calc(100% - (100% - var(--frameW)) / 2),
+          rgba(0,0,0,1) calc(100% - (100% - var(--frameW)) / 2),
+          rgba(0,0,0,1) 100%
+        )
+      `,
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+          }}
+        >
+          {/* Izquierda arriba */}
+          <img
+            src={FLORES_LATERAL}
+            alt=""
+            aria-hidden="true"
+            className="hidden lg:block absolute left-0 top-10 w-[340px] -translate-x-[45%] opacity-[0.22]"
+            style={{ filter: "drop-shadow(0 12px 28px rgba(15,23,42,0.10))" }}
+          />
 
-      {/* ================= DETALLES (DESPUÉS DE CONFIRMAR) ================= */}
-      {mostrarDetalles && (
-        <FadeIn delay={320}>
-          <section className="bg-[#F8F4E3] py-12 px-4">
-            <div className="max-w-5xl mx-auto">
-              <PostConfirmationDetails
-                boda={boda}
-                configuracion={configuracion}
-                faqs={[]} // TODO: Pasar FAQs reales si están disponibles
-              />
-            </div>
-          </section>
-        </FadeIn>
-      )}
+          {/* Derecha arriba (espejo) */}
+          <img
+            src={FLORES_LATERAL}
+            alt=""
+            aria-hidden="true"
+            className="hidden lg:block absolute right-0 top-12 w-[340px] translate-x-[45%] scale-x-[-1] opacity-[0.22]"
+            style={{ filter: "drop-shadow(0 12px 28px rgba(15,23,42,0.10))" }}
+          />
+
+          {/* Izquierda abajo */}
+          <img
+            src={FLORES_LATERAL}
+            alt=""
+            aria-hidden="true"
+            className="hidden lg:block absolute left-0 bottom-[-40px] w-[380px] -translate-x-[48%] rotate-[6deg] opacity-[0.18]"
+            style={{ filter: "drop-shadow(0 16px 34px rgba(15,23,42,0.10))" }}
+          />
+
+          {/* Derecha abajo (espejo) */}
+          <img
+            src={FLORES_LATERAL}
+            alt=""
+            aria-hidden="true"
+            className="hidden lg:block absolute right-0 bottom-[-40px] w-[380px] translate-x-[48%] rotate-[-6deg] scale-x-[-1] opacity-[0.18]"
+            style={{ filter: "drop-shadow(0 16px 34px rgba(15,23,42,0.10))" }}
+          />
+        </div>
+
+        {/* MARCO (encima de todo) */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2
+               w-[calc(100%-1.5rem)] sm:w-[calc(100%-2.5rem)]
+               max-w-7xl rounded-[2.75rem] border z-40 mb-5"
+          style={{
+            borderColor: "rgba(15, 23, 42, 0.06)",
+            boxShadow:
+              "0 0 0 1px rgba(255,255,255,0.35), 0 18px 50px rgba(15,23,42,0.10)",
+          }}
+        />
+      </main>
 
       {/* ================= FOOTER ================= */}
       <FadeIn delay={400}>
-        <footer className="bg-[#020617] border-t border-[#020617] text-[#F8F4E3]/80">
+        <footer className="bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-black/95   overflow-hidden text-white">
           <div className="max-w-5xl mx-auto px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <p className="text-[11px]">
               Con todo nuestro cariño,{" "}

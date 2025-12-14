@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FiX, FiCheckCircle, FiClock, FiAlertCircle } from "react-icons/fi";
 import { registrarRsvp, validarCodigo } from "../services/publicRsvpService";
+import { ConfirmationSuccess } from "./ConfirmationSuccess";
 
 import {
   COLOR_AZUL,
@@ -57,7 +58,9 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
 
       const respuesta = await registrarRsvp(cargaUtilidad);
 
+      // mostrar pantalla de éxito (usamos ConfirmationSuccess)
       setEstadoFormulario("success");
+      setInvitadoEncontrado(respuesta?.invitado || invitadoEncontrado);
 
       if (onSuccess) {
         setTimeout(() => {
@@ -67,16 +70,6 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
           });
         }, 600);
       }
-
-      // limpiar y cerrar luego
-      setTimeout(() => {
-        setCodigoInvitacion("");
-        setCantidadPersonas(1);
-        setMensajePersonal("");
-        setNumeroContacto("");
-        setInvitadoEncontrado(null);
-        setEtapa("buscar");
-      }, 500);
     } catch (error) {
       console.error("Error en confirmación:", error);
       setEstadoFormulario("error");
@@ -103,14 +96,25 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
 
     try {
       setEstadoFormulario("loading");
-      const { data } = await validarCodigo(codigoInvitacion.trim().toUpperCase());
+      const data = await validarCodigo(codigoInvitacion.trim().toUpperCase());
       if (data?.ok && data?.invitado) {
         const inv = data.invitado;
         setInvitadoEncontrado(inv);
         setCantidadPersonas(inv.pases || 1);
         setNumeroContacto(inv.celular || "");
-        setEtapa("confirmar");
-        setEstadoFormulario("idle");
+
+        // Si ya está confirmado, notificar al padre para mostrar la celebración
+        if (inv.es_confirmado) {
+          setEstadoFormulario("success");
+          if (onSuccess) {
+            // Enviar datos similares a los que se envían tras confirmar
+            onSuccess({ nombre: inv.nombre_invitado, cantidad: inv.pases || 1 });
+          }
+          return;
+        } else {
+          setEtapa("confirmar");
+          setEstadoFormulario("idle");
+        }
       } else {
         setMensajeError(data?.message || "Código no válido");
         setEstadoFormulario("error");
@@ -124,22 +128,20 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
 
   if (!isOpen) return null;
 
-  const modalBg = `linear-gradient(180deg, ${COLOR_DORADO}10, ${COLOR_MARFIL})`;
+  // Usamos el mismo fondo oscuro y tarjeta que ConfirmationSuccess para mantener coherencia visual
+  const modalBg = undefined;
 
   return (
     <div
       className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4 py-4 overflow-y-auto"
       onClick={onClose}
     >
-      <div
-        className="relative w-full max-w-lg rounded-3xl overflow-hidden my-8 border-2"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: modalBg,
-          borderColor: COLOR_DORADO,
-          boxShadow: "0 20px 50px rgba(10,11,13,0.45)",
-        }}
-      >
+      <div onClick={(e) => e.stopPropagation()}>
+        <div className="relative z-10 max-w-2xl w-full mx-auto">
+          <div className="bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-black/95 border border-yellow-500/40 rounded-3xl shadow-2xl overflow-hidden">
+            {/* Línea decorativa superior */}
+            <div className="h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
+            <div className="p-6 sm:p-8">
         {/* Botón cerrar */}
         <button
           onClick={onClose}
@@ -148,25 +150,17 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
           <FiX className="w-5 h-5 text-slate-600" />
         </button>
 
-        {/* Línea decorativa superior */}
-        <div
-          className="h-1"
-          style={{
-            background: `linear-gradient(90deg, ${COLOR_DORADO}, ${COLOR_CORAL})`,
-          }}
-        />
-
-        {/* Contenido */}
-        <div className="p-6 sm:p-8">
+            {/* Contenido (migrado dentro de la tarjeta para mantener estilo) */}
+            
           {/* Encabezado */}
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center h-12 w-12 rounded-full mb-3" style={{ background: COLOR_DORADO }}>
               <FiCheckCircle className="w-6 h-6 text-[#F8F4E3]" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif text-slate-900 mb-2">
+            <h2 className="text-2xl sm:text-3xl font-serif text-white mb-2">
               Confirma tu asistencia
             </h2>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-200">
               Ingresa los datos de tu invitación para registrar tu presencia
             </p>
           </div>
@@ -176,7 +170,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
             <form onSubmit={etapa === "buscar" ? validarCodigoAction : manejadorEnvio} className="space-y-4">
               {/* Código de invitación */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-slate-200 uppercase tracking-wider mb-2">
                   Código de invitación
                 </label>
                 <input
@@ -189,7 +183,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
                   style={{ borderColor: "#F3E7D0" }}
                   disabled={etapa === "confirmar"}
                 />
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-300 mt-1">
                   Aparece en tu invitación o mensaje WhatsApp
                 </p>
               </div>
@@ -197,7 +191,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
               {etapa === "confirmar" && invitadoEncontrado && (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                    <label className="block text-xs font-semibold text-slate-200 uppercase tracking-wider mb-2">
                       Teléfono registrado (editable)
                     </label>
                     <input
@@ -212,7 +206,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                    <label className="block text-xs font-semibold text-slate-200 uppercase tracking-wider mb-2">
                       Número de pases (no editable)
                     </label>
                     <div className="w-full rounded-xl border-2 bg-slate-50 px-4 py-3 text-sm text-slate-700" style={{ borderColor: "#F3E7D0" }}>
@@ -222,7 +216,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                    <label className="block text-xs font-semibold text-slate-200 uppercase tracking-wider mb-2">
                       Mensaje (opcional)
                     </label>
                     <textarea
@@ -248,8 +242,8 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
               )}
 
               {/* Nota informativa */}
-              <div className="rounded-xl p-3" style={{ background: "rgba(244, 236, 223, 0.9)", border: `1px solid ${COLOR_DORADO}` }}>
-                <p className="text-xs text-[#1E293B] flex gap-2 items-start">
+              <div className="bg-white/5 border border-yellow-500/20 rounded-2xl p-2 sm:p-3 mb-4 backdrop-blur-sm">
+                <p className="text-xs text-slate-200 flex gap-2 items-start">
                   <FiClock className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#D4AF37]" />
                   <span>
                     Después de confirmar, recibirás detalles de la boda por
@@ -262,12 +256,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
               <button
                 type="submit"
                 disabled={estadoFormulario === "loading"}
-                className="w-full rounded-xl text-white font-semibold py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                style={{
-                  background: etapa === "buscar"
-                    ? `linear-gradient(90deg, ${COLOR_DORADO}, ${COLOR_CORAL})`
-                    : `linear-gradient(90deg, ${COLOR_CORAL}, ${COLOR_DORADO})`,
-                }}
+                 className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all"
               >
                 {estadoFormulario === "loading" ? (
                   <>
@@ -283,29 +272,28 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
               </button>
             </form>
           ) : (
-            /* estadoFormulario de éxito */
-            <div className="text-center py-6">
-              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full mb-4" style={{ background: COLOR_DORADO }}>
-                <FiCheckCircle className="w-8 h-8 text-[#F8F4E3]" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                ¡Confirmación registrada!
-              </h3>
-              <p className="text-sm text-slate-600 mb-6">
-                Gracias por tu confirmación. Pronto verás más detalles sobre
-                la celebración.
-              </p>
-              <button
-                onClick={onClose}
-                className="inline-flex items-center gap-2 rounded-xl text-[#1E293B] font-semibold px-6 py-2.5 transition-colors"
-                style={{ background: COLOR_MARFIL, border: `1px solid ${COLOR_DORADO}` }}
-              >
-                Cerrar
-              </button>
-            </div>
+            /* estadoFormulario de éxito: usamos ConfirmationSuccess con confeti */
+            <ConfirmationSuccess
+              nombreInvitado={invitadoEncontrado?.nombre_invitado}
+              cantidadPersonas={invitadoEncontrado?.pases || cantidadPersonas}
+              invitado={invitadoEncontrado}
+              onClose={() => {
+                // limpiar estado y cerrar modal
+                setCodigoInvitacion("");
+                setCantidadPersonas(1);
+                setMensajePersonal("");
+                setNumeroContacto("");
+                setInvitadoEncontrado(null);
+                setEtapa("buscar");
+                setEstadoFormulario("idle");
+                if (onClose) onClose();
+              }}
+            />
           )}
         </div>
       </div>
+    </div>
+    </div>
     </div>
   );
 }

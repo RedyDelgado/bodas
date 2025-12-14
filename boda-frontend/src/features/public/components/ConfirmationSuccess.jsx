@@ -16,6 +16,7 @@ import {
 export function ConfirmationSuccess({
   nombreInvitado,
   cantidadPersonas,
+  invitado,
   onClose,
 }) {
   const refAudio = useRef(null);
@@ -184,14 +185,14 @@ export function ConfirmationSuccess({
                 </p>
               </div>
 
-              {/* Información útil */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
+              {/* Información útil (detalles del invitado) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
                 <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
                   <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">
                     Personas confirmadas
                   </p>
                   <p className="text-2xl font-bold text-yellow-400">
-                    {cantidadPersonas || 1}
+                    {invitado?.pases ?? cantidadPersonas ?? 1}
                   </p>
                 </div>
                 <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
@@ -199,6 +200,14 @@ export function ConfirmationSuccess({
                     Estado
                   </p>
                   <p className="text-lg font-bold text-emerald-400">Confirmado</p>
+                </div>
+                <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                  <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">Teléfono</p>
+                  <p className="text-sm text-slate-200">{invitado?.celular || "—"}</p>
+                </div>
+                <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                  <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">Correo</p>
+                  <p className="text-sm text-slate-200">{invitado?.correo || "—"}</p>
                 </div>
               </div>
 

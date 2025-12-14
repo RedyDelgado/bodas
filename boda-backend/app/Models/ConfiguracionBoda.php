@@ -14,17 +14,27 @@ class ConfiguracionBoda extends Model
         'frase_principal',
         'texto_fecha_religioso',
         'texto_fecha_civil',
+
         'texto_padres_novio',
         'texto_padres_novia',
         'texto_padrinos_mayores',
         'texto_padrinos_civiles',
+
         'cronograma_texto',
         'local_religioso',
         'local_recepcion',
+
+        // SOLO URLS
+        'ceremonia_maps_url',
+        'recepcion_maps_url',
+
         'texto_cuentas_bancarias',
         'texto_yape',
+
         'texto_historia_pareja',
         'texto_mensaje_final',
+
+        'texto_preguntas_frecuentes',
     ];
 
     public function boda(): BelongsTo
