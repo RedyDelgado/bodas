@@ -15,14 +15,18 @@ use App\Models\User;
 class CardDesignController extends Controller
 {
     protected function ensureOwnerOrAbort(Boda $boda): void
-{
-    /** @var User $user */
-    $user = Auth::user();
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
 
-    if ($user->rol?->nombre !== 'superadmin' && $boda->user_id !== $user->id) {
-        abort(403, 'No tienes permiso para esta boda');
+        if (!$user) {
+            abort(401, 'No autenticado');
+        }
+
+        if ($user->rol?->nombre !== 'superadmin' && $boda->user_id !== $user->id) {
+            abort(403, 'No tienes permiso para esta boda');
+        }
     }
-}
 
 
     public function store(Request $request, Boda $boda)
@@ -68,7 +72,7 @@ class CardDesignController extends Controller
                 }
             }
         } catch (\Throwable $e) {
-            \Log::warning('No se pudo generar preview: '.$e->getMessage());
+            \Log::warning('No se pudo generar preview: ' . $e->getMessage());
         }
 
         $card = TarjetaDiseno::where('boda_id', $boda->id)->first();
@@ -99,19 +103,17 @@ class CardDesignController extends Controller
         return response()->json(['message' => 'Generación en cola (background). Se procesará pronto.', 'card_design' => $card]);
     }
     public function progress(Request $request, Boda $boda)
-{
-    $this->ensureOwnerOrAbort($boda);
+    {
+        $this->ensureOwnerOrAbort($boda);
 
-    $card = TarjetaDiseno::where('boda_id', $boda->id)->first();
-    $total = $boda->invitados()->count();
+        $card = TarjetaDiseno::where('boda_id', $boda->id)->first();
+        $total = $boda->invitados()->count();
 
-    return response()->json([
-        'estado' => $card?->estado_generacion ?? 'sin_diseno',
-        'generadas' => (int)($card?->ultimo_conteo_generado ?? 0),
-        'total' => (int)$total,
-        'ultima_generacion_at' => $card?->ultima_generacion_at,
-    ]);
-}
-
-
+        return response()->json([
+            'estado' => $card?->estado_generacion ?? 'sin_diseno',
+            'generadas' => (int)($card?->ultimo_conteo_generado ?? 0),
+            'total' => (int)$total,
+            'ultima_generacion_at' => $card?->ultima_generacion_at,
+        ]);
+    }
 }

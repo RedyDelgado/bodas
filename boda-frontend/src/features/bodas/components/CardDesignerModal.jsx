@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
 
-export default function CardDesignerModal({ open, onClose, boda, invitados }) {
+export default function CardDesignerModal({
+  open,
+  onClose,
+  boda,
+  invitados,
+  onStartGenerate,
+}) {
   const [templateFile, setTemplateFile] = useState(null);
   const [templateUrl, setTemplateUrl] = useState(null);
   const [templateInfo, setTemplateInfo] = useState({ w: 0, h: 0 });
   const [placed, setPlaced] = useState([]);
-  const [fontFamily, setFontFamily] = useState('CormorantGaramond-SemiBold');
+  const [fontFamily, setFontFamily] = useState("CormorantGaramond-SemiBold");
   const [fontSize, setFontSize] = useState(18);
   const [saving, setSaving] = useState(false);
   const canvasRef = useRef(null);
@@ -44,37 +50,54 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
       setPlaced([]);
     }
   }, [open]);
-useEffect(() => {
-  let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-  (async () => {
-    try {
-      // axiosClient tiene baseURL = VITE_API_URL (ej. http://localhost:8000/api)
-      const { data } = await axiosClient.get("/fonts"); // ==> /api/fonts en backend
-      if (cancelled) return;
+    (async () => {
+      try {
+        // axiosClient tiene baseURL = VITE_API_URL (ej. http://localhost:8000/api)
+        const { data } = await axiosClient.get("/fonts"); // ==> /api/fonts en backend
+        if (cancelled) return;
 
-      const mapped = (data || []).map((f) => ({
-        name: f.name || f.filename,
-        // Si el backend devuelve url absoluta, úsala.
-        // Si devuelve relativa, también funciona.
-        path: f.url || `/api/fonts/file/${f.filename}`,
-      }));
+        const mapped = (data || []).map((f) => ({
+          name: f.name || f.filename,
+          // Si el backend devuelve url absoluta, úsala.
+          // Si devuelve relativa, también funciona.
+          path: f.url || `/api/fonts/file/${f.filename}`,
+        }));
 
-      setLoadedFonts(mapped);
-    } catch (e) {
-      // Fallback: usa fonts locales del frontend (public/fonts)
-      setLoadedFonts([
-        { name: "CormorantGaramond-SemiBold", path: `${window.location.origin}/fonts/CormorantGaramond-SemiBold.ttf` },
-        { name: "Montserrat-Bold", path: `${window.location.origin}/fonts/Montserrat-Bold.otf` },
-        { name: "Montserrat-Italic", path: `${window.location.origin}/fonts/Montserrat-Italic.otf` },
-        { name: "Montserrat-Medium", path: `${window.location.origin}/fonts/Montserrat-Medium.otf` },
-        { name: "Montserrat-Regular", path: `${window.location.origin}/fonts/Montserrat-Regular.otf` },
-      ]);
-    }
-  })();
+        setLoadedFonts(mapped);
+      } catch (e) {
+        // Fallback: usa fonts locales del frontend (public/fonts)
+        setLoadedFonts([
+          {
+            name: "CormorantGaramond-SemiBold",
+            path: `${window.location.origin}/fonts/CormorantGaramond-SemiBold.ttf`,
+          },
+          {
+            name: "Montserrat-Bold",
+            path: `${window.location.origin}/fonts/Montserrat-Bold.otf`,
+          },
+          {
+            name: "Montserrat-Italic",
+            path: `${window.location.origin}/fonts/Montserrat-Italic.otf`,
+          },
+          {
+            name: "Montserrat-Medium",
+            path: `${window.location.origin}/fonts/Montserrat-Medium.otf`,
+          },
+          {
+            name: "Montserrat-Regular",
+            path: `${window.location.origin}/fonts/Montserrat-Regular.otf`,
+          },
+        ]);
+      }
+    })();
 
-  return () => { cancelled = true; };
-}, []);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const defaultFields = [
     { key: "nombre_invitado", label: "Nombre del invitado" },
@@ -87,16 +110,22 @@ useEffect(() => {
   const [fieldsList, setFieldsList] = useState(defaultFields);
   // fonts available in backend public/fonts
   const backendFonts = [
-    { name: 'CormorantGaramond-SemiBold', file: 'CormorantGaramond-SemiBold.ttf' },
-    { name: 'EuphoriaScript-Regular', file: 'EuphoriaScript-Regular.otf' },
-    { name: 'Montserrat-Bold', file: 'Montserrat-Bold.otf' },
-    { name: 'Montserrat-Italic', file: 'Montserrat-Italic.otf' },
-    { name: 'Montserrat-Medium', file: 'Montserrat-Medium.otf' },
-    { name: 'Montserrat-Regular', file: 'Montserrat-Regular.otf' },
-    { name: 'PlayfairDisplay-Regular', file: 'PlayfairDisplay-Regular.otf' },
-    { name: 'PlayfairDisplaySC-Bold', file: 'PlayfairDisplaySC-Bold.otf' },
-    { name: 'PlayfairDisplaySC-Italic', file: 'PlayfairDisplaySC-Italic.otf' },
-    { name: 'PlayfairDisplaySC-Regular', file: 'PlayfairDisplaySC-Regular.otf' },
+    {
+      name: "CormorantGaramond-SemiBold",
+      file: "CormorantGaramond-SemiBold.ttf",
+    },
+    { name: "EuphoriaScript-Regular", file: "EuphoriaScript-Regular.otf" },
+    { name: "Montserrat-Bold", file: "Montserrat-Bold.otf" },
+    { name: "Montserrat-Italic", file: "Montserrat-Italic.otf" },
+    { name: "Montserrat-Medium", file: "Montserrat-Medium.otf" },
+    { name: "Montserrat-Regular", file: "Montserrat-Regular.otf" },
+    { name: "PlayfairDisplay-Regular", file: "PlayfairDisplay-Regular.otf" },
+    { name: "PlayfairDisplaySC-Bold", file: "PlayfairDisplaySC-Bold.otf" },
+    { name: "PlayfairDisplaySC-Italic", file: "PlayfairDisplaySC-Italic.otf" },
+    {
+      name: "PlayfairDisplaySC-Regular",
+      file: "PlayfairDisplaySC-Regular.otf",
+    },
   ];
 
   const [zoom, setZoom] = useState(100); // percent
@@ -105,30 +134,41 @@ useEffect(() => {
 
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/fonts')
+    fetch("/api/fonts")
       .then(async (res) => {
-        if (!res.ok) throw new Error('No fonts');
+        if (!res.ok) throw new Error("No fonts");
         const data = await res.json();
         if (cancelled) return;
-        const mapped = data.map(f => ({ name: f.name || f.filename, path: f.url || `${window.location.origin}/fonts/${f.filename}`}));
+        const mapped = data.map((f) => ({
+          name: f.name || f.filename,
+          path: f.url || `${window.location.origin}/fonts/${f.filename}`,
+        }));
         setLoadedFonts(mapped);
       })
       .catch(() => {
         // fallback to embedded list if API fails
-        setLoadedFonts(backendFonts.map(f=>({ name: f.name, path: `${window.location.origin}/fonts/${f.file}`})));
+        setLoadedFonts(
+          backendFonts.map((f) => ({
+            name: f.name,
+            path: `${window.location.origin}/fonts/${f.file}`,
+          }))
+        );
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     // inject @font-face for available backend fonts so CSS can use them
-    loadedFonts.forEach(f => {
+    loadedFonts.forEach((f) => {
       if (!document.getElementById(`font-${f.name}`)) {
-        const style = document.createElement('style');
+        const style = document.createElement("style");
         style.id = `font-${f.name}`;
         // try to infer format from extension for better browser support
-        const ext = f.path.split('.').pop().toLowerCase();
-        const fmt = ext === 'ttf' ? 'truetype' : (ext === 'otf' ? 'opentype' : 'woff2');
+        const ext = f.path.split(".").pop().toLowerCase();
+        const fmt =
+          ext === "ttf" ? "truetype" : ext === "otf" ? "opentype" : "woff2";
         style.innerHTML = `@font-face{font-family: '${f.name}'; src: url('${f.path}') format('${fmt}'); font-display: swap;}`;
         document.head.appendChild(style);
       }
@@ -139,17 +179,32 @@ useEffect(() => {
   async function ensureFontLoaded(name) {
     try {
       // if already available, resolve
-      if (document.fonts && document.fonts.check && document.fonts.check(`1em "${name}"`)) return;
-      const f = loadedFonts.find(x => x.name === name);
+      if (
+        document.fonts &&
+        document.fonts.check &&
+        document.fonts.check(`1em "${name}"`)
+      )
+        return;
+      const f = loadedFonts.find((x) => x.name === name);
       if (!f) return;
       // fetch font binary and register via FontFace API (safer: ensures real font content)
       if (window.FontFace) {
-        const res = await fetch(f.path, { method: 'GET', mode: 'cors' });
-        if (!res.ok) throw new Error('Font fetch failed');
-        const contentType = (res.headers.get('content-type') || '').toLowerCase();
-        if (!contentType.includes('font') && !contentType.includes('octet') && !contentType.includes('binary')) {
+        const res = await fetch(f.path, { method: "GET", mode: "cors" });
+        if (!res.ok) throw new Error("Font fetch failed");
+        const contentType = (
+          res.headers.get("content-type") || ""
+        ).toLowerCase();
+        if (
+          !contentType.includes("font") &&
+          !contentType.includes("octet") &&
+          !contentType.includes("binary")
+        ) {
           // may still be ok if extension is correct; log warning
-          console.warn('Font content-type may be incorrect:', contentType, f.path);
+          console.warn(
+            "Font content-type may be incorrect:",
+            contentType,
+            f.path
+          );
         }
         const ab = await res.arrayBuffer();
         const ff = new FontFace(name, ab);
@@ -158,70 +213,88 @@ useEffect(() => {
         return;
       }
     } catch (err) {
-      console.warn('ensureFontLoaded error', err);
+      console.warn("ensureFontLoaded error", err);
     }
   }
 
-  function zoomIn() { setZoom(z => Math.min(400, z + 10)); }
-  function zoomOut() { setZoom(z => Math.max(10, z - 10)); }
+  function zoomIn() {
+    setZoom((z) => Math.min(400, z + 10));
+  }
+  function zoomOut() {
+    setZoom((z) => Math.max(10, z - 10));
+  }
 
   function fitToScreen() {
     if (!canvasRef.current || !templateInfo.w || !templateInfo.h) return;
     const rect = canvasRef.current.getBoundingClientRect();
-    const scale = Math.floor(Math.min((rect.width / templateInfo.w) * 100, (rect.height / templateInfo.h) * 100));
+    const scale = Math.floor(
+      Math.min(
+        (rect.width / templateInfo.w) * 100,
+        (rect.height / templateInfo.h) * 100
+      )
+    );
     if (scale <= 0) return;
     setZoom(scale);
   }
 
   async function downloadPreview() {
-    if (!templateUrl) return alert('Sube una plantilla primero');
+    if (!templateUrl) return alert("Sube una plantilla primero");
     const img = new Image();
-    img.crossOrigin = 'anonymous';
+    img.crossOrigin = "anonymous";
     img.src = templateUrl;
-    await new Promise((res,rej)=>{ img.onload = res; img.onerror = rej; });
+    await new Promise((res, rej) => {
+      img.onload = res;
+      img.onerror = rej;
+    });
     const w = templateInfo.w || img.width || 1920;
     const h = templateInfo.h || img.height || 1080;
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, w, h);
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     // ensure fonts used by the design are loaded before drawing text
     try {
-      const usedFonts = Array.from(new Set(placed.map(p => p.fontFamily || fontFamily).filter(Boolean)));
-      await Promise.all(usedFonts.map(f => document.fonts.load(`16px "${f}"`)));
+      const usedFonts = Array.from(
+        new Set(placed.map((p) => p.fontFamily || fontFamily).filter(Boolean))
+      );
+      await Promise.all(
+        usedFonts.map((f) => document.fonts.load(`16px "${f}"`))
+      );
     } catch (err) {
       // ignore font load failures
     }
-    placed.forEach(p => {
+    placed.forEach((p) => {
       const px = (p.x / 100) * w;
       const py = (p.y / 100) * h;
-      const fld = fieldsList.find(f=>f.key===p.field);
-      const label = fld?fld.label:p.field;
+      const fld = fieldsList.find((f) => f.key === p.field);
+      const label = fld ? fld.label : p.field;
       // determine display text: explicit -> sample -> label
-     let display = label;
+      let display = label;
 
-if (useSample && invitados && invitados.length > 0) {
-  const sample = invitados[0];
-  const map = {
-    nombre_invitado: sample.nombre_invitado,
-    nombre_pareja: boda?.nombre_pareja,
-    fecha_boda: boda?.fecha_boda,
-    ciudad: boda?.ciudad,
-    codigo_clave: sample.codigo_clave,
-    pases: sample.pases,
-  };
-  display = map[p.field] ?? label;
-}
+      if (useSample && invitados && invitados.length > 0) {
+        const sample = invitados[0];
+        const map = {
+          nombre_invitado: sample.nombre_invitado,
+          nombre_pareja: boda?.nombre_pareja,
+          fecha_boda: boda?.fecha_boda,
+          ciudad: boda?.ciudad,
+          codigo_clave: sample.codigo_clave,
+          pases: sample.pases,
+        };
+        display = map[p.field] ?? label;
+      }
       // draw text in black by default (contrasts most templates)
-      ctx.fillStyle = '#000000';
-      ctx.font = `${p.fontSize || fontSize}px "${p.fontFamily || fontFamily}", sans-serif`;
+      ctx.fillStyle = "#000000";
+      ctx.font = `${p.fontSize || fontSize}px "${
+        p.fontFamily || fontFamily
+      }", sans-serif`;
       ctx.fillText(display, px, py);
     });
-    const data = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
+    const data = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
     a.href = data;
     a.download = `prediseno_${Date.now()}.png`;
     a.click();
@@ -234,7 +307,7 @@ if (useSample && invitados && invitados.length > 0) {
   function onPlacedDragStart(e, placedId) {
     e.dataTransfer.setData("text/plain", `placed:${placedId}`);
     // allow move effect
-    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.effectAllowed = "move";
   }
 
   function handleDrop(e) {
@@ -242,8 +315,8 @@ if (useSample && invitados && invitados.length > 0) {
     if (!templateUrl) return;
     const raw = e.dataTransfer.getData("text/plain");
     const rect = canvasRef.current.getBoundingClientRect();
-    let px = (e.clientX - rect.left);
-    let py = (e.clientY - rect.top);
+    let px = e.clientX - rect.left;
+    let py = e.clientY - rect.top;
 
     // If grid is active and snapToGrid true, snap pixels to nearest grid intersection
     if (showGrid && snapToGrid) {
@@ -260,24 +333,34 @@ if (useSample && invitados && invitados.length > 0) {
 
     const field = raw;
     if (!field) return;
-    if (field.startsWith('field:')) {
-      const key = field.replace('field:', '');
+    if (field.startsWith("field:")) {
+      const key = field.replace("field:", "");
       // determine default text for the new placed element (sample or label)
-      const fld = fieldsList.find(f=>f.key===key);
+      const fld = fieldsList.find((f) => f.key === key);
       const label = fld ? fld.label : key;
       let defaultText = label;
-      if (useSample && invitados && invitados.length>0) {
+      if (useSample && invitados && invitados.length > 0) {
         const sample = invitados[0];
-        const map = { nombre_invitado: sample.nombre_invitado, nombre_pareja: boda?.nombre_pareja, fecha_boda: boda?.fecha_boda, ciudad: boda?.ciudad, codigo_clave: sample.codigo_clave, pases: sample.pases };
+        const map = {
+          nombre_invitado: sample.nombre_invitado,
+          nombre_pareja: boda?.nombre_pareja,
+          fecha_boda: boda?.fecha_boda,
+          ciudad: boda?.ciudad,
+          codigo_clave: sample.codigo_clave,
+          pases: sample.pases,
+        };
         defaultText = map[key] ?? label;
       }
-      setPlaced((p) => [...p, { id: Date.now(), field: key, x, y, fontSize, fontFamily }]);
+      setPlaced((p) => [
+        ...p,
+        { id: Date.now(), field: key, x, y, fontSize, fontFamily },
+      ]);
       setSelectedPlacedId(null);
       return;
     }
-    if (field.startsWith('placed:')) {
-      const id = Number(field.replace('placed:', ''));
-      setPlaced((p) => p.map(it => it.id === id ? {...it, x, y} : it));
+    if (field.startsWith("placed:")) {
+      const id = Number(field.replace("placed:", ""));
+      setPlaced((p) => p.map((it) => (it.id === id ? { ...it, x, y } : it)));
       setSelectedPlacedId(id);
       return;
     }
@@ -297,47 +380,46 @@ if (useSample && invitados && invitados.length > 0) {
     }
   }
 
+  async function handleSave() {
+    try {
+      setSaving(true);
 
-async function handleSave() {
-  try {
-    setSaving(true);
+      const form = new FormData();
+      form.append(
+        "design",
+        JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList })
+      );
+      if (templateFile) form.append("template", templateFile);
 
-    const form = new FormData();
-    form.append("design", JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList }));
-    if (templateFile) form.append("template", templateFile);
+      const { data } = await axiosClient.post(
+        `/mis-bodas/${boda?.id}/card-design`,
+        form,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-    const { data } = await axiosClient.post(
-      `/mis-bodas/${boda?.id}/card-design`,
-      form,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
+      alert("Diseño guardado. Puedes finalizar y regenerar tarjetas.");
 
-    alert("Diseño guardado. Puedes finalizar y regenerar tarjetas.");
-
-    if (data?.card_design?.ruta_vista_previa) {
-      // backend guarda ruta tipo "tarjetas/....png" dentro de storage/public
-      const apiBase = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
-      const url = `${apiBase}/storage/${data.card_design.ruta_vista_previa}`;
-      window.open(url, "_blank");
+      if (data?.card_design?.ruta_vista_previa) {
+        // backend guarda ruta tipo "tarjetas/....png" dentro de storage/public
+        const apiBase = (import.meta.env.VITE_API_URL || "").replace(
+          /\/api\/?$/,
+          ""
+        );
+        const url = `${apiBase}/storage/${data.card_design.ruta_vista_previa}`;
+        window.open(url, "_blank");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("No se pudo guardar el diseño. Revisa consola.");
+    } finally {
+      setSaving(false);
     }
-  } catch (e) {
-    console.error(e);
-    alert("No se pudo guardar el diseño. Revisa consola.");
-  } finally {
-    setSaving(false);
   }
-}
-
-
-
-
-
-
 
   function handleSelectPlaced(id) {
     setSelectedPlacedId(id);
     // compute immediate centering feedback
-    const item = placed.find(p=>p.id===id);
+    const item = placed.find((p) => p.id === id);
     if (item) {
       setSnapX(Math.abs((item.x ?? 50) - 50) <= snapThreshold);
       setSnapY(Math.abs((item.y ?? 50) - 50) <= snapThreshold);
@@ -345,15 +427,17 @@ async function handleSave() {
   }
 
   function handleDeletePlaced(id) {
-    setPlaced((p) => p.filter(it => it.id !== id));
+    setPlaced((p) => p.filter((it) => it.id !== id));
     if (selectedPlacedId === id) setSelectedPlacedId(null);
   }
 
   function updateSelectedPlaced(changes) {
     if (!selectedPlacedId) return;
     setPlaced((p) => {
-      const updated = p.map(it => it.id === selectedPlacedId ? {...it, ...changes} : it);
-      const sel = updated.find(it => it.id === selectedPlacedId);
+      const updated = p.map((it) =>
+        it.id === selectedPlacedId ? { ...it, ...changes } : it
+      );
+      const sel = updated.find((it) => it.id === selectedPlacedId);
       if (sel) {
         setSnapX(Math.abs((sel.x ?? 50) - 50) <= snapThreshold);
         setSnapY(Math.abs((sel.y ?? 50) - 50) <= snapThreshold);
@@ -362,27 +446,11 @@ async function handleSave() {
     });
   }
 
-async function handleFinalizeAndGenerate() {
-  if (!confirm("Finalizar diseño y regenerar tarjetas para todos los invitados?")) return;
-
-  try {
-    setSaving(true);
-
-    const { data } = await axiosClient.post(
-      `/mis-bodas/${boda?.id}/card-design/generate`
-    );
-
-    alert(data?.message || "Generación en cola. Se procesará pronto.");
-    onClose();
-  } catch (e) {
-    console.error(e);
-    const msg = e?.response?.data?.message || e?.message || "Error iniciando generación";
-    alert(`No se pudo iniciar la generación: ${msg}`);
-  } finally {
-    setSaving(false);
+  function handleFinalizeAndGenerate() {
+    if (onStartGenerate) return onStartGenerate();
+    // fallback si no mandas callback:
+    alert("No hay handler onStartGenerate.");
   }
-}
-
 
   if (!open) return null;
 
@@ -392,7 +460,12 @@ async function handleFinalizeAndGenerate() {
         <header className="flex items-center justify-between px-6 py-4 border-b">
           <h3 className="text-base font-semibold">Diseño de tarjeta</h3>
           <div className="flex items-center gap-2">
-            <button className="md:hidden text-sm px-3 py-1 rounded-md border bg-slate-50" onClick={()=>setSidebarOpen(s=>!s)}>{sidebarOpen? 'Cerrar barra' : 'Abrir barra'}</button>
+            <button
+              className="md:hidden text-sm px-3 py-1 rounded-md border bg-slate-50"
+              onClick={() => setSidebarOpen((s) => !s)}
+            >
+              {sidebarOpen ? "Cerrar barra" : "Abrir barra"}
+            </button>
             <button
               className="text-sm px-3 py-1 rounded-md border bg-slate-50"
               onClick={() => {
@@ -412,77 +485,264 @@ async function handleFinalizeAndGenerate() {
         </header>
 
         <div className="flex flex-1 overflow-hidden">
-          <aside className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-96 border-r overflow-auto p-6 bg-white`}>
+          <aside
+            className={`${
+              sidebarOpen ? "block" : "hidden"
+            } md:block w-96 border-r overflow-auto p-6 bg-white`}
+          >
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Sube una plantilla (1920x1080 recomendada)</label>
-                <input type="file" accept="image/*" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; setTemplateFile(f); }} />
-                {templateInfo.w > 0 && <p className="text-[12px] text-slate-500 mt-2">Dimensiones: {templateInfo.w} x {templateInfo.h} px</p>}
-                {templateFile && templateInfo.w && <p className="text-[12px] text-amber-700 mt-1">Si la imagen no es 1920x1080, el editor escalará visualmente.</p>}
-                <div className="flex items-center gap-2 mt-2"><input id="useSample" type="checkbox" checked={useSample} onChange={(e)=>setUseSample(e.target.checked)} /><label htmlFor="useSample" className="text-xs text-slate-500">Usar datos de ejemplo</label></div>
-                <div className="flex items-center gap-2 mt-2"><input id="showGrid" type="checkbox" checked={showGrid} onChange={(e)=>setShowGrid(e.target.checked)} /><label htmlFor="showGrid" className="text-xs text-slate-500">Mostrar cuadrícula</label></div>
-                <div className="mt-2"><label className="text-xs text-slate-500">Ajuste centrado (%)</label><input type="range" min="1" max="10" value={snapThreshold} onChange={(e)=>setSnapThreshold(Number(e.target.value))} className="w-full" /><div className="flex items-center justify-between text-[11px] text-slate-400"><span>{snapThreshold}%</span><span className="text-xs">Sensibilidad</span></div></div>
-                <div className="mt-2 flex items-center gap-2"><input id="snapToGrid" type="checkbox" checked={snapToGrid} onChange={(e)=>setSnapToGrid(e.target.checked)} /><label htmlFor="snapToGrid" className="text-xs text-slate-500">Ajustar automáticamente a cuadrícula</label></div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">
+                  Sube una plantilla (1920x1080 recomendada)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    setTemplateFile(f);
+                  }}
+                />
+                {templateInfo.w > 0 && (
+                  <p className="text-[12px] text-slate-500 mt-2">
+                    Dimensiones: {templateInfo.w} x {templateInfo.h} px
+                  </p>
+                )}
+                {templateFile && templateInfo.w && (
+                  <p className="text-[12px] text-amber-700 mt-1">
+                    Si la imagen no es 1920x1080, el editor escalará
+                    visualmente.
+                  </p>
+                )}
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    id="useSample"
+                    type="checkbox"
+                    checked={useSample}
+                    onChange={(e) => setUseSample(e.target.checked)}
+                  />
+                  <label htmlFor="useSample" className="text-xs text-slate-500">
+                    Usar datos de ejemplo
+                  </label>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    id="showGrid"
+                    type="checkbox"
+                    checked={showGrid}
+                    onChange={(e) => setShowGrid(e.target.checked)}
+                  />
+                  <label htmlFor="showGrid" className="text-xs text-slate-500">
+                    Mostrar cuadrícula
+                  </label>
+                </div>
+                <div className="mt-2">
+                  <label className="text-xs text-slate-500">
+                    Ajuste centrado (%)
+                  </label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={snapThreshold}
+                    onChange={(e) => setSnapThreshold(Number(e.target.value))}
+                    className="w-full"
+                  />
+                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <span>{snapThreshold}%</span>
+                    <span className="text-xs">Sensibilidad</span>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    id="snapToGrid"
+                    type="checkbox"
+                    checked={snapToGrid}
+                    onChange={(e) => setSnapToGrid(e.target.checked)}
+                  />
+                  <label
+                    htmlFor="snapToGrid"
+                    className="text-xs text-slate-500"
+                  >
+                    Ajustar automáticamente a cuadrícula
+                  </label>
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Campos arrastrables</label>
-                  <div className="flex gap-2 mb-2">
+                <label className="block text-xs font-medium text-slate-600 mb-1">
+                  Campos arrastrables
+                </label>
+                <div className="flex gap-2 mb-2">
                   {(() => {
-                    const sel = placed.find(p => p.id === selectedPlacedId);
+                    const sel = placed.find((p) => p.id === selectedPlacedId);
                     const currentFamily = sel?.fontFamily ?? fontFamily;
                     const currentSize = sel?.fontSize ?? fontSize;
                     return (
                       <>
-                        <select value={currentFamily} onChange={async (e)=>{ const v = e.target.value; setFontFamily(v); await ensureFontLoaded(v); if(selectedPlacedId) updateSelectedPlaced({ fontFamily: v }); }} className="text-sm rounded-md border px-2 py-1">
-                          <option value="CormorantGaramond-SemiBold">Cormorant (pred)</option>
+                        <select
+                          value={currentFamily}
+                          onChange={async (e) => {
+                            const v = e.target.value;
+                            setFontFamily(v);
+                            await ensureFontLoaded(v);
+                            if (selectedPlacedId)
+                              updateSelectedPlaced({ fontFamily: v });
+                          }}
+                          className="text-sm rounded-md border px-2 py-1"
+                        >
+                          <option value="CormorantGaramond-SemiBold">
+                            Cormorant (pred)
+                          </option>
                           <option value="Arial">Arial</option>
                           <option value="Helvetica">Helvetica</option>
-                          {loadedFonts.map(f=> <option key={f.name} value={f.name}>{f.name}</option>)}
+                          {loadedFonts.map((f) => (
+                            <option key={f.name} value={f.name}>
+                              {f.name}
+                            </option>
+                          ))}
                         </select>
-                        <input type="number" min="6" max="500" step="1" value={currentSize} onChange={(e)=>{ const v = Number(e.target.value); if(selectedPlacedId) updateSelectedPlaced({ fontSize: v }); else setFontSize(v); }} className="w-20 rounded-md border px-2 py-1 text-sm" />
+                        <input
+                          type="number"
+                          min="6"
+                          max="500"
+                          step="1"
+                          value={currentSize}
+                          onChange={(e) => {
+                            const v = Number(e.target.value);
+                            if (selectedPlacedId)
+                              updateSelectedPlaced({ fontSize: v });
+                            else setFontSize(v);
+                          }}
+                          className="w-20 rounded-md border px-2 py-1 text-sm"
+                        />
                       </>
                     );
                   })()}
                 </div>
-                
 
                 <div className="mb-3">
-                  <label className="text-xs text-slate-600">Zoom / Preview</label>
+                  <label className="text-xs text-slate-600">
+                    Zoom / Preview
+                  </label>
                   <div className="flex gap-2 mt-2">
-                    <button type="button" onClick={zoomOut} className="px-3 py-1 rounded-md border">-</button>
-                    <div className="px-3 py-1 rounded-md border flex items-center">{zoom}%</div>
-                    <button type="button" onClick={zoomIn} className="px-3 py-1 rounded-md border">+</button>
-                    <button type="button" onClick={fitToScreen} className="ml-2 px-3 py-1 rounded-md border">Fit</button>
-                    <button type="button" onClick={downloadPreview} className="ml-2 px-3 py-1 rounded-md bg-slate-900 text-white">Descargar prediseño</button>
+                    <button
+                      type="button"
+                      onClick={zoomOut}
+                      className="px-3 py-1 rounded-md border"
+                    >
+                      -
+                    </button>
+                    <div className="px-3 py-1 rounded-md border flex items-center">
+                      {zoom}%
+                    </div>
+                    <button
+                      type="button"
+                      onClick={zoomIn}
+                      className="px-3 py-1 rounded-md border"
+                    >
+                      +
+                    </button>
+                    <button
+                      type="button"
+                      onClick={fitToScreen}
+                      className="ml-2 px-3 py-1 rounded-md border"
+                    >
+                      Fit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={downloadPreview}
+                      className="ml-2 px-3 py-1 rounded-md bg-slate-900 text-white"
+                    >
+                      Descargar prediseño
+                    </button>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   {fieldsList.map((f) => (
-                    <div key={f.key} draggable onDragStart={(e)=>onDragStart(e,f.key)} className="cursor-move rounded-md border border-slate-200 px-3 py-2 text-sm bg-white flex items-center justify-between">
-                      <div><div className="font-medium">{f.label}</div><div className="text-[11px] text-slate-400">{f.key} {f.mappedTo ? `• map: ${f.mappedTo}` : ''}</div></div>
-                      <div className="text-[11px] text-slate-400">Arrastrar</div>
+                    <div
+                      key={f.key}
+                      draggable
+                      onDragStart={(e) => onDragStart(e, f.key)}
+                      className="cursor-move rounded-md border border-slate-200 px-3 py-2 text-sm bg-white flex items-center justify-between"
+                    >
+                      <div>
+                        <div className="font-medium">{f.label}</div>
+                        <div className="text-[11px] text-slate-400">
+                          {f.key} {f.mappedTo ? `• map: ${f.mappedTo}` : ""}
+                        </div>
+                      </div>
+                      <div className="text-[11px] text-slate-400">
+                        Arrastrar
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="mt-4">
-                <button onClick={handleSave} disabled={saving} className="w-full inline-flex items-center justify-center rounded-md bg-emerald-700 text-white py-2 text-sm disabled:opacity-60">Guardar diseño</button>
-                <button onClick={handleFinalizeAndGenerate} disabled={saving} className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-slate-900 text-white py-2 text-sm disabled:opacity-60">Finalizar y regenerar tarjetas</button>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="w-full inline-flex items-center justify-center rounded-md bg-emerald-700 text-white py-2 text-sm disabled:opacity-60"
+                >
+                  Guardar diseño
+                </button>
+                <button
+                  onClick={handleFinalizeAndGenerate}
+                  disabled={saving}
+                  className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-slate-900 text-white py-2 text-sm disabled:opacity-60"
+                >
+                  Finalizar y regenerar tarjetas
+                </button>
               </div>
 
               {selectedPlacedId && (
                 <div className="mt-4 border-t pt-3">
-                  <h4 className="text-sm font-medium text-slate-600 mb-2">Elemento seleccionado</h4>
-                  <div className="space-y-2">      
+                  <h4 className="text-sm font-medium text-slate-600 mb-2">
+                    Elemento seleccionado
+                  </h4>
+                  <div className="space-y-2">
                     <label className="text-sm text-slate-500">X (%)</label>
-                    <input type="number" value={(placed.find(p=>p.id===selectedPlacedId)?.x) ?? 50} onChange={(e)=> updateSelectedPlaced({ x: Number(e.target.value) })} className="w-full rounded-md border px-2 py-1 text-sm" />
+                    <input
+                      type="number"
+                      value={
+                        placed.find((p) => p.id === selectedPlacedId)?.x ?? 50
+                      }
+                      onChange={(e) =>
+                        updateSelectedPlaced({ x: Number(e.target.value) })
+                      }
+                      className="w-full rounded-md border px-2 py-1 text-sm"
+                    />
                     <label className="text-sm text-slate-500">Y (%)</label>
-                    <input type="number" value={(placed.find(p=>p.id===selectedPlacedId)?.y) ?? 50} onChange={(e)=> updateSelectedPlaced({ y: Number(e.target.value) })} className="w-full rounded-md border px-2 py-1 text-sm" />
+                    <input
+                      type="number"
+                      value={
+                        placed.find((p) => p.id === selectedPlacedId)?.y ?? 50
+                      }
+                      onChange={(e) =>
+                        updateSelectedPlaced({ y: Number(e.target.value) })
+                      }
+                      className="w-full rounded-md border px-2 py-1 text-sm"
+                    />
                     {/* tamaño del elemento se controla desde el control superior */}
-                    <div className="flex gap-2"><button onClick={()=> handleDeletePlaced(selectedPlacedId)} className="flex-1 inline-flex items-center justify-center rounded-md bg-rose-600 text-white py-2 text-sm">Eliminar</button><button onClick={()=> setSelectedPlacedId(null)} className="flex-1 inline-flex items-center justify-center rounded-md border bg-white py-2 text-sm">Deseleccionar</button></div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleDeletePlaced(selectedPlacedId)}
+                        className="flex-1 inline-flex items-center justify-center rounded-md bg-rose-600 text-white py-2 text-sm"
+                      >
+                        Eliminar
+                      </button>
+                      <button
+                        onClick={() => setSelectedPlacedId(null)}
+                        className="flex-1 inline-flex items-center justify-center rounded-md border bg-white py-2 text-sm"
+                      >
+                        Deseleccionar
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -492,36 +752,112 @@ async function handleFinalizeAndGenerate() {
           <main className="flex-1 p-4 overflow-auto bg-gray-50 flex items-center justify-center">
             <div className="w-full max-w-none h-[calc(100vh-96px)] flex items-center justify-center">
               <div className="border border-slate-200 rounded-lg w-full h-full overflow-hidden relative bg-gray-50 flex items-center justify-center">
-                {!templateUrl && <p className="text-sm text-slate-500">Sube una imagen de plantilla para empezar</p>}
+                {!templateUrl && (
+                  <p className="text-sm text-slate-500">
+                    Sube una imagen de plantilla para empezar
+                  </p>
+                )}
 
                 {templateUrl && (
-                                  <div onDrop={handleDrop} onDragOver={allowDrop} className="relative w-full h-full overflow-auto flex items-center justify-center">
-                                  <div ref={canvasRef} style={{ width: templateInfo.w ? `${templateInfo.w}px` : '100%', height: templateInfo.h ? `${templateInfo.h}px` : '100%', transform:`scale(${zoom/100})`, transformOrigin:'center center', position:'relative', backgroundImage: `url(${templateUrl})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}>
-                    {showGrid && <div style={{position:'absolute', inset:0, pointerEvents:'none', backgroundImage: `linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '40px 40px'}} />}
-                    {placed.map((p)=>{
-                      const fld = fieldsList.find((f)=>f.key===p.field);
-                      const label = fld ? fld.label : p.field;
-                      // display priority: explicit text on element -> sample mapping -> label
-                      let display = label;
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={allowDrop}
+                    className="relative w-full h-full overflow-auto flex items-center justify-center"
+                  >
+                    <div
+                      ref={canvasRef}
+                      style={{
+                        width: templateInfo.w ? `${templateInfo.w}px` : "100%",
+                        height: templateInfo.h ? `${templateInfo.h}px` : "100%",
+                        transform: `scale(${zoom / 100})`,
+                        transformOrigin: "center center",
+                        position: "relative",
+                        backgroundImage: `url(${templateUrl})`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      {showGrid && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            pointerEvents: "none",
+                            backgroundImage: `linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)`,
+                            backgroundSize: "40px 40px",
+                          }}
+                        />
+                      )}
+                      {placed.map((p) => {
+                        const fld = fieldsList.find((f) => f.key === p.field);
+                        const label = fld ? fld.label : p.field;
+                        // display priority: explicit text on element -> sample mapping -> label
+                        let display = label;
 
-if (useSample && invitados && invitados.length > 0) {
-  const sample = invitados[0];
-  const map = {
-    nombre_invitado: sample.nombre_invitado,
-    nombre_pareja: boda?.nombre_pareja,
-    fecha_boda: boda?.fecha_boda,
-    ciudad: boda?.ciudad,
-    codigo_clave: sample.codigo_clave,
-    pases: sample.pases,
-  };
-  display = map[p.field] ?? label;
-}
-                      return (
-                        <div key={p.id} draggable onDragStart={(e)=>onPlacedDragStart(e,p.id)} onClick={()=>handleSelectPlaced(p.id)} className={`absolute px-2 py-1 rounded-md ${selectedPlacedId===p.id? 'ring-2 ring-emerald-500' : ''}`} style={{ left: `${p.x}%`, top: `${p.y}%`, transform: 'translate(-50%,-50%)', cursor: 'move', background: 'rgba(0,0,0,0.6)', color: '#fff', fontFamily: p.fontFamily || fontFamily, fontSize: `${p.fontSize || fontSize}px`, lineHeight: 1 }}>{display}</div>
-                      );
-                    })}
-                    {snapX && <div style={{position:'absolute', left:'50%', top:0, bottom:0, width:1, background:'rgba(16,185,129,0.9)'}} />}
-                    {snapY && <div style={{position:'absolute', top:'50%', left:0, right:0, height:1, background:'rgba(16,185,129,0.9)'}} />}
+                        if (useSample && invitados && invitados.length > 0) {
+                          const sample = invitados[0];
+                          const map = {
+                            nombre_invitado: sample.nombre_invitado,
+                            nombre_pareja: boda?.nombre_pareja,
+                            fecha_boda: boda?.fecha_boda,
+                            ciudad: boda?.ciudad,
+                            codigo_clave: sample.codigo_clave,
+                            pases: sample.pases,
+                          };
+                          display = map[p.field] ?? label;
+                        }
+                        return (
+                          <div
+                            key={p.id}
+                            draggable
+                            onDragStart={(e) => onPlacedDragStart(e, p.id)}
+                            onClick={() => handleSelectPlaced(p.id)}
+                            className={`absolute px-2 py-1 rounded-md ${
+                              selectedPlacedId === p.id
+                                ? "ring-2 ring-emerald-500"
+                                : ""
+                            }`}
+                            style={{
+                              left: `${p.x}%`,
+                              top: `${p.y}%`,
+                              transform: "translate(-50%,-50%)",
+                              cursor: "move",
+                              background: "rgba(0,0,0,0.6)",
+                              color: "#fff",
+                              fontFamily: p.fontFamily || fontFamily,
+                              fontSize: `${p.fontSize || fontSize}px`,
+                              lineHeight: 1,
+                            }}
+                          >
+                            {display}
+                          </div>
+                        );
+                      })}
+                      {snapX && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: "50%",
+                            top: 0,
+                            bottom: 0,
+                            width: 1,
+                            background: "rgba(16,185,129,0.9)",
+                          }}
+                        />
+                      )}
+                      {snapY && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: 0,
+                            right: 0,
+                            height: 1,
+                            background: "rgba(16,185,129,0.9)",
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 )}
@@ -530,6 +866,8 @@ if (useSample && invitados && invitados.length > 0) {
           </main>
         </div>
       </div>
+
+      
     </div>
   );
 }

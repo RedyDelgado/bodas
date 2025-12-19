@@ -83,19 +83,21 @@ class RsvpCardGenerator
 
         return $path;
     }
-
+    
     private function valueForField(Invitado $inv, $field, $boda)
     {
         return match ($field) {
             'nombre_invitado' => $inv->nombre_invitado ?? '',
-            'nombre_pareja' => $boda?->nombre_pareja ?? '',
-            'fecha_boda' => $boda?->fecha_boda?->format('d M Y') ?? (string)($boda?->fecha_boda ?? ''),
-            'ciudad' => $boda?->ciudad ?? '',
-            'codigo_clave' => $inv->codigo_clave ?? '',
-            'pases' => (string)($inv->pases ?? 1),
-            default => '';
+            'nombre_pareja'   => $boda?->nombre_pareja ?? '',
+            'fecha_boda'      => $boda?->fecha_boda?->format('d M Y') ?? (string) ($boda?->fecha_boda ?? ''),
+            'ciudad'          => $boda?->ciudad ?? '',
+            'codigo_clave'    => $inv->codigo_clave ?? '',
+            'pases'           => (string) ($inv->pases ?? 1),
+
+            default           => '',
         };
     }
+
 
     private function valueFromMapping(Invitado $inv, $boda, string $mapped)
     {

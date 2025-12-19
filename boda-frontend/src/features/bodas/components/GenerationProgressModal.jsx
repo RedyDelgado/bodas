@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 
-export default function GenerationProgressModal({ open, progress, onCloseBlocked }) {
+export default function GenerationProgressModal({ open, progress, onClose }) {
   if (!open) return null;
 
   const total = progress?.total ?? 0;
   const generadas = progress?.generadas ?? 0;
   const estado = progress?.estado ?? "en_cola";
 
-  const pct = total > 0 ? Math.min(100, Math.round((generadas / total) * 100)) : 0;
+  const pct =
+    total > 0 ? Math.min(100, Math.round((generadas / total) * 100)) : 0;
+
   const bloqueando = estado === "en_cola" || estado === "procesando";
 
   return (
@@ -44,14 +46,17 @@ export default function GenerationProgressModal({ open, progress, onCloseBlocked
             />
           </div>
 
-          <div className="text-xs text-slate-500">
-            Avance: {pct}%
-          </div>
+          <div className="text-xs text-slate-500">Avance: {pct}%</div>
+          {estado === "error" && (
+  <div className="text-xs text-rose-600 bg-rose-50 border border-rose-100 rounded-lg p-2">
+    {progress?.mensaje || "Ocurrió un error durante la generación."}
+  </div>
+)}
 
           <button
             type="button"
             disabled={bloqueando}
-            onClick={bloqueando ? onCloseBlocked : undefined}
+            onClick={!bloqueando ? onClose : undefined}
             className={`w-full rounded-xl py-2 text-sm font-medium ${
               bloqueando
                 ? "bg-slate-200 text-slate-500 cursor-not-allowed"

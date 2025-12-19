@@ -8,6 +8,7 @@ import { WhatsappCardModal } from "../components/WhatsappCardModal";
 import CardDesignerModal from "../components/CardDesignerModal";
 
 import axiosClient from "../../../shared/config/axiosClient";
+import GenerationProgressModal from "../components/GenerationProgressModal"; 
 
 // React Icons
 import {
@@ -137,6 +138,12 @@ export function BodaInvitadosPage() {
   const [waInvitado, setWaInvitado] = useState(null);
   const [designerOpen, setDesignerOpen] = useState(false);
   const [cardStatus, setCardStatus] = useState(null);
+  const [genOpen, setGenOpen] = useState(false);
+  const [genProgress, setGenProgress] = useState({
+    estado: "en_cola",
+    generadas: 0,
+    total: 0,
+  });
 
   // búsqueda
   const [busqueda, setBusqueda] = useState("");
@@ -173,33 +180,35 @@ export function BodaInvitadosPage() {
     fetchInvitados();
     // fetch card design status
     (async () => {
-      try {
-        if (!bodaId) return;
-        const res = await fetch(`/api/mis-bodas/${bodaId}/card-design/status`);
-        if (!res.ok) return;
-        const data = await res.json();
-        setCardStatus(data.card_design || null);
-      } catch (e) {
-        // ignore
-      }
-    })();
+  try {
+    if (!bodaId) return;
+    const { data } = await axiosClient.get(
+      `/mis-bodas/${bodaId}/card-design/status`
+    );
+    setCardStatus(data?.card_design ?? null);
+  } catch (e) {
+    // ignore
+  }
+})();
+
   }, [bodaId]);
 
-  useEffect(() => {
-    if (designerOpen) return;
-    // when modal closed, refresh status
-    (async () => {
-      try {
-        if (!bodaId) return;
-        const res = await fetch(`/api/mis-bodas/${bodaId}/card-design/status`);
-        if (!res.ok) return;
-        const data = await res.json();
-        setCardStatus(data.card_design || null);
-      } catch (e) {
-        // ignore
-      }
-    })();
-  }, [designerOpen, bodaId]);
+useEffect(() => {
+  if (designerOpen) return;
+
+  (async () => {
+    try {
+      if (!bodaId) return;
+      const { data } = await axiosClient.get(
+        `/mis-bodas/${bodaId}/card-design/status`
+      );
+      setCardStatus(data?.card_design ?? null);
+    } catch (e) {
+      // ignore
+    }
+  })();
+}, [designerOpen, bodaId]);
+
 
   // --------- STATS ----------
   const stats = useMemo(() => {
@@ -334,6 +343,117 @@ export function BodaInvitadosPage() {
     XLSX.writeFile(wb, "plantilla_invitados.xlsx");
   };
 
+async function fetchProgress() {
+  if (!bodaId) return null;
+
+  try {
+    const { data } = await axiosClient.get(
+      `/mis-bodas/${bodaId}/card-design/progress`
+    );
+
+    setGenProgress((p) => ({
+      ...p,
+      estado: data?.estado ?? "en_cola",
+      generadas: data?.generadas ?? 0,
+      total: data?.total ?? 0,
+      mensaje: data?.mensaje ?? p.mensaje ?? "", // ✅ conserva mensaje si ya había
+    }));
+
+    return data;
+  } catch (err) {
+    console.error("progress error:", err);
+    const msg =
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      "No se pudo consultar el progreso.";
+
+    setGenProgress((p) => ({
+      ...p,
+      estado: "error",
+      mensaje: msg,
+    }));
+
+    throw err;
+  }
+}
+  useEffect(() => {
+    if (!genOpen) return;
+
+    let alive = true;
+    let timer = null;
+
+    const tick = async () => {
+      try {
+        const info = await fetchProgress();
+        if (!alive) return;
+
+        const estado = info?.estado;
+        if (estado === "finalizado" || estado === "error") {
+          clearInterval(timer);
+
+          // refresca invitados para que cambie Pendiente -> Generada
+          const dataInv = await invitadosApi.listarPorBoda(bodaId);
+          setInvitados(Array.isArray(dataInv) ? dataInv : dataInv.data ?? []);
+
+          // refresca cardStatus también
+          const { data: st } = await axiosClient.get(
+            `/mis-bodas/${bodaId}/card-design/status`
+          );
+          setCardStatus(st.card_design || null);
+        }
+      } catch (e) {
+        // si falla, no cierres el modal; solo marca error lógico si quieres
+        setGenProgress((p) => ({ ...p, estado: "error" }));
+        clearInterval(timer);
+      }
+    };
+
+    tick();
+    timer = setInterval(tick, 1200);
+
+    return () => {
+      alive = false;
+      if (timer) clearInterval(timer);
+    };
+  }, [genOpen, bodaId]);
+
+async function startGeneration() {
+  if (
+    !window.confirm(
+      "Finalizar diseño y regenerar tarjetas para todos los invitados?"
+    )
+  ) return;
+
+  setGenProgress({
+    estado: "en_cola",
+    generadas: 0,
+    total: invitados.length,
+    mensaje: "", // ✅ nuevo
+  });
+  setGenOpen(true);
+
+  try {
+    // opcional: para que la UI no quede “en cola” si tu backend demora en reflejar progreso
+    setGenProgress((p) => ({ ...p, estado: "procesando" }));
+
+    await axiosClient.post(`/mis-bodas/${bodaId}/card-design/generate`);
+  } catch (err) {
+    console.error("generate error:", err);
+    const msg =
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      "Error al iniciar la generación.";
+
+    setGenProgress((p) => ({
+      ...p,
+      estado: "error",
+      mensaje: msg,
+    }));
+  }
+}
+
   // --------- WHATSAPP ----------
   const handleEnviarWhatsapp = (invitado) => {
     const celular = invitado.celular ?? invitado.telefono;
@@ -363,7 +483,8 @@ export function BodaInvitadosPage() {
 
     const mensaje = [
       `¡Hola ${invitado.nombre_invitado}! 💍`,
-      `Te invitamos a acompañarnos en ${nombrePareja}${fecha ? ` el ${fecha}` : ""
+      `Te invitamos a acompañarnos en ${nombrePareja}${
+        fecha ? ` el ${fecha}` : ""
       }.`,
       enlaceRsvp
         ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
@@ -656,14 +777,34 @@ export function BodaInvitadosPage() {
             <div className="flex items-start gap-3">
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
                 <svg viewBox="0 0 24 24" className="w-4 h-4">
-                  <path d="M3 7h18M12 3v14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  <path
+                    d="M3 7h18M12 3v14"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-sm font-semibold text-slate-900">Diseño de tarjeta</h3>
-                <p className="text-xs text-slate-500">Sube una plantilla y arrastra campos para crear la tarjeta.</p>
+                <h3 className="text-sm font-semibold text-slate-900">
+                  Diseño de tarjeta
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Sube una plantilla y arrastra campos para crear la tarjeta.
+                </p>
                 {cardStatus && (
-                  <p className="text-xs text-slate-500 mt-1">Estado: <span className="font-medium">{cardStatus.estado_generacion || 'n/a'}</span> · Última generación: <span className="font-medium">{cardStatus.ultimo_conteo_generado ?? 0}</span></p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Estado:{" "}
+                    <span className="font-medium">
+                      {cardStatus.estado_generacion || "n/a"}
+                    </span>{" "}
+                    · Última generación:{" "}
+                    <span className="font-medium">
+                      {cardStatus.ultimo_conteo_generado ?? 0}
+                    </span>
+                  </p>
                 )}
               </div>
               <div>
@@ -684,6 +825,10 @@ export function BodaInvitadosPage() {
           onClose={() => setDesignerOpen(false)}
           boda={boda}
           invitados={invitados}
+          onStartGenerate={() => {
+            setDesignerOpen(false);
+            startGeneration();
+          }}
         />
       </div>
 
@@ -833,9 +978,11 @@ export function BodaInvitadosPage() {
                         </span>
                       )}
                     </td>
-                    <td className="py-2 pr-4 text-center">{
-                      (() => {
-                        const generado = Boolean(i.rsvp_card_path || i.rsvp_card_generated_at);
+                    <td className="py-2 pr-4 text-center">
+                      {(() => {
+                        const generado = Boolean(
+                          i.rsvp_card_path || i.rsvp_card_generated_at
+                        );
                         if (generado) {
                           return (
                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] text-emerald-700">
@@ -850,8 +997,8 @@ export function BodaInvitadosPage() {
                             Pendiente
                           </span>
                         );
-                      })()
-                    }</td>
+                      })()}
+                    </td>
                     <td className="py-2 pr-4 text-right space-x-2">
                       {celular && (
                         <button
@@ -901,6 +1048,13 @@ export function BodaInvitadosPage() {
         }}
         onOpenWhatsapp={() => handleEnviarWhatsapp(waInvitado)}
       />
+      <GenerationProgressModal
+  open={genOpen}
+  progress={genProgress}
+  onClose={() => setGenOpen(false)}
+/>
+
+
     </div>
   );
 }
