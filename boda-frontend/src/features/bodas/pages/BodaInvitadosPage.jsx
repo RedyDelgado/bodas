@@ -6,6 +6,9 @@ import { invitadosApi } from "../services/invitadosApiService";
 import * as XLSX from "xlsx";
 import { WhatsappCardModal } from "../components/WhatsappCardModal";
 import CardDesignerModal from "../components/CardDesignerModal";
+
+import axiosClient from "../../../shared/config/axiosClient";
+
 // React Icons
 import {
   FiUser,

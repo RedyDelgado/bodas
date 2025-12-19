@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import axiosClient from "../../../shared/config/axiosClient";
 
 export default function CardDesignerModal({ open, onClose, boda, invitados }) {
   const [templateFile, setTemplateFile] = useState(null);
@@ -43,6 +44,37 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
       setPlaced([]);
     }
   }, [open]);
+useEffect(() => {
+  let cancelled = false;
+
+  (async () => {
+    try {
+      // axiosClient tiene baseURL = VITE_API_URL (ej. http://localhost:8000/api)
+      const { data } = await axiosClient.get("/fonts"); // ==> /api/fonts en backend
+      if (cancelled) return;
+
+      const mapped = (data || []).map((f) => ({
+        name: f.name || f.filename,
+        // Si el backend devuelve url absoluta, úsala.
+        // Si devuelve relativa, también funciona.
+        path: f.url || `/api/fonts/file/${f.filename}`,
+      }));
+
+      setLoadedFonts(mapped);
+    } catch (e) {
+      // Fallback: usa fonts locales del frontend (public/fonts)
+      setLoadedFonts([
+        { name: "CormorantGaramond-SemiBold", path: `${window.location.origin}/fonts/CormorantGaramond-SemiBold.ttf` },
+        { name: "Montserrat-Bold", path: `${window.location.origin}/fonts/Montserrat-Bold.otf` },
+        { name: "Montserrat-Italic", path: `${window.location.origin}/fonts/Montserrat-Italic.otf` },
+        { name: "Montserrat-Medium", path: `${window.location.origin}/fonts/Montserrat-Medium.otf` },
+        { name: "Montserrat-Regular", path: `${window.location.origin}/fonts/Montserrat-Regular.otf` },
+      ]);
+    }
+  })();
+
+  return () => { cancelled = true; };
+}, []);
 
   const defaultFields = [
     { key: "nombre_invitado", label: "Nombre del invitado" },
@@ -169,12 +201,20 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
       const fld = fieldsList.find(f=>f.key===p.field);
       const label = fld?fld.label:p.field;
       // determine display text: explicit -> sample -> label
-      let display = p.text ?? label;
-      if (!p.text && useSample && invitados && invitados.length>0) {
-        const sample = invitados[0];
-        const map = { nombre_invitado: sample.nombre_invitado, nombre_pareja: boda?.nombre_pareja, fecha_boda: boda?.fecha_boda, ciudad: boda?.ciudad, codigo_clave: invitados[0].codigo_clave, pases: invitados[0].pases };
-        display = map[p.field] ?? label;
-      }
+     let display = label;
+
+if (useSample && invitados && invitados.length > 0) {
+  const sample = invitados[0];
+  const map = {
+    nombre_invitado: sample.nombre_invitado,
+    nombre_pareja: boda?.nombre_pareja,
+    fecha_boda: boda?.fecha_boda,
+    ciudad: boda?.ciudad,
+    codigo_clave: sample.codigo_clave,
+    pases: sample.pases,
+  };
+  display = map[p.field] ?? label;
+}
       // draw text in black by default (contrasts most templates)
       ctx.fillStyle = '#000000';
       ctx.font = `${p.fontSize || fontSize}px "${p.fontFamily || fontFamily}", sans-serif`;
@@ -231,7 +271,7 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
         const map = { nombre_invitado: sample.nombre_invitado, nombre_pareja: boda?.nombre_pareja, fecha_boda: boda?.fecha_boda, ciudad: boda?.ciudad, codigo_clave: sample.codigo_clave, pases: sample.pases };
         defaultText = map[key] ?? label;
       }
-      setPlaced((p) => [...p, { id: Date.now(), field: key, x, y, fontSize, fontFamily, text: defaultText }]);
+      setPlaced((p) => [...p, { id: Date.now(), field: key, x, y, fontSize, fontFamily }]);
       setSelectedPlacedId(null);
       return;
     }
@@ -257,41 +297,42 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
     }
   }
 
-  function handleSave() {
-    // Por ahora solo visual: devolvemos la configuración al console
-    // Enviar al backend
-    (async () => {
-      try {
-      setSaving(true);
-      const form = new FormData();
-      form.append('design', JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList }));
-      if (templateFile) form.append('template', templateFile);
 
-        const res = await fetch(`/api/mis-bodas/${boda?.id}/card-design`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json'
-          },
-          body: form,
-        });
-        if (!res.ok) throw new Error('Error guardando diseño');
-        const data = await res.json();
-        console.log('Guardado:', data);
-        alert('Diseño guardado. Puedes finalizar y regenerar tarjetas.');
-        // mostrar preview si existe (campo en español `ruta_vista_previa`)
-        if (data.card_design && data.card_design.ruta_vista_previa) {
-          const url = data.card_design.ruta_vista_previa.startsWith('http') ? data.card_design.ruta_vista_previa : `/storage/${data.card_design.ruta_vista_previa}`;
-          window.open(url, '_blank');
-        }
-      } catch (e) {
-        console.error(e);
-        alert('No se pudo guardar el diseño.');
-      } finally {
-        setSaving(false);
-      }
-    })();
+async function handleSave() {
+  try {
+    setSaving(true);
+
+    const form = new FormData();
+    form.append("design", JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList }));
+    if (templateFile) form.append("template", templateFile);
+
+    const { data } = await axiosClient.post(
+      `/mis-bodas/${boda?.id}/card-design`,
+      form,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    alert("Diseño guardado. Puedes finalizar y regenerar tarjetas.");
+
+    if (data?.card_design?.ruta_vista_previa) {
+      // backend guarda ruta tipo "tarjetas/....png" dentro de storage/public
+      const apiBase = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
+      const url = `${apiBase}/storage/${data.card_design.ruta_vista_previa}`;
+      window.open(url, "_blank");
+    }
+  } catch (e) {
+    console.error(e);
+    alert("No se pudo guardar el diseño. Revisa consola.");
+  } finally {
+    setSaving(false);
   }
+}
+
+
+
+
+
+
 
   function handleSelectPlaced(id) {
     setSelectedPlacedId(id);
@@ -321,40 +362,27 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
     });
   }
 
-  async function handleFinalizeAndGenerate() {
-    if (!confirm('Finalizar diseño y regenerar tarjetas para todos los invitados?')) return;
-    try {
-      setSaving(true);
-      const endpoint = `/api/mis-bodas/${boda?.id}/card-design/generate`;
-      let res = await fetch(endpoint, { method: 'POST', credentials: 'include', headers: { 'Accept': 'application/json' } });
-      // if vite dev server did not proxy this route, try common backend ports (fallback)
-      if (res.status === 404) {
-        const host = window.location.hostname || 'localhost';
-        const tryPorts = [8080, 8000, 8001];
-        for (const p of tryPorts) {
-          try {
-            const url = `${window.location.protocol}//${host}:${p}${endpoint}`;
-            res = await fetch(url, { method: 'POST', credentials: 'include', headers: { 'Accept': 'application/json' } });
-            if (res.ok || res.status !== 404) break;
-          } catch (inner) {
-            // continue
-          }
-        }
-      }
-      if (!res.ok) {
-        const txt = await res.text().catch(()=>null);
-        throw new Error(`Error iniciando generación: ${res.status} ${txt}`);
-      }
-      const data = await res.json();
-      alert(data.message || 'Generación en cola. Se procesará en segundo plano.');
-      onClose();
-    } catch (e) {
-      console.error(e);
-      alert('No se pudo iniciar la generación. Revisa la consola para más detalle.');
-    } finally {
-      setSaving(false);
-    }
+async function handleFinalizeAndGenerate() {
+  if (!confirm("Finalizar diseño y regenerar tarjetas para todos los invitados?")) return;
+
+  try {
+    setSaving(true);
+
+    const { data } = await axiosClient.post(
+      `/mis-bodas/${boda?.id}/card-design/generate`
+    );
+
+    alert(data?.message || "Generación en cola. Se procesará pronto.");
+    onClose();
+  } catch (e) {
+    console.error(e);
+    const msg = e?.response?.data?.message || e?.message || "Error iniciando generación";
+    alert(`No se pudo iniciar la generación: ${msg}`);
+  } finally {
+    setSaving(false);
   }
+}
+
 
   if (!open) return null;
 
@@ -448,10 +476,7 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
               {selectedPlacedId && (
                 <div className="mt-4 border-t pt-3">
                   <h4 className="text-sm font-medium text-slate-600 mb-2">Elemento seleccionado</h4>
-                  <div className="space-y-2">
-                    <label className="text-sm text-slate-500">Texto</label>
-                    <input type="text" value={(placed.find(p=>p.id===selectedPlacedId)?.text) ?? ''} onChange={(e)=> updateSelectedPlaced({ text: e.target.value })} className="w-full rounded-md border px-2 py-1 text-sm" />
-                    
+                  <div className="space-y-2">      
                     <label className="text-sm text-slate-500">X (%)</label>
                     <input type="number" value={(placed.find(p=>p.id===selectedPlacedId)?.x) ?? 50} onChange={(e)=> updateSelectedPlaced({ x: Number(e.target.value) })} className="w-full rounded-md border px-2 py-1 text-sm" />
                     <label className="text-sm text-slate-500">Y (%)</label>
@@ -477,12 +502,20 @@ export default function CardDesignerModal({ open, onClose, boda, invitados }) {
                       const fld = fieldsList.find((f)=>f.key===p.field);
                       const label = fld ? fld.label : p.field;
                       // display priority: explicit text on element -> sample mapping -> label
-                      let display = p.text ?? label;
-                      if (!p.text && useSample && invitados && invitados.length>0) {
-                        const sample = invitados[0];
-                        const map = { nombre_invitado: sample.nombre_invitado, nombre_pareja: boda?.nombre_pareja, fecha_boda: boda?.fecha_boda, ciudad: boda?.ciudad, codigo_clave: sample.codigo_clave, pases: sample.pases };
-                        display = map[p.field] ?? label;
-                      }
+                      let display = label;
+
+if (useSample && invitados && invitados.length > 0) {
+  const sample = invitados[0];
+  const map = {
+    nombre_invitado: sample.nombre_invitado,
+    nombre_pareja: boda?.nombre_pareja,
+    fecha_boda: boda?.fecha_boda,
+    ciudad: boda?.ciudad,
+    codigo_clave: sample.codigo_clave,
+    pases: sample.pases,
+  };
+  display = map[p.field] ?? label;
+}
                       return (
                         <div key={p.id} draggable onDragStart={(e)=>onPlacedDragStart(e,p.id)} onClick={()=>handleSelectPlaced(p.id)} className={`absolute px-2 py-1 rounded-md ${selectedPlacedId===p.id? 'ring-2 ring-emerald-500' : ''}`} style={{ left: `${p.x}%`, top: `${p.y}%`, transform: 'translate(-50%,-50%)', cursor: 'move', background: 'rgba(0,0,0,0.6)', color: '#fff', fontFamily: p.fontFamily || fontFamily, fontSize: `${p.fontSize || fontSize}px`, lineHeight: 1 }}>{display}</div>
                       );

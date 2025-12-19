@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\PublicBodaController;
 use App\Http\Controllers\Api\PublicRsvpController;
 use App\Http\Controllers\Api\FaqBodaController;
 use App\Http\Controllers\Api\PublicRsvpCardController;
+use App\Http\Controllers\Api\CardDesignController;
 /*
 |--------------------------------------------------------------------------
 | Rutas públicas
@@ -223,10 +224,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/mis-bodas/{boda}/resumen', [BodaController::class, 'resumenPropia']);
 
         // Diseño de tarjeta (guardar plantilla + JSON)
-        Route::post('/mis-bodas/{boda}/card-design', [\App\Http\Controllers\Api\CardDesignController::class, 'store']);
+        Route::post('/mis-bodas/{boda}/card-design', [CardDesignController::class, 'store']);
         // Generar todas las tarjetas para la boda (background job)
-        Route::post('/mis-bodas/{boda}/card-design/generate', [\App\Http\Controllers\Api\CardDesignController::class, 'generate']);
+        Route::post('/mis-bodas/{boda}/card-design/generate', [CardDesignController::class, 'generate']);
         // Estado del diseño
-        Route::get('/mis-bodas/{boda}/card-design/status', [\App\Http\Controllers\Api\CardDesignController::class, 'status']);
+        Route::get('/mis-bodas/{boda}/card-design/status', [CardDesignController::class, 'status']);
+        Route::get('/mis-bodas/{boda}/card-design/progress', [CardDesignController::class, 'progress']);
+
     });
 });

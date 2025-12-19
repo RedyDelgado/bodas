@@ -10,12 +10,24 @@ use Illuminate\Support\Facades\Http as HttpClient;
 use App\Models\Boda;
 use App\Models\TarjetaDiseno;
 use App\Models\Invitado;
+use App\Models\User;
 
 class CardDesignController extends Controller
 {
+    protected function ensureOwnerOrAbort(Boda $boda): void
+{
+    /** @var User $user */
+    $user = Auth::user();
+
+    if ($user->rol?->nombre !== 'superadmin' && $boda->user_id !== $user->id) {
+        abort(403, 'No tienes permiso para esta boda');
+    }
+}
+
+
     public function store(Request $request, Boda $boda)
     {
-        $this->authorize('update', $boda);
+        $this->ensureOwnerOrAbort($boda);
 
         $data = $request->input('design') ?: null;
 
@@ -65,7 +77,7 @@ class CardDesignController extends Controller
 
     public function status(Request $request, Boda $boda)
     {
-        $this->authorize('view', $boda);
+        $this->ensureOwnerOrAbort($boda);
 
         $card = TarjetaDiseno::where('boda_id', $boda->id)->first();
         return response()->json(['card_design' => $card]);
@@ -73,7 +85,7 @@ class CardDesignController extends Controller
 
     public function generate(Request $request, Boda $boda)
     {
-        $this->authorize('update', $boda);
+        $this->ensureOwnerOrAbort($boda);
 
         // Dispatch background job to generate cards for all invitados
         $card = TarjetaDiseno::firstOrCreate(['boda_id' => $boda->id]);
@@ -86,4 +98,20 @@ class CardDesignController extends Controller
 
         return response()->json(['message' => 'Generación en cola (background). Se procesará pronto.', 'card_design' => $card]);
     }
+    public function progress(Request $request, Boda $boda)
+{
+    $this->ensureOwnerOrAbort($boda);
+
+    $card = TarjetaDiseno::where('boda_id', $boda->id)->first();
+    $total = $boda->invitados()->count();
+
+    return response()->json([
+        'estado' => $card?->estado_generacion ?? 'sin_diseno',
+        'generadas' => (int)($card?->ultimo_conteo_generado ?? 0),
+        'total' => (int)$total,
+        'ultima_generacion_at' => $card?->ultima_generacion_at,
+    ]);
+}
+
+
 }

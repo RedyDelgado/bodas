@@ -10,6 +10,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Invitado;
+use App\Models\Boda;
+use App\Models\TarjetaDiseno;
 
 class GenerateRsvpCardsJob implements ShouldQueue
 {
@@ -26,31 +28,35 @@ class GenerateRsvpCardsJob implements ShouldQueue
 
     public function handle()
     {
-        $base = config('app.url') ?? url('/');
+        $boda = Boda::with('invitados')->findOrFail($this->bodaId);
+        $card = TarjetaDiseno::firstOrCreate(['boda_id' => $boda->id]);
 
-        $design = \App\Models\TarjetaDiseno::where('boda_id', $this->bodaId)->first();
-        $generated = 0;
+        $card->estado_generacion = 'procesando';
+        $card->ultimo_conteo_generado = 0;
+        $card->save();
 
-        Invitado::where('boda_id', $this->bodaId)
-            ->orderBy('id')
-            ->chunk(100, function ($invitados) use ($design, &$generated) {
-                foreach ($invitados as $inv) {
-                    try {
-                        $generator = new \App\Services\RsvpCardGenerator();
-                        $path = $generator->generateForInvitado($inv, $design);
-                        if ($path) $generated++;
-                    } catch (\Throwable $e) {
-                        Log::warning('Error generating card for Invitado '.$inv->id.': '.$e->getMessage());
-                    }
-                }
-            });
+        $generator = new \App\Services\RsvpCardGenerator();
 
-        // Update design metadata
-        if ($design) {
-            $design->ultimo_conteo_generado = $generated;
-            $design->ultima_generacion_at = now();
-            $design->estado_generacion = 'completado';
-            $design->save();
+        $count = 0;
+
+        foreach ($boda->invitados as $inv) {
+            // genera png y retorna path relativo en storage public (ej: tarjetas/rsvp/..../xxx.png)
+            $path = $generator->generateForInvitado($inv, $card);
+
+            // IMPORTANTE: marca al invitado como generado
+            $inv->rsvp_card_path = $path;
+            $inv->rsvp_card_generated_at = now();
+            $inv->save();
+
+            $count++;
+
+            // actualiza progreso (puedes hacerlo cada 1 o cada N)
+            $card->ultimo_conteo_generado = $count;
+            $card->save();
         }
+
+        $card->estado_generacion = 'finalizado';
+        $card->ultima_generacion_at = now();
+        $card->save();
     }
 }
