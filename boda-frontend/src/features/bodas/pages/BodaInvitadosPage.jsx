@@ -4,7 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMiBodaActual } from "../hooks/useBodas";
 import { invitadosApi } from "../services/invitadosApiService";
 import * as XLSX from "xlsx";
-
+import { WhatsappCardModal } from "../components/WhatsappCardModal";
+import CardDesignerModal from "../components/CardDesignerModal";
 // React Icons
 import {
   FiUser,
@@ -129,6 +130,11 @@ export function BodaInvitadosPage() {
     pases: 1,
   });
 
+  const [waModalOpen, setWaModalOpen] = useState(false);
+  const [waInvitado, setWaInvitado] = useState(null);
+  const [designerOpen, setDesignerOpen] = useState(false);
+  const [cardStatus, setCardStatus] = useState(null);
+
   // búsqueda
   const [busqueda, setBusqueda] = useState("");
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
@@ -162,7 +168,35 @@ export function BodaInvitadosPage() {
     };
 
     fetchInvitados();
+    // fetch card design status
+    (async () => {
+      try {
+        if (!bodaId) return;
+        const res = await fetch(`/api/mis-bodas/${bodaId}/card-design/status`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setCardStatus(data.card_design || null);
+      } catch (e) {
+        // ignore
+      }
+    })();
   }, [bodaId]);
+
+  useEffect(() => {
+    if (designerOpen) return;
+    // when modal closed, refresh status
+    (async () => {
+      try {
+        if (!bodaId) return;
+        const res = await fetch(`/api/mis-bodas/${bodaId}/card-design/status`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setCardStatus(data.card_design || null);
+      } catch (e) {
+        // ignore
+      }
+    })();
+  }, [designerOpen, bodaId]);
 
   // --------- STATS ----------
   const stats = useMemo(() => {
@@ -298,40 +332,46 @@ export function BodaInvitadosPage() {
   };
 
   // --------- WHATSAPP ----------
- const handleEnviarWhatsapp = (invitado) => {
-  const celular = invitado.celular ?? invitado.telefono;
-  if (!celular) return alert("Este invitado no tiene número de teléfono registrado.");
+  const handleEnviarWhatsapp = (invitado) => {
+    const celular = invitado.celular ?? invitado.telefono;
+    if (!celular)
+      return alert("Este invitado no tiene número de teléfono registrado.");
 
-  let telefonoLimpio = String(celular).replace(/\D/g, "");
+    let telefonoLimpio = String(celular).replace(/\D/g, "");
 
-  // ✅ Evita duplicar 51 si ya lo pusieron
-  if (telefonoLimpio.startsWith("51")) {
-    telefonoLimpio = telefonoLimpio.slice(2);
-  }
-  if (telefonoLimpio.length < 9) return alert("El número de teléfono no es válido.");
+    // ✅ Evita duplicar 51 si ya lo pusieron
+    if (telefonoLimpio.startsWith("51")) {
+      telefonoLimpio = telefonoLimpio.slice(2);
+    }
+    if (telefonoLimpio.length < 9)
+      return alert("El número de teléfono no es válido.");
 
-  const base = window.location.origin;
-  const sub = boda?.subdominio;
-  const codigo = invitado.codigo_clave;
+    const base = window.location.origin;
+    const sub = boda?.subdominio;
+    const codigo = invitado.codigo_clave;
 
-  const enlaceRsvp =
-    sub && codigo ? `${base}/boda/${sub}?rsvp=${encodeURIComponent(codigo)}` : "";
+    const enlaceRsvp =
+      sub && codigo
+        ? `${base}/boda/${sub}?rsvp=${encodeURIComponent(codigo)}`
+        : "";
 
-  const nombrePareja = boda?.nombre_pareja || "nuestra boda";
-  const fecha = boda?.fecha_boda || "";
+    const nombrePareja = boda?.nombre_pareja || "nuestra boda";
+    const fecha = boda?.fecha_boda || "";
 
-  const mensaje = [
-    `¡Hola ${invitado.nombre_invitado}! 💍`,
-    `Te invitamos a acompañarnos en ${nombrePareja}${fecha ? ` el ${fecha}` : ""}.`,
-    enlaceRsvp
-      ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
-      : "Te agradecemos que nos confirmes tu asistencia.",
-  ].join("\n\n");
+    const mensaje = [
+      `¡Hola ${invitado.nombre_invitado}! 💍`,
+      `Te invitamos a acompañarnos en ${nombrePareja}${fecha ? ` el ${fecha}` : ""
+      }.`,
+      enlaceRsvp
+        ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
+        : "Te agradecemos que nos confirmes tu asistencia.",
+    ].join("\n\n");
 
-  const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
-  window.open(url, "_blank");
-};
-
+    const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
+      mensaje
+    )}`;
+    window.open(url, "_blank");
+  };
 
   // --------- FILTRO BUSCADOR ----------
   const invitadosFiltrados = useMemo(() => {
@@ -603,12 +643,45 @@ export function BodaInvitadosPage() {
               Descargar plantilla
             </button>
           </div>
-
           <p className="text-[11px] text-slate-500">
             La primera fila de la plantilla ya incluye los encabezados. No los
             cambies; solo completa las filas con los datos de tus invitados.
           </p>
+
+          {/* Nuevo: card de Diseño junto a Importar (muestra botón) */}
+          <div className="mt-4 border-t pt-4">
+            <div className="flex items-start gap-3">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-white">
+                <svg viewBox="0 0 24 24" className="w-4 h-4">
+                  <path d="M3 7h18M12 3v14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-slate-900">Diseño de tarjeta</h3>
+                <p className="text-xs text-slate-500">Sube una plantilla y arrastra campos para crear la tarjeta.</p>
+                {cardStatus && (
+                  <p className="text-xs text-slate-500 mt-1">Estado: <span className="font-medium">{cardStatus.estado_generacion || 'n/a'}</span> · Última generación: <span className="font-medium">{cardStatus.ultimo_conteo_generado ?? 0}</span></p>
+                )}
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setDesignerOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  Diseño de tarjeta
+                </button>
+              </div>
+            </div>
+          </div>
         </section>
+
+        <CardDesignerModal
+          open={designerOpen}
+          onClose={() => setDesignerOpen(false)}
+          boda={boda}
+          invitados={invitados}
+        />
       </div>
 
       {/* Resumen + Buscador + Tabla */}
@@ -692,6 +765,7 @@ export function BodaInvitadosPage() {
                 <th className="py-2 pr-4 text-left">Teléfono</th>
                 <th className="py-2 pr-4 text-center">Pases</th>
                 <th className="py-2 pr-4 text-left">Estado</th>
+                <th className="py-2 pr-4 text-center">Tarjeta</th>
                 <th className="py-2 pr-4 text-right">Acciones</th>
               </tr>
             </thead>
@@ -756,11 +830,33 @@ export function BodaInvitadosPage() {
                         </span>
                       )}
                     </td>
+                    <td className="py-2 pr-4 text-center">{
+                      (() => {
+                        const generado = Boolean(i.rsvp_card_path || i.rsvp_card_generated_at);
+                        if (generado) {
+                          return (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] text-emerald-700">
+                              <FiCheckCircle className="w-3 h-3" />
+                              Generada
+                            </span>
+                          );
+                        }
+                        return (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] text-amber-700">
+                            <FiClock className="w-3 h-3" />
+                            Pendiente
+                          </span>
+                        );
+                      })()
+                    }</td>
                     <td className="py-2 pr-4 text-right space-x-2">
                       {celular && (
                         <button
                           type="button"
-                          onClick={() => handleEnviarWhatsapp(i)}
+                          onClick={() => {
+                            setWaInvitado(i);
+                            setWaModalOpen(true);
+                          }}
                           className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100"
                         >
                           <FiMessageCircle className="w-3.5 h-3.5" />
@@ -793,6 +889,15 @@ export function BodaInvitadosPage() {
           </table>
         </div>
       </div>
+      <WhatsappCardModal
+        open={waModalOpen}
+        invitado={waInvitado}
+        onClose={() => {
+          setWaModalOpen(false);
+          setWaInvitado(null);
+        }}
+        onOpenWhatsapp={() => handleEnviarWhatsapp(waInvitado)}
+      />
     </div>
   );
 }

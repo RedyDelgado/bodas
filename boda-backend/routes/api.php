@@ -46,6 +46,43 @@ Route::prefix('public')->group(function () {
     // GET /api/public/bodas/{boda}/faqs
     Route::get('bodas/{boda}/faqs', [PublicBodaController::class, 'faqs']);
 
+
+    Route::get('rsvp-card/{codigo}.png', [PublicRsvpCardController::class, 'show']);
+
+
+
+});
+// Lista pública de fuentes disponibles en public/fonts
+Route::get('/fonts', function() {
+    $dir = public_path('fonts');
+    $files = [];
+    if (is_dir($dir)) {
+        foreach (scandir($dir) as $f) {
+            if ($f === '.' || $f === '..') continue;
+            $path = $dir . DIRECTORY_SEPARATOR . $f;
+            if (is_file($path)) {
+                $files[] = [
+                    'name' => pathinfo($f, PATHINFO_FILENAME),
+                    'filename' => $f,
+                    // return an API-served absolute URL to avoid dev-server or proxy issues
+                    'url' => request()->getSchemeAndHttpHost() . '/api/fonts/file/' . $f,
+                ];
+            }
+        }
+    }
+    return response()->json($files);
+});
+
+// Serve font file through Laravel with CORS headers to avoid OTS errors when frontend
+// requests fonts from a different origin/port (Vite dev server vs backend).
+Route::get('/fonts/file/{file}', function ($file) {
+    $path = public_path('fonts/' . $file);
+    if (!file_exists($path)) return response('Not Found', 404);
+    $mime = mime_content_type($path) ?: 'application/octet-stream';
+    return response()->file($path, [
+        'Content-Type' => $mime,
+        'Access-Control-Allow-Origin' => '*',
+    ]);
 });
 Route::get('/public/rsvp/validar/{codigo}', [PublicRsvpController::class, 'validar']);
 
@@ -173,7 +210,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/invitados/{invitado}', [InvitadoController::class, 'updatePropio']);
         Route::delete('/invitados/{invitado}', [InvitadoController::class, 'destroyPropio']);
 
-        Route::get('/public/rsvp-card/{codigo}.png', [PublicRsvpCardController::class, 'show']);
+        
 
         // Confirmación manual de invitado (si llaman por teléfono, etc.)
         Route::post('/invitados/{invitado}/confirmar', [InvitadoController::class, 'confirmar']);
@@ -184,5 +221,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Estadísticas rápidas para el panel de admin de boda
         Route::get('/mis-bodas/{boda}/resumen', [BodaController::class, 'resumenPropia']);
+
+        // Diseño de tarjeta (guardar plantilla + JSON)
+        Route::post('/mis-bodas/{boda}/card-design', [\App\Http\Controllers\Api\CardDesignController::class, 'store']);
+        // Generar todas las tarjetas para la boda (background job)
+        Route::post('/mis-bodas/{boda}/card-design/generate', [\App\Http\Controllers\Api\CardDesignController::class, 'generate']);
+        // Estado del diseño
+        Route::get('/mis-bodas/{boda}/card-design/status', [\App\Http\Controllers\Api\CardDesignController::class, 'status']);
     });
 });

@@ -18,6 +18,7 @@ import { BodaConfigPage } from "../features/bodas/pages/BodaConfigPage";
 import BodaPublicPage from "../features/public/pages/BodaPublicPage";
 import { BodaInvitadosPage } from "../features/bodas/pages/BodaInvitadosPage.jsx";
 import { RsvpPage } from "../features/public/pages/RsvpPage.jsx";
+import FullCardDesignerPage from "../features/bodas/pages/FullCardDesignerPage.jsx";
 
 // Si no tienes NotFound aún, puedes crearlo luego.
 function NotFoundPage() {
@@ -79,6 +80,7 @@ export function AppRouter() {
           <Route index element={<BodaDashboardPage />} />
           <Route path="configuracion" element={<BodaConfigPage />} />
           <Route path="invitados" element={<BodaInvitadosPage />} />
+          <Route path="disenar-tarjeta" element={<FullCardDesignerPage />} />
           {/* Más adelante: /panel/fotos, /panel/estadisticas, etc. */}
         </Route>
 

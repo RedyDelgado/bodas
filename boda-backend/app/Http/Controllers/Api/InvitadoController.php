@@ -106,6 +106,10 @@ class InvitadoController extends Controller
                 'es_confirmado'      => $inv->es_confirmado,
                 'fecha_confirmacion' => $inv->fecha_confirmacion,
                 'notas'              => $inv->notas,
+                // Campos relacionados con la tarjeta RSVP (cache)
+                'rsvp_card_path'         => $inv->rsvp_card_path,
+                'rsvp_card_generated_at' => $inv->rsvp_card_generated_at,
+                'rsvp_card_url'          => $inv->rsvp_card_url,
                 'link_rsvp'          => $linkRsvp,
             ];
         });

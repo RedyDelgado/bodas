@@ -25,9 +25,18 @@ return new class extends Migration
 
             $table->string('notas', 255)->nullable();
 
+            // ✅ RSVP card cache (SIN after)
+            $table->string('rsvp_card_path', 255)->nullable();
+            $table->string('rsvp_card_hash', 64)->nullable();
+            $table->timestamp('rsvp_card_generated_at')->nullable();
+
             $table->timestamps();
 
             $table->unique(['boda_id', 'codigo_clave']);
+
+            // índices opcionales
+            $table->index('rsvp_card_hash');
+            $table->index('rsvp_card_generated_at');
         });
     }
 

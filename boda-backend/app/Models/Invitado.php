@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Invitado extends Model
@@ -22,12 +23,20 @@ class Invitado extends Model
         'es_confirmado',
         'fecha_confirmacion',
         'notas',
+
+        // ✅ NUEVO: RSVP card cache
+        'rsvp_card_path',
+        'rsvp_card_hash',
+        'rsvp_card_generated_at',
     ];
 
     protected $casts = [
         'pases'              => 'integer',
         'es_confirmado'      => 'boolean',
         'fecha_confirmacion' => 'datetime',
+
+        // ✅ NUEVO
+        'rsvp_card_generated_at' => 'datetime',
     ];
 
     protected static function booted()
@@ -36,6 +45,28 @@ class Invitado extends Model
             // Si no se envía código manualmente, lo generamos
             if (empty($invitado->codigo_clave)) {
                 $invitado->codigo_clave = strtoupper(Str::random(8));
+            }
+        });
+
+        // Después de crear un invitado, si la boda tiene un diseño guardado, encolamos generación de su tarjeta
+        static::created(function (Invitado $invitado) {
+            try {
+                $boda = $invitado->boda;
+                if (!$boda) return;
+                $hasDesign = \App\Models\TarjetaDiseno::where('boda_id', $boda->id)->exists();
+                if ($hasDesign) {
+                    \App\Jobs\GenerateRsvpCardJob::dispatch($invitado->id);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('auto-generate rsvp card failed for invitado '.$invitado->id.': '.$e->getMessage());
+            }
+        });
+
+        // ✅ Opcional recomendado:
+        // Si cambian campos “que afectan el texto”, invalidamos cache para regenerar
+        static::updating(function (Invitado $invitado) {
+            if ($invitado->isDirty(['nombre_invitado', 'celular', 'correo', 'nombre_acompanante'])) {
+                $invitado->invalidateRsvpCardCache();
             }
         });
     }
@@ -48,5 +79,27 @@ class Invitado extends Model
     public function logsWhatsapp(): HasMany
     {
         return $this->hasMany(LogWhatsappEnvio::class, 'invitado_id');
+    }
+
+    /**
+     * ✅ Accessor: URL pública de la tarjeta generada (si existe)
+     * Requiere: php artisan storage:link
+     */
+    public function getRsvpCardUrlAttribute(): ?string
+    {
+        if (!$this->rsvp_card_path) return null;
+        if (!Storage::disk('public')->exists($this->rsvp_card_path)) return null;
+
+        return Storage::disk('public')->url($this->rsvp_card_path);
+    }
+
+    /**
+     * ✅ Limpia cache para forzar regeneración la próxima vez
+     */
+    public function invalidateRsvpCardCache(): void
+    {
+        $this->rsvp_card_path = null;
+        $this->rsvp_card_hash = null;
+        $this->rsvp_card_generated_at = null;
     }
 }
