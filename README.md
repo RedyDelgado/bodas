@@ -14,6 +14,9 @@ Una plataforma completa para la creación, gestión y publicación de bodas en l
 - [Instalación](#instalación)
 - [Configuración](#configuración)
 - [Uso](#uso)
+- [Despliegue](#despliegue)
+- [Testing](#testing)
+- [Release Notes (dic-2025)](#release-notes-dic-2025)
 - [Arquitectura](#arquitectura)
 - [Base de Datos](#base-de-datos)
 - [API Endpoints](#api-endpoints)
@@ -398,6 +401,31 @@ cd boda-frontend
 npm run build  # Generar carpeta dist/
 npm run preview  # Ver producción localmente
 ```
+
+---
+
+## 🚀 Despliegue
+
+- Producción Contabo (rápido):
+     ```bash
+     ssh root@<IP_SERVIDOR> "cd /opt/wedding && git pull origin main && cd boda-backend && bash scripts/update-prod.sh <IP_SERVIDOR>"
+     ```
+- Primera vez o detalles completos: ver [GUIA_DESPLIEGUE_CONTABO.md](GUIA_DESPLIEGUE_CONTABO.md).
+- Scripts clave: [deploy.sh](deploy.sh) (bootstrap) y [boda-backend/scripts/update-prod.sh](boda-backend/scripts/update-prod.sh) (actualización + migraciones).
+
+## ✅ Testing
+
+- Backend: `cd boda-backend && php artisan test`
+- Frontend (si aplica): `cd boda-frontend && npm test`
+- Guía extendida: [GUIA_TESTING_RSVP.md](GUIA_TESTING_RSVP.md).
+
+## 📝 Release Notes (dic-2025)
+
+- Superadmin: impersonación con indicador en header y retorno seguro.
+- Gestión de Usuarios: creación de superadmins desde modal (backend + UI).
+- Sidebar superadmin depurado (solo rutas funcionales).
+- Dashboards admin/superadmin alineados al estilo de LogsAuditoria (tarjetas blancas, tablas bg-slate-50, sin gradientes).
+- Fixes: enum de auditoría usa `CRITICO`; orden de hooks corregido en dashboard superadmin.
 
 ---
 
