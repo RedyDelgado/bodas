@@ -20,6 +20,9 @@ class User extends Authenticatable
         'telefono',
         'activo',
         'ultimo_acceso_at',
+        'suspendido',
+        'razon_suspension',
+        'last_login_at',
     ];
 
     protected $hidden = [
@@ -30,7 +33,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'activo' => 'boolean',
+        'suspendido' => 'boolean',
         'ultimo_acceso_at' => 'datetime',
+        'last_login_at' => 'datetime',
     ];
 
     public function rol(): BelongsTo
@@ -41,5 +46,21 @@ class User extends Authenticatable
     public function bodas(): HasMany
     {
         return $this->hasMany(Boda::class, 'user_id');
+    }
+
+    /**
+     * Alias para compatibilidad con el controlador
+     */
+    public function role()
+    {
+        return $this->rol();
+    }
+
+    /**
+     * Verificar si el usuario es superadmin
+     */
+    public function isSuperadmin(): bool
+    {
+        return $this->rol && $this->rol->nombre === 'superadmin';
     }
 }

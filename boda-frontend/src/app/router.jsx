@@ -22,6 +22,12 @@ import { UserSettingsPage } from "../features/user/pages/UserSettingsPage.jsx";
 import { BodaInvitadosPage } from "../features/bodas/pages/BodaInvitadosPage.jsx";
 import { RsvpPage } from "../features/public/pages/RsvpPage.jsx";
 import FullCardDesignerPage from "../features/bodas/pages/FullCardDesignerPage.jsx";
+import SuperadminDashboardPage from "../features/superadmin/pages/SuperadminDashboardPage.jsx";
+import LogsAuditoriaPage from "../features/superadmin/pages/LogsAuditoriaPage.jsx";
+import GestionUsuariosPage from "../features/superadmin/pages/GestionUsuariosPage.jsx";
+import GestionBodasPage from "../features/superadmin/pages/GestionBodasPage.jsx";
+import IpsBloqueadasPage from "../features/superadmin/pages/IpsBloqueadasPage.jsx";
+import SesionesActivasPage from "../features/superadmin/pages/SesionesActivasPage.jsx";
 
 // Si no tienes NotFound aún, puedes crearlo luego.
 function NotFoundPage() {
@@ -70,6 +76,12 @@ export function AppRouter() {
           }
         >
           <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/dashboard-analitico" element={<SuperadminDashboardPage />} />
+          <Route path="/admin/logs-auditoria" element={<LogsAuditoriaPage />} />
+          <Route path="/admin/usuarios" element={<GestionUsuariosPage />} />
+          <Route path="/admin/bodas" element={<GestionBodasPage />} />
+          <Route path="/admin/ips-bloqueadas" element={<IpsBloqueadasPage />} />
+          <Route path="/admin/sesiones-activas" element={<SesionesActivasPage />} />
           {/* Más adelante: /admin/bodas, /admin/planes, /admin/plantillas, etc. */}
         </Route>
 

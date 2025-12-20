@@ -144,6 +144,10 @@ export function AdminLayout() {
   const [searchParams] = useSearchParams();
   const bodaId = searchParams.get("boda");
 
+  const isSuperadmin =
+    usuario?.rol?.nombre === "superadmin" || usuario?.rol === "superadmin";
+  const dashboardPath = isSuperadmin ? "/admin" : "/panel";
+
   const [bodaInfo, setBodaInfo] = useState(null);
   const [bodaLoading, setBodaLoading] = useState(false);
 
@@ -232,7 +236,7 @@ export function AdminLayout() {
         <div className="h-16 flex items-center px-6 border-b border-slate-200">
           <button
             type="button"
-            onClick={() => navigate("/panel")}
+            onClick={() => navigate(dashboardPath)}
             className="flex items-center gap-2 group"
           >
             <div className="h-9 w-9 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xs font-semibold group-hover:scale-[1.02] transition-transform">
@@ -252,7 +256,7 @@ export function AdminLayout() {
         {/* Menú lateral */}
         <nav className="flex-1 px-3 py-4 text-sm space-y-1">
           <NavLink
-            to="/panel"
+            to={dashboardPath}
             end
             className={({ isActive }) =>
               `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
@@ -266,10 +270,98 @@ export function AdminLayout() {
             <span>Dashboard</span>
           </NavLink>
 
-          {/* Solo superadmin ve Planes */}
-          {usuario?.rol?.nombre === "superadmin" && (
+          {/* Superadmin: solo opciones que sí existen */}
+          {isSuperadmin && (
+            <>
+              <NavLink
+                to="/admin/dashboard-analitico"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconDashboard className="w-4 h-4" />
+                <span>Dashboard Analítico</span>
+              </NavLink>
+              
+              <NavLink
+                to="/admin/logs-auditoria"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconLayers className="w-4 h-4" />
+                <span>Logs de Auditoría</span>
+              </NavLink>
+              
+              <NavLink
+                to="/admin/usuarios"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconLayers className="w-4 h-4" />
+                <span>Gestión de Usuarios</span>
+              </NavLink>
+              
+              <NavLink
+                to="/admin/bodas"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconLayers className="w-4 h-4" />
+                <span>Gestión de Bodas</span>
+              </NavLink>
+              
+              <NavLink
+                to="/admin/ips-bloqueadas"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconLayers className="w-4 h-4" />
+                <span>IPs Bloqueadas</span>
+              </NavLink>
+              
+              <NavLink
+                to="/admin/sesiones-activas"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconLayers className="w-4 h-4" />
+                <span>Sesiones Activas</span>
+              </NavLink>
+            </>
+          )}
+
+          {!isSuperadmin && (
             <NavLink
-              to="/admin/planes"
+              to="/panel/ajustes"
               className={({ isActive }) =>
                 `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
                   isActive
@@ -278,41 +370,10 @@ export function AdminLayout() {
                 }`
               }
             >
-              <IconLayers className="w-4 h-4" />
-              <span>Planes</span>
+              <IconSettings className="w-4 h-4" />
+              <span>Ajustes</span>
             </NavLink>
           )}
-
-          {/* Solo superadmin ve Plantillas */}
-          {usuario?.rol?.nombre === "superadmin" && (
-            <NavLink
-              to="/admin/plantillas"
-              className={({ isActive }) =>
-                `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                  isActive
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`
-              }
-            >
-              <IconLayers className="w-4 h-4" />
-              <span>Plantillas</span>
-            </NavLink>
-          )}
-
-          <NavLink
-            to={usuario?.rol?.nombre === "superadmin" ? "/admin/ajustes" : "/panel/ajustes"}
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                isActive
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`
-            }
-          >
-            <IconSettings className="w-4 h-4" />
-            <span>Ajustes</span>
-          </NavLink>
         </nav>
 
         {/* Info de la boda actual en el footer del sidebar */}
@@ -371,7 +432,7 @@ export function AdminLayout() {
             {/* Mini logo en mobile */}
             <button
               type="button"
-              onClick={() => navigate("/panel")}
+              onClick={() => navigate(dashboardPath)}
               className="md:hidden h-8 w-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs font-semibold"
             >
               WB
@@ -386,8 +447,33 @@ export function AdminLayout() {
             </div>
           </div>
 
-          {/* Bloque derecho: datos del usuario + logout */}
+          {/* Bloque derecho: datos del usuario + impersonación + logout */}
           <div className="flex items-center gap-3">
+            {sessionStorage.getItem('impersonating_user') && (
+              <div className="flex items-center gap-2 bg-purple-100 border border-purple-200 text-purple-700 px-3 py-1 rounded-lg">
+                <span className="text-xs font-semibold">
+                  Viendo como: {sessionStorage.getItem('impersonating_user')}
+                </span>
+                <button
+                  onClick={() => {
+                    const backupToken = sessionStorage.getItem('superadmin_token_backup');
+                    if (backupToken) {
+                      localStorage.setItem('token', backupToken);
+                      sessionStorage.removeItem('superadmin_token_backup');
+                      sessionStorage.removeItem('impersonating_user');
+                      sessionStorage.removeItem('impersonating_user_id');
+                      window.location.href = '/admin/bodas';
+                    } else {
+                      alert('No se encontró token de respaldo. Por favor, cierra sesión y vuelve a iniciar como superadmin.');
+                    }
+                  }}
+                  className="text-xs font-bold text-purple-700 hover:text-purple-900"
+                >
+                  Volver a Superadmin
+                </button>
+              </div>
+            )}
+
             {usuario && (
               <div className="flex flex-col items-end leading-tight">
                 <span className="text-xs font-semibold text-slate-900">

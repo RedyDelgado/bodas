@@ -3,7 +3,17 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Listeners\RegistrarLoginExitoso;
+use App\Listeners\RegistrarLoginFallido;
+use App\Listeners\RegistrarLogout;
+use App\Listeners\RegistrarPasswordReset;
+use App\Listeners\RegistrarLockout;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -17,6 +27,27 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        
+        // Eventos de autenticación para auditoría
+        Login::class => [
+            RegistrarLoginExitoso::class,
+        ],
+        
+        Failed::class => [
+            RegistrarLoginFallido::class,
+        ],
+        
+        Logout::class => [
+            RegistrarLogout::class,
+        ],
+        
+        PasswordReset::class => [
+            RegistrarPasswordReset::class,
+        ],
+        
+        Lockout::class => [
+            RegistrarLockout::class,
         ],
     ];
 

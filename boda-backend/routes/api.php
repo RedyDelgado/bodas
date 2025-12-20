@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\PublicRsvpCardController;
 use App\Http\Controllers\Api\CardDesignController;
 use App\Http\Controllers\Api\RsvpGenerationProgressController;
 use App\Http\Controllers\Api\RsvpCardDownloadController;
+use App\Http\Controllers\Api\SuperadminController;
 /*
 |--------------------------------------------------------------------------
 | Rutas públicas
@@ -128,7 +129,24 @@ Route::middleware('auth:sanctum')->group(function () {
    
 
 
-    Route::middleware('role:superadmin')->group(function () {
+    Route::middleware(['role:superadmin', 'auditoria'])->group(function () {
+
+        // Rutas de estadísticas y métricas para superadmin
+        Route::prefix('superadmin')->group(function () {
+            Route::get('/metricas', [SuperadminController::class, 'obtenerMetricas']);
+            Route::get('/logs-auditoria', [SuperadminController::class, 'obtenerLogsAuditoria']);
+            Route::get('/sesiones-activas', [SuperadminController::class, 'obtenerSesionesActivas']);
+            Route::get('/ips-bloqueadas', [SuperadminController::class, 'obtenerIpsBloqueadas']);
+            Route::post('/ips-bloqueadas', [SuperadminController::class, 'bloquearIp']);
+            Route::delete('/ips-bloqueadas/{ipBloqueada}', [SuperadminController::class, 'desbloquearIp']);
+            Route::get('/usuarios', [SuperadminController::class, 'obtenerUsuarios']);
+            Route::post('/usuarios/superadmin', [SuperadminController::class, 'crearSuperadmin']);
+            Route::put('/usuarios/{usuario}/estado', [SuperadminController::class, 'cambiarEstadoUsuario']);
+            Route::delete('/usuarios/{usuario}', [SuperadminController::class, 'eliminarUsuario']);
+            Route::post('/usuarios/{usuario}/impersonate', [SuperadminController::class, 'impersonarUsuario']);
+            Route::get('/usuarios/exportar', [SuperadminController::class, 'exportarUsuarios']);
+            Route::post('/metricas/calcular-hoy', [SuperadminController::class, 'calcularMetricasHoy']);
+        });
 
         // CRUD completo de roles, planes, plantillas
         Route::apiResource('roles', RoleController::class)->except(['show']);
@@ -178,7 +196,7 @@ Route::middleware('auth:sanctum')->group(function () {
     |
     */
 
-    Route::middleware('role:admin_boda,superadmin')->group(function () {
+    Route::middleware(['role:admin_boda,superadmin', 'auditoria'])->group(function () {
 
         // Obtener boda del usuario autenticado (para ajustes)
         Route::get('/mi-boda', [BodaController::class, 'getMiBoda']);

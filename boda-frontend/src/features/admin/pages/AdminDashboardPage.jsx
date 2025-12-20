@@ -21,111 +21,89 @@ export function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-bold text-slate-900">
-          Dashboard Superadmin
-        </h1>
-        <p className="text-xs text-slate-500">
-          Datos fake basados en el modelo de la tabla <code>bodas</code>.
-        </p>
+      {/* Encabezado */}
+      <div>
+        <h1 className="text-3xl font-bold text-slate-800 mb-2">Dashboard Superadmin</h1>
+        <p className="text-slate-600">Visión general de todas las bodas registradas en la plataforma</p>
       </div>
 
       {/* Tarjetas resumen */}
-      <div className="grid md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-sm">
-          <p className="text-slate-500 mb-1">Bodas registradas</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-slate-500 text-sm mb-1">Bodas registradas</p>
           <p className="text-2xl font-bold text-slate-900">{totalBodas}</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-sm">
-          <p className="text-slate-500 mb-1">Invitados totales</p>
-          <p className="text-2xl font-bold text-slate-900">
-            {totalInvitados}
-          </p>
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-slate-500 text-sm mb-1">Invitados totales</p>
+          <p className="text-2xl font-bold text-slate-900">{totalInvitados}</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-sm">
-          <p className="text-slate-500 mb-1">Confirmados</p>
-          <p className="text-2xl font-bold text-emerald-600">
-            {totalConfirmados}
-          </p>
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-slate-500 text-sm mb-1">Confirmados</p>
+          <p className="text-2xl font-bold text-emerald-600">{totalConfirmados}</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-sm">
-          <p className="text-slate-500 mb-1">Visitas acumuladas</p>
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-slate-500 text-sm mb-1">Visitas acumuladas</p>
           <p className="text-2xl font-bold text-slate-900">{totalVistas}</p>
         </div>
       </div>
 
       {/* Tabla de bodas */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-slate-900">
-            Bodas en la plataforma
-          </h2>
-          <span className="text-[11px] text-slate-500">
-            Vista de control general (superadmin).
-          </span>
-        </div>
-
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         {cargando ? (
-          <p className="text-sm text-slate-500">Cargando bodas...</p>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
+          </div>
         ) : error ? (
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-red-600 p-4">{error}</p>
         ) : bodas.length === 0 ? (
-          <p className="text-sm text-slate-500">
-            No hay bodas registradas (FAKE).
-          </p>
+          <p className="text-sm text-slate-500 p-4">No hay bodas registradas.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-slate-50 text-xs text-slate-500 uppercase">
-                  <th className="text-left px-3 py-2 border-b">Título</th>
-                  <th className="text-left px-3 py-2 border-b">Subdominio</th>
-                  <th className="text-left px-3 py-2 border-b">Fecha</th>
-                  <th className="text-left px-3 py-2 border-b">Ubicación</th>
-                  <th className="text-center px-3 py-2 border-b">
-                    Invitados
-                  </th>
-                  <th className="text-center px-3 py-2 border-b">
-                    Confirmados
-                  </th>
-                  <th className="text-center px-3 py-2 border-b">Visitas</th>
-                  <th className="text-center px-3 py-2 border-b">Estado</th>
+            <table className="w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Título</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Subdominio</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Fecha</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Ubicación</th>
+                  <th className="text-center py-3 px-4 text-sm font-semibold text-slate-700">Invitados</th>
+                  <th className="text-center py-3 px-4 text-sm font-semibold text-slate-700">Confirmados</th>
+                  <th className="text-center py-3 px-4 text-sm font-semibold text-slate-700">Visitas</th>
+                  <th className="text-center py-3 px-4 text-sm font-semibold text-slate-700">Estado</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-100">
                 {bodas.map((boda) => (
                   <tr key={boda.id} className="hover:bg-slate-50">
-                    <td className="px-3 py-2 border-b">
-                      <div className="font-medium text-slate-900">
-                        {boda.titulo}
-                      </div>
+                    <td className="py-3 px-4 text-sm text-slate-900 font-medium">
+                      {boda.titulo}
                     </td>
-                    <td className="px-3 py-2 border-b text-xs text-slate-700">
+                    <td className="py-3 px-4 text-sm text-slate-700">
                       {boda.subdominio}
                     </td>
-                    <td className="px-3 py-2 border-b text-xs text-slate-700">
+                    <td className="py-3 px-4 text-sm text-slate-700">
                       {boda.fechaBoda}
                     </td>
-                    <td className="px-3 py-2 border-b text-xs text-slate-700">
+                    <td className="py-3 px-4 text-sm text-slate-700">
                       {boda.ciudad}, {boda.pais}
                     </td>
-                    <td className="px-3 py-2 border-b text-center text-xs text-slate-800">
+                    <td className="py-3 px-4 text-center text-sm text-slate-800">
                       {boda.totalInvitados}
                     </td>
-                    <td className="px-3 py-2 border-b text-center text-xs text-emerald-700">
+                    <td className="py-3 px-4 text-center text-sm text-emerald-700 font-medium">
                       {boda.totalConfirmados}
                     </td>
-                    <td className="px-3 py-2 border-b text-center text-xs text-slate-800">
+                    <td className="py-3 px-4 text-center text-sm text-slate-800">
                       {boda.totalVistas}
                     </td>
-                    <td className="px-3 py-2 border-b text-center text-xs">
+                    <td className="py-3 px-4 text-center">
                       <span
-                        className={`px-2 py-1 rounded-full ${
+                        className={`px-2 py-1 rounded text-xs font-medium ${
                           boda.estado === "activa"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                            ? "bg-emerald-100 text-emerald-700"
                             : boda.estado === "borrador"
-                            ? "bg-amber-50 text-amber-700 border border-amber-100"
-                            : "bg-slate-100 text-slate-700 border border-slate-200"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-slate-100 text-slate-700"
                         }`}
                       >
                         {boda.estado}
