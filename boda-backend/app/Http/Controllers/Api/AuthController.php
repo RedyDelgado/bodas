@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Models\{ Role, Plan, Plantilla, Boda, ConfiguracionBoda };
 
@@ -22,8 +23,20 @@ class AuthController extends Controller
             'device_name' => 'nullable|string',
         ]);
 
-        /** @var User|null $user */
-        $user = User::where('email', $data['email'])->with('rol')->first();
+        try {
+            /** @var User|null $user */
+            $user = User::where('email', $data['email'])->with('rol')->first();
+        } catch (\Throwable $e) {
+            Log::error('Error consultando usuario en login', [
+                'email' => $data['email'] ?? null,
+                'ip' => $request->ip(),
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'message' => 'Error interno del servidor',
+            ], 500);
+        }
 
         if (! $user || ! Hash::check($data['password'], $user->password)) {
             return response()->json(['message' => 'Credenciales inválidas'], 401);
@@ -34,7 +47,20 @@ class AuthController extends Controller
         }
 
         $deviceName = $data['device_name'] ?? 'api-token';
-        $token = $user->createToken($deviceName)->plainTextToken;
+
+        try {
+            $token = $user->createToken($deviceName)->plainTextToken;
+        } catch (\Throwable $e) {
+            Log::error('Error creando token Sanctum en login', [
+                'user_id' => $user->id ?? null,
+                'ip' => $request->ip(),
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'message' => 'Error interno del servidor',
+            ], 500);
+        }
 
         return response()->json([
             'token'   => $token,
