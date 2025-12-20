@@ -1,0 +1,1067 @@
+[2025-12-19 20:37:37] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:38] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:39] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1568083} 
+[2025-12-19 20:37:39] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:39] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:39] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:39] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1567009} 
+[2025-12-19 20:37:39] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:39] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:39] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:40] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1568180} 
+[2025-12-19 20:37:40] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:40] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:40] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:41] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1566796} 
+[2025-12-19 20:37:41] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:41] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:41] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:41] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1566790} 
+[2025-12-19 20:37:41] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:41] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:41] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:42] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1567724} 
+[2025-12-19 20:37:42] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:42] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:42] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:42] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1567883} 
+[2025-12-19 20:37:42] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:42] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:43] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:43] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1566866} 
+[2025-12-19 20:37:43] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:43] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:43] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:44] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1567832} 
+[2025-12-19 20:37:44] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:44] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:44] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:44] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1567086} 
+[2025-12-19 20:37:44] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:44] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:45] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:45] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1566035} 
+[2025-12-19 20:37:45] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:45] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:45] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:46] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1567233} 
+[2025-12-19 20:37:46] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:46] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:46] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:46] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1567419} 
+[2025-12-19 20:37:46] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:46] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:46] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:47] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1567482} 
+[2025-12-19 20:37:47] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:47] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:47] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:47] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1567934} 
+[2025-12-19 20:37:47] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:47] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:48] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:48] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1569008} 
+[2025-12-19 20:37:48] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:48] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:48] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:49] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1567229} 
+[2025-12-19 20:37:49] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:49] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:49] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:49] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1566705} 
+[2025-12-19 20:37:49] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:49] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:50] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:50] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1566985} 
+[2025-12-19 20:37:50] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:37:50] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:37:50] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:37:51] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1568406} 
+[2025-12-19 20:37:51] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:07] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:07] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:08] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1568083} 
+[2025-12-19 20:40:08] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:08] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:08] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:09] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1567009} 
+[2025-12-19 20:40:09] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:09] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:09] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:09] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1568180} 
+[2025-12-19 20:40:09] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:10] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:10] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:10] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1566796} 
+[2025-12-19 20:40:10] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:10] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:10] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:11] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1566790} 
+[2025-12-19 20:40:11] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:11] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:11] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:11] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1567724} 
+[2025-12-19 20:40:11] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:11] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:11] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:12] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1567883} 
+[2025-12-19 20:40:12] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:12] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:12] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:13] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1566866} 
+[2025-12-19 20:40:13] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:13] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:13] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:13] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1567832} 
+[2025-12-19 20:40:13] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:13] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:13] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:14] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1567086} 
+[2025-12-19 20:40:14] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:14] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:14] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:15] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1566035} 
+[2025-12-19 20:40:15] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:15] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:15] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:15] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1567233} 
+[2025-12-19 20:40:15] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:15] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:15] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:16] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1567419} 
+[2025-12-19 20:40:16] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:16] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:16] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:16] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1567482} 
+[2025-12-19 20:40:16] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:16] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:17] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:17] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1567934} 
+[2025-12-19 20:40:17] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:17] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:17] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:18] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1569008} 
+[2025-12-19 20:40:18] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:18] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:18] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:19] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1567229} 
+[2025-12-19 20:40:19] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:19] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:19] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:19] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1566705} 
+[2025-12-19 20:40:19] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:19] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:19] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:20] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1566985} 
+[2025-12-19 20:40:20] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 20:40:20] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 20:40:20] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 20:40:21] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1568406} 
+[2025-12-19 20:40:21] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:40] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:41] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:41] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1568083} 
+[2025-12-19 21:09:42] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:42] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:42] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:42] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1567009} 
+[2025-12-19 21:09:42] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:42] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:42] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:43] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1568180} 
+[2025-12-19 21:09:43] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:43] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:43] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:43] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1566796} 
+[2025-12-19 21:09:43] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:43] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:44] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:44] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1566790} 
+[2025-12-19 21:09:44] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:44] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:44] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:45] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1567724} 
+[2025-12-19 21:09:45] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:45] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:45] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:45] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1567883} 
+[2025-12-19 21:09:45] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:45] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:45] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:46] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1566866} 
+[2025-12-19 21:09:46] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:46] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:46] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:46] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1567832} 
+[2025-12-19 21:09:46] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:46] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:47] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:47] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1567086} 
+[2025-12-19 21:09:47] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:47] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:47] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:48] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1566035} 
+[2025-12-19 21:09:48] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:48] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:48] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:48] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1567233} 
+[2025-12-19 21:09:48] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:48] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:48] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:49] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1567419} 
+[2025-12-19 21:09:49] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:49] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:49] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:50] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1567482} 
+[2025-12-19 21:09:50] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:50] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:50] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:50] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1567934} 
+[2025-12-19 21:09:50] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:50] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:50] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:51] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1569008} 
+[2025-12-19 21:09:51] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:51] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:51] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:52] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1567229} 
+[2025-12-19 21:09:52] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:52] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:52] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:52] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1566705} 
+[2025-12-19 21:09:52] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:52] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:53] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:53] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1566985} 
+[2025-12-19 21:09:53] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:09:53] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/2qlKTQow3ByVYNNAUbgam4ii1gJ0bRSbAipo2sgn.png"} 
+[2025-12-19 21:09:53] local.WARNING: RSVP GEN: Fuente default no encontrada en backend/public/fonts {"fontFamily":"Arial","expected_paths":["/var/www/html/public/fonts/Arial.ttf","/var/www/html/public/fonts/Arial.otf"]} 
+[2025-12-19 21:09:54] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1568406} 
+[2025-12-19 21:09:54] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:14] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:15] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589077} 
+[2025-12-19 21:35:15] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:28] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:30] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589077} 
+[2025-12-19 21:35:30] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:30] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:31] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1588233} 
+[2025-12-19 21:35:31] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:31] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:32] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589202} 
+[2025-12-19 21:35:32] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:32] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:32] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1587996} 
+[2025-12-19 21:35:32] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:33] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:33] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1587762} 
+[2025-12-19 21:35:33] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:33] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:34] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1588765} 
+[2025-12-19 21:35:34] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:34] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:35] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1588842} 
+[2025-12-19 21:35:35] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:35] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:36] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1587871} 
+[2025-12-19 21:35:36] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:36] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:36] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1588862} 
+[2025-12-19 21:35:36] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:36] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:37] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588160} 
+[2025-12-19 21:35:37] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:37] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:38] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587043} 
+[2025-12-19 21:35:38] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:38] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:39] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1588409} 
+[2025-12-19 21:35:39] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:39] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:40] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1588648} 
+[2025-12-19 21:35:40] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:40] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:41] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1588352} 
+[2025-12-19 21:35:41] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:41] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:42] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1588948} 
+[2025-12-19 21:35:42] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:42] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:42] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1590170} 
+[2025-12-19 21:35:42] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:42] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:43] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588229} 
+[2025-12-19 21:35:43] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:43] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:44] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1587914} 
+[2025-12-19 21:35:44] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:44] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:45] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1587923} 
+[2025-12-19 21:35:45] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:35:45] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:35:45] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589429} 
+[2025-12-19 21:35:45] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:37] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:39] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589077} 
+[2025-12-19 21:37:39] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:39] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:39] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1588233} 
+[2025-12-19 21:37:39] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:39] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:40] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589202} 
+[2025-12-19 21:37:40] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:40] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:41] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1587996} 
+[2025-12-19 21:37:41] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:41] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:41] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1587762} 
+[2025-12-19 21:37:41] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:41] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:42] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1588765} 
+[2025-12-19 21:37:42] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:42] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:43] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1588842} 
+[2025-12-19 21:37:43] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:43] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:43] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1587871} 
+[2025-12-19 21:37:43] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:43] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:44] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1588862} 
+[2025-12-19 21:37:44] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:44] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:44] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588160} 
+[2025-12-19 21:37:44] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:44] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:45] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587043} 
+[2025-12-19 21:37:45] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:45] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:46] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1588409} 
+[2025-12-19 21:37:46] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:46] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:46] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1588648} 
+[2025-12-19 21:37:46] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:46] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:47] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1588352} 
+[2025-12-19 21:37:47] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:47] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:47] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1588948} 
+[2025-12-19 21:37:47] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:47] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:48] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1590170} 
+[2025-12-19 21:37:48] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:48] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:49] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588229} 
+[2025-12-19 21:37:49] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:49] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:49] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1587914} 
+[2025-12-19 21:37:49] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:49] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:50] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1587923} 
+[2025-12-19 21:37:50] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:37:50] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:37:50] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589429} 
+[2025-12-19 21:37:50] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:31] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:33] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589077} 
+[2025-12-19 21:52:33] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:33] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:33] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1588233} 
+[2025-12-19 21:52:33] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:33] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:34] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589202} 
+[2025-12-19 21:52:34] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:34] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:34] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1587996} 
+[2025-12-19 21:52:34] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:34] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:35] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1587762} 
+[2025-12-19 21:52:35] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:35] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:35] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1588765} 
+[2025-12-19 21:52:36] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:36] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:36] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1588842} 
+[2025-12-19 21:52:36] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:36] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:37] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1587871} 
+[2025-12-19 21:52:37] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:37] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:37] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1588862} 
+[2025-12-19 21:52:37] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:37] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:38] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588160} 
+[2025-12-19 21:52:38] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:38] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:39] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587043} 
+[2025-12-19 21:52:39] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:39] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:39] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1588409} 
+[2025-12-19 21:52:39] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:39] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:40] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1588648} 
+[2025-12-19 21:52:40] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:40] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:41] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1588352} 
+[2025-12-19 21:52:41] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:41] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:41] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1588948} 
+[2025-12-19 21:52:41] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:41] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:42] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1590170} 
+[2025-12-19 21:52:42] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:42] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:43] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588229} 
+[2025-12-19 21:52:43] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:43] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:43] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1587914} 
+[2025-12-19 21:52:43] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:43] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:44] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1587923} 
+[2025-12-19 21:52:44] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:52:44] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/5XIhQ5x4WMa2SyAgQMMc5FbEDfxFXEyfZ7zLWtzH.png"} 
+[2025-12-19 21:52:44] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589429} 
+[2025-12-19 21:52:45] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:26] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:27] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1590129} 
+[2025-12-19 21:55:27] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:39] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:41] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1590129} 
+[2025-12-19 21:55:41] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:41] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:42] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1589130} 
+[2025-12-19 21:55:42] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:42] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:42] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589572} 
+[2025-12-19 21:55:42] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:42] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:43] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1588879} 
+[2025-12-19 21:55:43] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:43] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:44] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1588169} 
+[2025-12-19 21:55:44] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:44] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:44] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1589149} 
+[2025-12-19 21:55:44] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:45] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:45] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1589945} 
+[2025-12-19 21:55:45] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:45] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:46] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1588233} 
+[2025-12-19 21:55:46] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:46] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:46] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1589193} 
+[2025-12-19 21:55:46] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:47] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:47] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588538} 
+[2025-12-19 21:55:47] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:47] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:48] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587443} 
+[2025-12-19 21:55:48] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:48] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:48] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1589313} 
+[2025-12-19 21:55:48] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:49] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:49] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1589490} 
+[2025-12-19 21:55:49] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:49] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:50] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1589470} 
+[2025-12-19 21:55:50] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:50] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:50] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1590014} 
+[2025-12-19 21:55:50] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:50] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:51] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1591036} 
+[2025-12-19 21:55:51] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:51] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:52] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588602} 
+[2025-12-19 21:55:52] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:52] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:52] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1588794} 
+[2025-12-19 21:55:52] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:53] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:53] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1588331} 
+[2025-12-19 21:55:53] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 21:55:53] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 21:55:54] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589821} 
+[2025-12-19 21:55:54] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:14] local.INFO: GenerateRsvpCardsJob START {"boda_id":1,"total":20} 
+[2025-12-19 22:00:14] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:16] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1590129} 
+[2025-12-19 22:00:16] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:16] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":2,"count":1,"total":20} 
+[2025-12-19 22:00:16] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:16] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1589130} 
+[2025-12-19 22:00:16] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:16] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":1,"count":2,"total":20} 
+[2025-12-19 22:00:16] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:17] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589572} 
+[2025-12-19 22:00:17] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:17] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":8,"count":3,"total":20} 
+[2025-12-19 22:00:17] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:18] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1588879} 
+[2025-12-19 22:00:18] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:18] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":7,"count":4,"total":20} 
+[2025-12-19 22:00:18] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:18] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1588169} 
+[2025-12-19 22:00:18] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:18] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":19,"count":5,"total":20} 
+[2025-12-19 22:00:18] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:19] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1589149} 
+[2025-12-19 22:00:19] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:19] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":3,"count":6,"total":20} 
+[2025-12-19 22:00:19] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:20] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1589945} 
+[2025-12-19 22:00:20] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:20] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":11,"count":7,"total":20} 
+[2025-12-19 22:00:20] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:20] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1588233} 
+[2025-12-19 22:00:20] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:20] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":5,"count":8,"total":20} 
+[2025-12-19 22:00:20] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:21] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1589193} 
+[2025-12-19 22:00:21] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:21] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":12,"count":9,"total":20} 
+[2025-12-19 22:00:21] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:22] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588538} 
+[2025-12-19 22:00:22] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:22] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":13,"count":10,"total":20} 
+[2025-12-19 22:00:22] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:22] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587443} 
+[2025-12-19 22:00:22] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:22] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":15,"count":11,"total":20} 
+[2025-12-19 22:00:22] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:23] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1589313} 
+[2025-12-19 22:00:23] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:23] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":18,"count":12,"total":20} 
+[2025-12-19 22:00:23] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:24] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1589490} 
+[2025-12-19 22:00:24] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:24] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":17,"count":13,"total":20} 
+[2025-12-19 22:00:24] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:24] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1589470} 
+[2025-12-19 22:00:24] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:24] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":6,"count":14,"total":20} 
+[2025-12-19 22:00:24] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:25] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1590014} 
+[2025-12-19 22:00:25] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:25] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":14,"count":15,"total":20} 
+[2025-12-19 22:00:25] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:25] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1591036} 
+[2025-12-19 22:00:25] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:25] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":4,"count":16,"total":20} 
+[2025-12-19 22:00:25] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:26] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588602} 
+[2025-12-19 22:00:26] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:26] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":10,"count":17,"total":20} 
+[2025-12-19 22:00:26] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:27] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1588794} 
+[2025-12-19 22:00:27] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:27] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":9,"count":18,"total":20} 
+[2025-12-19 22:00:27] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:27] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1588331} 
+[2025-12-19 22:00:27] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:27] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":16,"count":19,"total":20} 
+[2025-12-19 22:00:27] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:00:28] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589821} 
+[2025-12-19 22:00:28] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:00:28] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":20,"count":20,"total":20} 
+[2025-12-19 22:00:28] local.INFO: GenerateRsvpCardsJob DONE {"boda_id":1,"generadas":20,"total":20} 
+[2025-12-19 22:19:59] local.INFO: CardDesigner: limpió tarjetas antiguas {"folder":"tarjetas/generadas/1","count":20} 
+[2025-12-19 22:20:00] local.INFO: GenerateRsvpCardsJob START {"boda_id":1,"total":20} 
+[2025-12-19 22:20:00] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:02] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1590129} 
+[2025-12-19 22:20:02] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:02] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":2,"count":1,"total":20} 
+[2025-12-19 22:20:02] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:03] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1589130} 
+[2025-12-19 22:20:03] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:03] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":1,"count":2,"total":20} 
+[2025-12-19 22:20:03] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:03] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589572} 
+[2025-12-19 22:20:03] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:03] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":8,"count":3,"total":20} 
+[2025-12-19 22:20:03] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:04] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1588879} 
+[2025-12-19 22:20:04] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:04] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":7,"count":4,"total":20} 
+[2025-12-19 22:20:04] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:05] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1588169} 
+[2025-12-19 22:20:05] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:05] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":19,"count":5,"total":20} 
+[2025-12-19 22:20:05] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:05] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1589149} 
+[2025-12-19 22:20:05] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:06] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":3,"count":6,"total":20} 
+[2025-12-19 22:20:06] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:06] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1589945} 
+[2025-12-19 22:20:06] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:06] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":11,"count":7,"total":20} 
+[2025-12-19 22:20:06] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:07] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1588233} 
+[2025-12-19 22:20:07] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:07] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":5,"count":8,"total":20} 
+[2025-12-19 22:20:07] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:07] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1589193} 
+[2025-12-19 22:20:07] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:07] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":12,"count":9,"total":20} 
+[2025-12-19 22:20:07] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:08] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588538} 
+[2025-12-19 22:20:08] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:08] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":13,"count":10,"total":20} 
+[2025-12-19 22:20:08] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:09] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587443} 
+[2025-12-19 22:20:09] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:09] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":15,"count":11,"total":20} 
+[2025-12-19 22:20:09] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:09] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1589313} 
+[2025-12-19 22:20:09] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:09] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":18,"count":12,"total":20} 
+[2025-12-19 22:20:09] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:10] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1589490} 
+[2025-12-19 22:20:10] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:10] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":17,"count":13,"total":20} 
+[2025-12-19 22:20:10] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:10] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1589470} 
+[2025-12-19 22:20:10] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:10] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":6,"count":14,"total":20} 
+[2025-12-19 22:20:10] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:11] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1590014} 
+[2025-12-19 22:20:11] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:11] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":14,"count":15,"total":20} 
+[2025-12-19 22:20:11] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:12] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1591036} 
+[2025-12-19 22:20:12] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:12] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":4,"count":16,"total":20} 
+[2025-12-19 22:20:12] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:12] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588602} 
+[2025-12-19 22:20:12] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:12] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":10,"count":17,"total":20} 
+[2025-12-19 22:20:12] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:13] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1588794} 
+[2025-12-19 22:20:13] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:13] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":9,"count":18,"total":20} 
+[2025-12-19 22:20:13] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:14] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1588331} 
+[2025-12-19 22:20:14] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:14] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":16,"count":19,"total":20} 
+[2025-12-19 22:20:14] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/G0ekePqcwh8AsgTkvCssJWkE4ajD6MKlPsGC99ra.png"} 
+[2025-12-19 22:20:14] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589821} 
+[2025-12-19 22:20:14] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:14] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":20,"count":20,"total":20} 
+[2025-12-19 22:20:15] local.INFO: GenerateRsvpCardsJob DONE {"boda_id":1,"generadas":20,"total":20} 
+[2025-12-19 22:20:44] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:20:46] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589304} 
+[2025-12-19 22:20:46] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:20:57] local.INFO: CardDesigner: limpió tarjetas antiguas {"folder":"tarjetas/generadas/1","count":20} 
+[2025-12-19 22:20:59] local.INFO: GenerateRsvpCardsJob START {"boda_id":1,"total":20} 
+[2025-12-19 22:20:59] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:00] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589304} 
+[2025-12-19 22:21:01] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:01] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":2,"count":1,"total":20} 
+[2025-12-19 22:21:01] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:01] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1588603} 
+[2025-12-19 22:21:01] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:01] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":1,"count":2,"total":20} 
+[2025-12-19 22:21:01] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:02] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1588716} 
+[2025-12-19 22:21:02] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:02] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":8,"count":3,"total":20} 
+[2025-12-19 22:21:02] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:02] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1588345} 
+[2025-12-19 22:21:02] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:03] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":7,"count":4,"total":20} 
+[2025-12-19 22:21:03] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:03] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1587357} 
+[2025-12-19 22:21:03] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:03] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":19,"count":5,"total":20} 
+[2025-12-19 22:21:03] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:04] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1588313} 
+[2025-12-19 22:21:04] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:04] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":3,"count":6,"total":20} 
+[2025-12-19 22:21:04] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:05] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1589212} 
+[2025-12-19 22:21:05] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:05] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":11,"count":7,"total":20} 
+[2025-12-19 22:21:05] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:05] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1587474} 
+[2025-12-19 22:21:05] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:05] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":5,"count":8,"total":20} 
+[2025-12-19 22:21:05] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:06] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1588380} 
+[2025-12-19 22:21:06] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:06] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":12,"count":9,"total":20} 
+[2025-12-19 22:21:06] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:06] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1587749} 
+[2025-12-19 22:21:06] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:07] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":13,"count":10,"total":20} 
+[2025-12-19 22:21:07] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:07] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1586645} 
+[2025-12-19 22:21:07] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:07] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":15,"count":11,"total":20} 
+[2025-12-19 22:21:07] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:08] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1588799} 
+[2025-12-19 22:21:08] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:08] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":18,"count":12,"total":20} 
+[2025-12-19 22:21:08] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:08] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1589094} 
+[2025-12-19 22:21:08] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:08] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":17,"count":13,"total":20} 
+[2025-12-19 22:21:08] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:09] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1588661} 
+[2025-12-19 22:21:09] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:09] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":6,"count":14,"total":20} 
+[2025-12-19 22:21:09] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:10] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1589243} 
+[2025-12-19 22:21:10] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:10] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":14,"count":15,"total":20} 
+[2025-12-19 22:21:10] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:10] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1590377} 
+[2025-12-19 22:21:10] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:10] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":4,"count":16,"total":20} 
+[2025-12-19 22:21:10] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:11] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1587864} 
+[2025-12-19 22:21:11] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:11] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":10,"count":17,"total":20} 
+[2025-12-19 22:21:11] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:12] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1588257} 
+[2025-12-19 22:21:12] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:12] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":9,"count":18,"total":20} 
+[2025-12-19 22:21:12] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:12] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1587579} 
+[2025-12-19 22:21:12] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:12] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":16,"count":19,"total":20} 
+[2025-12-19 22:21:12] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/jCcsu6Scim1nUrOXpe3QKR3NGXHR4ckw0f21Ytp3.png"} 
+[2025-12-19 22:21:13] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1588930} 
+[2025-12-19 22:21:13] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:21:13] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":20,"count":20,"total":20} 
+[2025-12-19 22:21:13] local.INFO: GenerateRsvpCardsJob DONE {"boda_id":1,"generadas":20,"total":20} 
+[2025-12-19 22:24:50] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/1tVq7rplLabMbnk7ghbyv3W3UqIhpMR0N93bzACO.png"} 
+[2025-12-19 22:24:52] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589249} 
+[2025-12-19 22:24:52] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:25:53] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/sIjrxZnWFqf6YTApKmWi9xOIWZC8SgbjP1BDWV3t.png"} 
+[2025-12-19 22:25:54] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589640} 
+[2025-12-19 22:25:55] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:35:56] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:35:58] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589563} 
+[2025-12-19 22:35:58] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:01] local.INFO: CardDesigner: limpió tarjetas antiguas {"folder":"tarjetas/generadas/1","count":20} 
+[2025-12-19 22:36:02] local.INFO: GenerateRsvpCardsJob START {"boda_id":1,"total":20} 
+[2025-12-19 22:36:02] local.INFO: RSVP GEN start {"inv":2,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:04] local.INFO: RSVP GEN encoded {"inv":2,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","bytes":1589563} 
+[2025-12-19 22:36:04] local.INFO: RSVP GEN saved {"inv":2,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_lic_alejandro_reynoso_tellez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:04] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":2,"count":1,"total":20} 
+[2025-12-19 22:36:04] local.INFO: RSVP GEN start {"inv":1,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:04] local.INFO: RSVP GEN encoded {"inv":1,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","bytes":1588679} 
+[2025-12-19 22:36:04] local.INFO: RSVP GEN saved {"inv":1,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ian_osorio_leal_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:04] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":1,"count":2,"total":20} 
+[2025-12-19 22:36:04] local.INFO: RSVP GEN start {"inv":8,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:05] local.INFO: RSVP GEN encoded {"inv":8,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","bytes":1589236} 
+[2025-12-19 22:36:05] local.INFO: RSVP GEN saved {"inv":8,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_nadia_mariangel_yanez_zuniga.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:05] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":8,"count":3,"total":20} 
+[2025-12-19 22:36:05] local.INFO: RSVP GEN start {"inv":7,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:06] local.INFO: RSVP GEN encoded {"inv":7,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","bytes":1588467} 
+[2025-12-19 22:36:06] local.INFO: RSVP GEN saved {"inv":7,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_simon_barreto_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:06] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":7,"count":4,"total":20} 
+[2025-12-19 22:36:06] local.INFO: RSVP GEN start {"inv":19,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:06] local.INFO: RSVP GEN encoded {"inv":19,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","bytes":1587924} 
+[2025-12-19 22:36:06] local.INFO: RSVP GEN saved {"inv":19,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_ignacio_sanabria.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:06] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":19,"count":5,"total":20} 
+[2025-12-19 22:36:06] local.INFO: RSVP GEN start {"inv":3,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:07] local.INFO: RSVP GEN encoded {"inv":3,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","bytes":1588849} 
+[2025-12-19 22:36:07] local.INFO: RSVP GEN saved {"inv":3,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_abigail_jimena_raya_casas.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:07] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":3,"count":6,"total":20} 
+[2025-12-19 22:36:07] local.INFO: RSVP GEN start {"inv":11,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:08] local.INFO: RSVP GEN encoded {"inv":11,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","bytes":1589477} 
+[2025-12-19 22:36:08] local.INFO: RSVP GEN saved {"inv":11,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_catalina_nadia_figueroa_valle.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:08] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":11,"count":7,"total":20} 
+[2025-12-19 22:36:08] local.INFO: RSVP GEN start {"inv":5,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:08] local.INFO: RSVP GEN encoded {"inv":5,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","bytes":1587981} 
+[2025-12-19 22:36:08] local.INFO: RSVP GEN saved {"inv":5,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_manuela_tirado_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:08] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":5,"count":8,"total":20} 
+[2025-12-19 22:36:08] local.INFO: RSVP GEN start {"inv":12,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:09] local.INFO: RSVP GEN encoded {"inv":12,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","bytes":1588898} 
+[2025-12-19 22:36:09] local.INFO: RSVP GEN saved {"inv":12,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_nadia_delgado_guerrero.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:09] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":12,"count":9,"total":20} 
+[2025-12-19 22:36:09] local.INFO: RSVP GEN start {"inv":13,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:09] local.INFO: RSVP GEN encoded {"inv":13,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","bytes":1588270} 
+[2025-12-19 22:36:09] local.INFO: RSVP GEN saved {"inv":13,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_sergio_cadena_leal.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:09] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":13,"count":10,"total":20} 
+[2025-12-19 22:36:10] local.INFO: RSVP GEN start {"inv":15,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:10] local.INFO: RSVP GEN encoded {"inv":15,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","bytes":1587222} 
+[2025-12-19 22:36:10] local.INFO: RSVP GEN saved {"inv":15,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sra_julia_carrera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:10] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":15,"count":11,"total":20} 
+[2025-12-19 22:36:10] local.INFO: RSVP GEN start {"inv":18,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:11] local.INFO: RSVP GEN encoded {"inv":18,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","bytes":1588903} 
+[2025-12-19 22:36:11] local.INFO: RSVP GEN saved {"inv":18,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_leonardo_cepeda_apodaca.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:11] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":18,"count":12,"total":20} 
+[2025-12-19 22:36:11] local.INFO: RSVP GEN start {"inv":17,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:11] local.INFO: RSVP GEN encoded {"inv":17,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","bytes":1589204} 
+[2025-12-19 22:36:11] local.INFO: RSVP GEN saved {"inv":17,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dn_antonio_pichardo_viera.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:11] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":17,"count":13,"total":20} 
+[2025-12-19 22:36:11] local.INFO: RSVP GEN start {"inv":6,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:12] local.INFO: RSVP GEN encoded {"inv":6,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","bytes":1588989} 
+[2025-12-19 22:36:12] local.INFO: RSVP GEN saved {"inv":6,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_mariangel_isabella_alba_mesa.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:12] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":6,"count":14,"total":20} 
+[2025-12-19 22:36:12] local.INFO: RSVP GEN start {"inv":14,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:13] local.INFO: RSVP GEN encoded {"inv":14,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","bytes":1589489} 
+[2025-12-19 22:36:13] local.INFO: RSVP GEN saved {"inv":14,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ing_javier_rosario_fernandez.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:13] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":14,"count":15,"total":20} 
+[2025-12-19 22:36:13] local.INFO: RSVP GEN start {"inv":4,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:13] local.INFO: RSVP GEN encoded {"inv":4,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","bytes":1590524} 
+[2025-12-19 22:36:13] local.INFO: RSVP GEN saved {"inv":4,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_dr_christopher_pacheco_cervantes_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:13] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":4,"count":16,"total":20} 
+[2025-12-19 22:36:13] local.INFO: RSVP GEN start {"inv":10,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:14] local.INFO: RSVP GEN encoded {"inv":10,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","bytes":1588352} 
+[2025-12-19 22:36:14] local.INFO: RSVP GEN saved {"inv":10,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_sr_alex_batista_trejo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:14] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":10,"count":17,"total":20} 
+[2025-12-19 22:36:14] local.INFO: RSVP GEN start {"inv":9,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:15] local.INFO: RSVP GEN encoded {"inv":9,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","bytes":1588343} 
+[2025-12-19 22:36:15] local.INFO: RSVP GEN saved {"inv":9,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_ornela_ayala_hijo.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:15] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":9,"count":18,"total":20} 
+[2025-12-19 22:36:15] local.INFO: RSVP GEN start {"inv":16,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:15] local.INFO: RSVP GEN encoded {"inv":16,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","bytes":1588150} 
+[2025-12-19 22:36:15] local.INFO: RSVP GEN saved {"inv":16,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_tomas_hurtado_alcantar.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:15] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":16,"count":19,"total":20} 
+[2025-12-19 22:36:15] local.INFO: RSVP GEN start {"inv":20,"boda_id":1,"template":"/var/www/html/storage/app/public/tarjetas/plantillas/1/UFi2GxcdS8mCpgjAouLLr0sXup3DEhjCoKd19ULA.png"} 
+[2025-12-19 22:36:16] local.INFO: RSVP GEN encoded {"inv":20,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","bytes":1589501} 
+[2025-12-19 22:36:16] local.INFO: RSVP GEN saved {"inv":20,"ok":true,"path":"tarjetas/generadas/1/1_lautaro_ana_sofia_camilo_juan_manuel_ulibarri_vega.png","disk_root":"/var/www/html/storage/app/public"} 
+[2025-12-19 22:36:16] local.DEBUG: GenerateRsvpCardsJob generated {"inv_id":20,"count":20,"total":20} 
+[2025-12-19 22:36:16] local.INFO: GenerateRsvpCardsJob DONE {"boda_id":1,"generadas":20,"total":20} 
+[2025-12-20 02:48:56] local.ERROR: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known (Connection: mysql, SQL: select table_name as `name`, (data_length + index_length) as `size`, table_comment as `comment`, engine as `engine`, table_collation as `collation` from information_schema.tables where table_schema = 'db_wedding' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') order by table_name) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known (Connection: mysql, SQL: select table_name as `name`, (data_length + index_length) as `size`, table_comment as `comment`, engine as `engine`, table_collation as `collation` from information_schema.tables where table_schema = 'db_wedding' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') order by table_name) at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(962): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(785): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(414): Illuminate\\Database\\Connection->run('select table_na...', Array, Object(Closure))
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(401): Illuminate\\Database\\Connection->select('select table_na...', Array, false)
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlBuilder.php(41): Illuminate\\Database\\Connection->selectFromWriteConnection('select table_na...')
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(165): Illuminate\\Database\\Schema\\MySqlBuilder->getTables(false)
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\Builder->hasTable('migrations')
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(727): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(261): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}(1)
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): retry(1, Object(Closure), 0, Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->repositoryExists()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(84): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->prepareDatabase()
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#22 /var/www/html/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#24 /var/www/html/vendor/symfony/console/Application.php(1088): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/html/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/html/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 {main}
+
+[previous exception] [object] (PDOException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:65)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(65): PDO->__construct('mysql:host=mysq...', 'db_wedding', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(83): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection(Object(PDOException), 'mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=mysq...', Array, Array)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1339): call_user_func(Object(Closure))
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(528): Illuminate\\Database\\Connection->getPdo()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(423): Illuminate\\Database\\Connection->getPdoForSelect(false)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select table_na...', Array)
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(962): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(785): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(414): Illuminate\\Database\\Connection->run('select table_na...', Array, Object(Closure))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(401): Illuminate\\Database\\Connection->select('select table_na...', Array, false)
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlBuilder.php(41): Illuminate\\Database\\Connection->selectFromWriteConnection('select table_na...')
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(165): Illuminate\\Database\\Schema\\MySqlBuilder->getTables(false)
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\Builder->hasTable('migrations')
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(727): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(261): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}(1)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): retry(1, Object(Closure), 0, Object(Closure))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->repositoryExists()
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(84): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->prepareDatabase()
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#32 /var/www/html/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#34 /var/www/html/vendor/symfony/console/Application.php(1088): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#35 /var/www/html/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#36 /var/www/html/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#38 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#39 {main}
+
+[previous exception] [object] (PDOException(code: 0): PDO::__construct(): php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:65)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(65): PDO->__construct('mysql:host=mysq...', 'db_wedding', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(83): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection(Object(PDOException), 'mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=mysq...', Array, Array)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1339): call_user_func(Object(Closure))
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(528): Illuminate\\Database\\Connection->getPdo()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(423): Illuminate\\Database\\Connection->getPdoForSelect(false)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select table_na...', Array)
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(962): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(785): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(414): Illuminate\\Database\\Connection->run('select table_na...', Array, Object(Closure))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(401): Illuminate\\Database\\Connection->select('select table_na...', Array, false)
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlBuilder.php(41): Illuminate\\Database\\Connection->selectFromWriteConnection('select table_na...')
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(165): Illuminate\\Database\\Schema\\MySqlBuilder->getTables(false)
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\Builder->hasTable('migrations')
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(727): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(261): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}(1)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): retry(1, Object(Closure), 0, Object(Closure))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->repositoryExists()
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(84): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->prepareDatabase()
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#32 /var/www/html/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#34 /var/www/html/vendor/symfony/console/Application.php(1088): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#35 /var/www/html/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#36 /var/www/html/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#38 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#39 {main}
+"} 
+[2025-12-20 02:49:44] local.ERROR: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known (Connection: mysql, SQL: select table_name as `name`, (data_length + index_length) as `size`, table_comment as `comment`, engine as `engine`, table_collation as `collation` from information_schema.tables where table_schema = 'db_wedding' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') order by table_name) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known (Connection: mysql, SQL: select table_name as `name`, (data_length + index_length) as `size`, table_comment as `comment`, engine as `engine`, table_collation as `collation` from information_schema.tables where table_schema = 'db_wedding' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') order by table_name) at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(962): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(785): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(414): Illuminate\\Database\\Connection->run('select table_na...', Array, Object(Closure))
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(401): Illuminate\\Database\\Connection->select('select table_na...', Array, false)
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlBuilder.php(41): Illuminate\\Database\\Connection->selectFromWriteConnection('select table_na...')
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(165): Illuminate\\Database\\Schema\\MySqlBuilder->getTables(false)
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\Builder->hasTable('migrations')
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(727): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(261): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}(1)
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): retry(1, Object(Closure), 0, Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->repositoryExists()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(84): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->prepareDatabase()
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#22 /var/www/html/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#24 /var/www/html/vendor/symfony/console/Application.php(1088): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/html/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/html/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 {main}
+
+[previous exception] [object] (PDOException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:65)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(65): PDO->__construct('mysql:host=mysq...', 'db_wedding', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(83): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection(Object(PDOException), 'mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=mysq...', Array, Array)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1339): call_user_func(Object(Closure))
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(528): Illuminate\\Database\\Connection->getPdo()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(423): Illuminate\\Database\\Connection->getPdoForSelect(false)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select table_na...', Array)
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(962): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(785): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(414): Illuminate\\Database\\Connection->run('select table_na...', Array, Object(Closure))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(401): Illuminate\\Database\\Connection->select('select table_na...', Array, false)
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlBuilder.php(41): Illuminate\\Database\\Connection->selectFromWriteConnection('select table_na...')
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(165): Illuminate\\Database\\Schema\\MySqlBuilder->getTables(false)
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\Builder->hasTable('migrations')
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(727): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(261): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}(1)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): retry(1, Object(Closure), 0, Object(Closure))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->repositoryExists()
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(84): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->prepareDatabase()
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#32 /var/www/html/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#34 /var/www/html/vendor/symfony/console/Application.php(1088): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#35 /var/www/html/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#36 /var/www/html/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#38 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#39 {main}
+
+[previous exception] [object] (PDOException(code: 0): PDO::__construct(): php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:65)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(65): PDO->__construct('mysql:host=mysq...', 'db_wedding', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(83): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection(Object(PDOException), 'mysql:host=mysq...', 'db_wedding', 'secret123', Array)
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=mysq...', Array, Array)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1339): call_user_func(Object(Closure))
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(528): Illuminate\\Database\\Connection->getPdo()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(423): Illuminate\\Database\\Connection->getPdoForSelect(false)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select table_na...', Array)
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(962): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(785): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select table_na...', Array, Object(Closure))
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(414): Illuminate\\Database\\Connection->run('select table_na...', Array, Object(Closure))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(401): Illuminate\\Database\\Connection->select('select table_na...', Array, false)
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlBuilder.php(41): Illuminate\\Database\\Connection->selectFromWriteConnection('select table_na...')
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(165): Illuminate\\Database\\Schema\\MySqlBuilder->getTables(false)
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\Builder->hasTable('migrations')
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(727): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(261): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}(1)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(140): retry(1, Object(Closure), 0, Object(Closure))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->repositoryExists()
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(84): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->prepareDatabase()
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#32 /var/www/html/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#34 /var/www/html/vendor/symfony/console/Application.php(1088): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#35 /var/www/html/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#36 /var/www/html/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#38 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#39 {main}
+"} 

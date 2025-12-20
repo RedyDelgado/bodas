@@ -11,6 +11,7 @@ import { ProtectedRoute } from "../shared/components/routing/ProtectedRoute.jsx"
 // Páginas
 import { LandingPage } from "../features/public/pages/LandingPage.jsx";
 import { LoginPage } from "../features/auth/pages/LoginPage.jsx";
+import { RegisterPage } from "../features/auth/pages/RegisterPage.jsx";
 import { DemoBodaPage } from "../features/bodas/pages/DemoBodaPage.jsx";
 import { AdminDashboardPage } from "../features/admin/pages/AdminDashboardPage.jsx";
 import { BodaDashboardPage } from "../features/bodas/pages/BodaDashboardPage.jsx";
@@ -44,6 +45,7 @@ export function AppRouter() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/registro" element={<RegisterPage />} />
           <Route path="/demo-boda/:slug" element={<DemoBodaPage />} />
           <Route path="/rsvp/:codigo" element={<RsvpPage />} />
         </Route>

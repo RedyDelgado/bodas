@@ -1,10 +1,9 @@
-// src/features/bodas/pages/BodaInvitadosPage.jsx
+﻿// src/features/bodas/pages/BodaInvitadosPage.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMiBodaActual } from "../hooks/useBodas";
 import { invitadosApi } from "../services/invitadosApiService";
 import * as XLSX from "xlsx";
-import { WhatsappCardModal } from "../components/WhatsappCardModal";
 import CardDesignerModal from "../components/CardDesignerModal";
 
 import axiosClient from "../../../shared/config/axiosClient";
@@ -20,6 +19,7 @@ import {
   FiTrash2,
   FiMessageCircle,
   FiSearch,
+  FiDownload,
 } from "react-icons/fi";
 import { HiOutlineMail } from "react-icons/hi";
 
@@ -134,8 +134,6 @@ export function BodaInvitadosPage() {
     pases: 1,
   });
 
-  const [waModalOpen, setWaModalOpen] = useState(false);
-  const [waInvitado, setWaInvitado] = useState(null);
   const [designerOpen, setDesignerOpen] = useState(false);
   const [cardStatus, setCardStatus] = useState(null);
   const [genOpen, setGenOpen] = useState(false);
@@ -148,6 +146,7 @@ export function BodaInvitadosPage() {
   // búsqueda
   const [busqueda, setBusqueda] = useState("");
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
+  const [descargandoZip, setDescargandoZip] = useState(false);
   // --------- CARGA INICIAL ----------
   useEffect(() => {
     if (!bodaId) {
@@ -389,8 +388,11 @@ async function fetchProgress() {
         if (!alive) return;
 
         const estado = info?.estado;
+        console.log('✓ Progreso consultado:', { estado, generadas: info?.generadas, total: info?.total });
+        
         if (estado === "finalizado" || estado === "error") {
           clearInterval(timer);
+          console.log('✓ Generación completada/error, refrescando datos...');
 
           // refresca invitados para que cambie Pendiente -> Generada
           const dataInv = await invitadosApi.listarPorBoda(bodaId);
@@ -403,14 +405,17 @@ async function fetchProgress() {
           setCardStatus(st.card_design || null);
         }
       } catch (e) {
+        console.error('✗ Error consultando progreso:', e);
         // si falla, no cierres el modal; solo marca error lógico si quieres
         setGenProgress((p) => ({ ...p, estado: "error" }));
         clearInterval(timer);
       }
     };
 
+    // Primera consulta inmediata
     tick();
-    timer = setInterval(tick, 1200);
+    // Consultar cada 500ms para ser más responsivo
+    timer = setInterval(tick, 500);
 
     return () => {
       alive = false;
@@ -418,12 +423,13 @@ async function fetchProgress() {
     };
   }, [genOpen, bodaId]);
 
-async function startGeneration() {
-  if (
-    !window.confirm(
-      "Finalizar diseño y regenerar tarjetas para todos los invitados?"
-    )
-  ) return;
+async function startGeneration({ skipConfirm = false } = {}) {
+  if (!skipConfirm) {
+    const confirmar = window.confirm(
+      "Esto regenerará todas las tarjetas para todos los invitados.\n\nLas tarjetas anteriores se sobrescribirán.\n\n¿Deseas continuar?"
+    );
+    if (!confirmar) return;
+  }
 
   setGenProgress({
     estado: "en_cola",
@@ -454,6 +460,59 @@ async function startGeneration() {
   }
 }
 
+  // --------- DESCARGAS ----------
+  const handleDescargarTarjeta = async (invitado) => {
+    try {
+      const { data } = await axiosClient.get(
+        `/invitados/${invitado.id}/rsvp-card/download`,
+        { responseType: 'blob' }
+      );
+      
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const ext = invitado.rsvp_card_path?.endsWith('.webp') ? 'webp' : 'png';
+      const nombreArchivo = (invitado.nombre_invitado || 'invitado').replace(/[^a-zA-Z0-9]/g, '_');
+      link.setAttribute('download', `${nombreArchivo}.${ext}`);
+      
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error descargando tarjeta:', err);
+      alert('No se pudo descargar la tarjeta.');
+    }
+  };
+
+  const handleDescargarTodosZip = async () => {
+    setDescargandoZip(true);
+    try {
+      const { data } = await axiosClient.get(
+        `/mis-bodas/${bodaId}/tarjetas/descargar-zip`,
+        { responseType: 'blob' }
+      );
+      
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const nombrePareja = (boda?.nombre_pareja || 'tarjetas').replace(/[^a-zA-Z0-9]/g, '_');
+      link.setAttribute('download', `${nombrePareja}_tarjetas.zip`);
+      
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error descargando ZIP:', err);
+      alert('No se pudo descargar el archivo ZIP. Revisa la consola.');
+    } finally {
+      setDescargandoZip(false);
+    }
+  };
+
   // --------- WHATSAPP ----------
   const handleEnviarWhatsapp = (invitado) => {
     const celular = invitado.celular ?? invitado.telefono;
@@ -462,7 +521,7 @@ async function startGeneration() {
 
     let telefonoLimpio = String(celular).replace(/\D/g, "");
 
-    // ✅ Evita duplicar 51 si ya lo pusieron
+    // Evita duplicar 51 si ya lo pusieron
     if (telefonoLimpio.startsWith("51")) {
       telefonoLimpio = telefonoLimpio.slice(2);
     }
@@ -481,16 +540,16 @@ async function startGeneration() {
     const nombrePareja = boda?.nombre_pareja || "nuestra boda";
     const fecha = boda?.fecha_boda || "";
 
-    const mensaje = [
-      `¡Hola ${invitado.nombre_invitado}! 💍`,
-      `Te invitamos a acompañarnos en ${nombrePareja}${
+    let mensaje = [
+      `¡Hola ${invitado.nombre_invitado}!`,
+      `Te invitamos a acompañarnos en nuestra boda, ${nombrePareja}${
         fecha ? ` el ${fecha}` : ""
       }.`,
       enlaceRsvp
         ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
         : "Te agradecemos que nos confirmes tu asistencia.",
-    ].join("\n\n");
-
+    ].join("\n\n"); 
+     
     const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
       mensaje
     )}`;
@@ -815,6 +874,28 @@ async function startGeneration() {
                 >
                   Diseño de tarjeta
                 </button>
+                {invitados.some((i) => i.rsvp_card_path) && (
+                  <div className="mt-2 space-y-2">
+                    <button
+                      type="button"
+                      onClick={handleDescargarTodosZip}
+                      disabled={descargandoZip}
+                      className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {descargandoZip ? (
+                        <>
+                          <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-blue-700"></div>
+                          Descargando...
+                        </>
+                      ) : (
+                        <>
+                          <FiDownload className="w-3.5 h-3.5" />
+                          Descargar todas (ZIP)
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -825,9 +906,9 @@ async function startGeneration() {
           onClose={() => setDesignerOpen(false)}
           boda={boda}
           invitados={invitados}
-          onStartGenerate={() => {
+          onStartGenerate={({ skipConfirm } = {}) => {
             setDesignerOpen(false);
-            startGeneration();
+            startGeneration({ skipConfirm });
           }}
         />
       </div>
@@ -983,19 +1064,17 @@ async function startGeneration() {
                         const generado = Boolean(
                           i.rsvp_card_path || i.rsvp_card_generated_at
                         );
-                        if (generado) {
-                          return (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] text-emerald-700">
-                              <FiCheckCircle className="w-3 h-3" />
-                              Generada
-                            </span>
-                          );
-                        }
+                        if (!generado) return <span className="text-xs text-slate-400">--</span>;
                         return (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] text-amber-700">
-                            <FiClock className="w-3 h-3" />
-                            Pendiente
-                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleDescargarTarjeta(i)}
+                            className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100"
+                            title="Descargar tarjeta"
+                          >
+                            <FiDownload className="w-3.5 h-3.5" />
+                            Des. Tarj.
+                          </button>
                         );
                       })()}
                     </td>
@@ -1003,10 +1082,7 @@ async function startGeneration() {
                       {celular && (
                         <button
                           type="button"
-                          onClick={() => {
-                            setWaInvitado(i);
-                            setWaModalOpen(true);
-                          }}
+                          onClick={() => handleEnviarWhatsapp(i)}
                           className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100"
                         >
                           <FiMessageCircle className="w-3.5 h-3.5" />
@@ -1039,15 +1115,6 @@ async function startGeneration() {
           </table>
         </div>
       </div>
-      <WhatsappCardModal
-        open={waModalOpen}
-        invitado={waInvitado}
-        onClose={() => {
-          setWaModalOpen(false);
-          setWaInvitado(null);
-        }}
-        onOpenWhatsapp={() => handleEnviarWhatsapp(waInvitado)}
-      />
       <GenerationProgressModal
   open={genOpen}
   progress={genProgress}
@@ -1057,11 +1124,6 @@ async function startGeneration() {
 
     </div>
   );
-}
-
-// Icono extra usado en el botón de plantilla
-function FiDownload(props) {
-  return <FiUploadRotated {...props} />;
 }
 
 // Truco simple para reutilizar el trazo de upload como “download”
@@ -1095,3 +1157,4 @@ function FiUploadRotated(props) {
     </svg>
   );
 }
+

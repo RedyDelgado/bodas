@@ -15,6 +15,8 @@ export default function CardDesignerModal({
   const [fontFamily, setFontFamily] = useState("CormorantGaramond-SemiBold");
   const [fontSize, setFontSize] = useState(18);
   const [saving, setSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [textColor, setTextColor] = useState("#000000");
   const canvasRef = useRef(null);
   const [useSample, setUseSample] = useState(true);
   const [selectedPlacedId, setSelectedPlacedId] = useState(null);
@@ -48,8 +50,46 @@ export default function CardDesignerModal({
     if (!open) {
       setTemplateFile(null);
       setPlaced([]);
+    } else {
+      // Cargar diseño guardado si existe
+      loadDesignFromBoda();
     }
   }, [open]);
+
+  async function loadDesignFromBoda() {
+    if (!boda?.id) return;
+      setIsLoading(true);
+    try {
+      const { data } = await axiosClient.get(
+        `/mis-bodas/${boda.id}/card-design/status`
+      );
+      const design = data?.card_design;
+      if (!design) return;
+
+      // Cargar plantilla si existe
+      if (design.plantilla_ruta) {
+        const fullUrl = `${window.location.origin}/storage/${design.plantilla_ruta}`;
+        const res = await fetch(fullUrl);
+        if (res.ok) {
+          const blob = await res.blob();
+          setTemplateFile(new File([blob], 'plantilla.png', { type: blob.type }));
+        }
+      }
+
+      // Cargar diseño JSON guardado
+      if (design.diseno_json) {
+        const json = design.diseno_json;
+        setPlaced(json.placed || []);
+        setFontFamily(json.fontFamily || 'CormorantGaramond-SemiBold');
+        setFontSize(json.fontSize || 18);
+        setTextColor(json.color || '#000000');
+      }
+    } catch (err) {
+      console.warn('No se pudo cargar diseño previo:', err);
+        } finally {
+          setIsLoading(false);
+    }
+  }
   useEffect(() => {
     let cancelled = false;
 
@@ -287,7 +327,7 @@ export default function CardDesignerModal({
         display = map[p.field] ?? label;
       }
       // draw text in black by default (contrasts most templates)
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = p.color || textColor || "#000000";
       ctx.font = `${p.fontSize || fontSize}px "${
         p.fontFamily || fontFamily
       }", sans-serif`;
@@ -353,7 +393,7 @@ export default function CardDesignerModal({
       }
       setPlaced((p) => [
         ...p,
-        { id: Date.now(), field: key, x, y, fontSize, fontFamily },
+        { id: Date.now(), field: key, x, y, fontSize, fontFamily, color: textColor },
       ]);
       setSelectedPlacedId(null);
       return;
@@ -380,14 +420,14 @@ export default function CardDesignerModal({
     }
   }
 
-  async function handleSave() {
+  async function handleSave({ silent = false } = {}) {
     try {
       setSaving(true);
 
       const form = new FormData();
       form.append(
         "design",
-        JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList })
+        JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList, color: textColor })
       );
       if (templateFile) form.append("template", templateFile);
 
@@ -397,7 +437,9 @@ export default function CardDesignerModal({
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      alert("Diseño guardado. Puedes finalizar y regenerar tarjetas.");
+      if (!silent) {
+        alert("Diseño guardado. Puedes finalizar y regenerar tarjetas.");
+      }
 
       if (data?.card_design?.ruta_vista_previa) {
         // backend guarda ruta tipo "tarjetas/....png" dentro de storage/public
@@ -411,6 +453,7 @@ export default function CardDesignerModal({
     } catch (e) {
       console.error(e);
       alert("No se pudo guardar el diseño. Revisa consola.");
+      throw e;
     } finally {
       setSaving(false);
     }
@@ -446,13 +489,33 @@ export default function CardDesignerModal({
     });
   }
 
-  function handleFinalizeAndGenerate() {
-    if (onStartGenerate) return onStartGenerate();
-    // fallback si no mandas callback:
+  async function handleFinalizeAndGenerate() {
+    const ok = window.confirm(
+      "Esto guardará el diseño y regenerará todas las tarjetas. ¿Deseas continuar?"
+    );
+    if (!ok) return;
+
+    try {
+      await handleSave({ silent: true });
+    } catch (e) {
+      return;
+    }
+    if (onStartGenerate) return onStartGenerate({ skipConfirm: true });
     alert("No hay handler onStartGenerate.");
   }
 
   if (!open) return null;
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-xl p-8 flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+          <p className="text-slate-700 font-medium">Cargando plantilla guardada...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60">
@@ -574,11 +637,12 @@ export default function CardDesignerModal({
                 <label className="block text-xs font-medium text-slate-600 mb-1">
                   Campos arrastrables
                 </label>
-                <div className="flex gap-2 mb-2">
+                <div className="flex flex-wrap gap-3 mb-2 items-center">
                   {(() => {
                     const sel = placed.find((p) => p.id === selectedPlacedId);
                     const currentFamily = sel?.fontFamily ?? fontFamily;
                     const currentSize = sel?.fontSize ?? fontSize;
+                    const currentColor = sel?.color ?? textColor;
                     return (
                       <>
                         <select
@@ -617,6 +681,21 @@ export default function CardDesignerModal({
                           }}
                           className="w-20 rounded-md border px-2 py-1 text-sm"
                         />
+                        <label className="flex items-center gap-2 text-xs text-slate-600 font-medium">
+                          Color
+                          <input
+                            type="color"
+                            value={currentColor}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              setTextColor(v);
+                              if (selectedPlacedId)
+                                updateSelectedPlaced({ color: v });
+                            }}
+                            className="w-14 h-10 rounded-md border cursor-pointer"
+                            title="Color del texto"
+                          />
+                        </label>
                       </>
                     );
                   })()}
@@ -749,8 +828,8 @@ export default function CardDesignerModal({
             </div>
           </aside>
 
-          <main className="flex-1 p-4 overflow-auto bg-gray-50 flex items-center justify-center">
-            <div className="w-full max-w-none h-[calc(100vh-96px)] flex items-center justify-center">
+          <main className="flex-1 p-4 overflow-hidden bg-gray-50 flex items-center justify-center">
+            <div className="w-full max-w-none h-[calc(100vh-96px)] flex items-center justify-center overflow-hidden">
               <div className="border border-slate-200 rounded-lg w-full h-full overflow-hidden relative bg-gray-50 flex items-center justify-center">
                 {!templateUrl && (
                   <p className="text-sm text-slate-500">
@@ -762,13 +841,15 @@ export default function CardDesignerModal({
                   <div
                     onDrop={handleDrop}
                     onDragOver={allowDrop}
-                    className="relative w-full h-full overflow-auto flex items-center justify-center"
+                    className="relative w-full h-full overflow-hidden flex items-center justify-center"
                   >
                     <div
                       ref={canvasRef}
                       style={{
                         width: templateInfo.w ? `${templateInfo.w}px` : "100%",
                         height: templateInfo.h ? `${templateInfo.h}px` : "100%",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
                         transform: `scale(${zoom / 100})`,
                         transformOrigin: "center center",
                         position: "relative",

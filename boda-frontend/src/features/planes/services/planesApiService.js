@@ -8,6 +8,8 @@ import axiosClient from "../../../shared/config/axiosClient";
  */
 export async function getPlanesApi() {
   const response = await axiosClient.get("/public/planes");
-  // Ajusta según devuelva tu controlador (data o data.data)
-  return response.data.data || response.data;
+  const payload = response.data?.data ?? response.data;
+  if (Array.isArray(payload)) return payload;
+  console.warn("Respuesta inesperada en getPlanesApi", payload);
+  return [];
 }

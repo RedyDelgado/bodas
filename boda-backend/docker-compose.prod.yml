@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: boda_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    ports:
+      - "8000:80"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - web
+    environment:
+      - APP_ENV=production
+
+  frontend:
+    build:
+      context: ../boda-frontend
+      dockerfile: Dockerfile
+      args:
+        # En producción sin Traefik, el backend expone 8000
+        VITE_API_URL: http://${SERVER_IP}:8000/api
+        VITE_USE_FAKE: "false"
+    container_name: boda_frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - web
+
+  mysql:
+    image: mysql:8.0
+    container_name: boda_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: db_wedding
+      MYSQL_USER: db_wedding
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret123}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    networks:
+      - web
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: boda_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: db_wedding
+      PMA_PASSWORD: ${DB_PASSWORD:-secret123}
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge

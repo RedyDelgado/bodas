@@ -1,6 +1,6 @@
 // src/features/auth/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { fetchMeApi, loginApi, logoutApi } from "../services/authService";
+import { fetchMeApi, loginApi, logoutApi, registerApi } from "../services/authService";
 
 const AuthContext = createContext(null);
 
@@ -72,6 +72,29 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function register(form) {
+    setError(null);
+    try {
+      const data = await registerApi(form);
+      const accessToken = data.token;
+      const userData = data.usuario ?? null;
+
+      if (!accessToken) {
+        throw new Error("El backend no devolvió un token");
+      }
+
+      localStorage.setItem("authToken", accessToken);
+      setToken(accessToken);
+      setUsuario(userData);
+
+      return { ok: true, user: userData, boda: data.boda };
+    } catch (err) {
+      console.error("Error en registro:", err);
+      setError("No se pudo completar el registro.");
+      return { ok: false, error: err };
+    }
+  }
+
   const value = {
     usuario,
     token,
@@ -79,6 +102,7 @@ export function AuthProvider({ children }) {
     error,
     login,
     logout,
+    register,
     isAuthenticated: !!usuario,
   };
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Boda;
 use App\Models\Plan;
 use App\Models\User;
+use App\Services\DomainVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -317,5 +318,166 @@ public function resumenPropia(Request $request, Boda $boda)
         }
 
         return $data;
+    }
+
+    // ===================== GESTIÓN DE DOMINIOS PROPIOS =====================
+
+    /**
+     * Asignar o actualizar el dominio personalizado de una boda propia.
+     * POST /api/mis-bodas/{boda}/dominio
+     * Body: { "dominio_personalizado": "redyypatricia.com", "verificar": true }
+     */
+    public function setDomainPropia(Request $request, Boda $boda)
+    {
+        $this->ensureOwnerOrAbort($boda);
+
+        $data = $request->validate([
+            'dominio_personalizado' => [
+                'required',
+                'string',
+                'max:150',
+                'unique:bodas,dominio_personalizado,' . $boda->id,
+            ],
+            'verificar' => 'sometimes|boolean', // Si true, verificamos DNS inmediatamente
+        ]);
+
+        $dominio = $data['dominio_personalizado'];
+        $verificar = $data['verificar'] ?? false;
+
+        // Validar disponibilidad (por si el unique no capturó todo)
+        $verifier = new DomainVerificationService();
+        if (! $verifier->isDomainAvailable($dominio, $boda->id)) {
+            return response()->json([
+                'message' => 'Este dominio ya está en uso por otra boda.',
+            ], 422);
+        }
+
+        // Actualizar boda
+        $boda->dominio_personalizado = $dominio;
+        $boda->usa_dominio_personalizado = true;
+        $boda->usa_subdominio = false; // Si usa dominio propio, desactivamos subdominio
+
+        // Verificar DNS si se solicita
+        if ($verificar) {
+            $result = $verifier->verifyDomain($dominio);
+            if ($result['ok']) {
+                $boda->dominio_verificado_at = now();
+            } else {
+                // No bloqueamos guardar, pero informamos
+                $boda->dominio_verificado_at = null;
+            }
+        } else {
+            // Si no verifica, marcamos como pendiente
+            $boda->dominio_verificado_at = null;
+        }
+
+        // Reconstruir URL pública
+        $baseDomain = config('app.bodas_base_domain', 'miwebdebodas.test');
+        $boda->url_publica_cache = 'https://' . $dominio;
+
+        $boda->save();
+
+        return response()->json([
+            'message' => 'Dominio personalizado actualizado correctamente.',
+            'data' => [
+                'dominio_personalizado' => $boda->dominio_personalizado,
+                'dominio_verificado' => $boda->dominio_verificado_at !== null,
+                'dominio_verificado_at' => $boda->dominio_verificado_at,
+                'url_publica_cache' => $boda->url_publica_cache,
+            ],
+        ]);
+    }
+
+    /**
+     * Eliminar el dominio personalizado y volver a usar subdominio.
+     * DELETE /api/mis-bodas/{boda}/dominio
+     */
+    public function removeDomainPropia(Request $request, Boda $boda)
+    {
+        $this->ensureOwnerOrAbort($boda);
+
+        $boda->dominio_personalizado = null;
+        $boda->usa_dominio_personalizado = false;
+        $boda->dominio_verificado_at = null;
+        $boda->usa_subdominio = true;
+
+        // Reconstruir URL con subdominio
+        $baseDomain = config('app.bodas_base_domain', 'miwebdebodas.test');
+        $boda->url_publica_cache = $boda->subdominio
+            ? 'https://' . $boda->subdominio . '.' . $baseDomain
+            : null;
+
+        $boda->save();
+
+        return response()->json([
+            'message' => 'Dominio personalizado eliminado. Ahora usa el subdominio.',
+            'data' => [
+                'usa_subdominio' => true,
+                'subdominio' => $boda->subdominio,
+                'url_publica_cache' => $boda->url_publica_cache,
+            ],
+        ]);
+    }
+
+    /**
+     * Verificar si el dominio apunta correctamente a nuestro servidor.
+     * POST /api/mis-bodas/{boda}/dominio/verificar
+     */
+    public function verifyDomainPropia(Request $request, Boda $boda)
+    {
+        $this->ensureOwnerOrAbort($boda);
+
+        if (! $boda->dominio_personalizado) {
+            return response()->json([
+                'message' => 'Esta boda no tiene un dominio personalizado configurado.',
+            ], 400);
+        }
+
+        $verifier = new DomainVerificationService();
+        $result = $verifier->verifyDomain($boda->dominio_personalizado);
+
+        if ($result['ok']) {
+            $boda->dominio_verificado_at = now();
+            $boda->save();
+
+            return response()->json([
+                'message' => $result['message'] ?? 'Dominio verificado correctamente.',
+                'verificado' => true,
+                'dominio_verificado_at' => $boda->dominio_verificado_at,
+            ]);
+        }
+
+        // Si falla, limpiamos la verificación
+        $boda->dominio_verificado_at = null;
+        $boda->save();
+
+        return response()->json([
+            'message' => $result['error'] ?? 'No se pudo verificar el dominio.',
+            'verificado' => false,
+            'details' => $result,
+        ], 422);
+    }
+
+    /**
+     * Validar disponibilidad de un dominio sin asignarlo.
+     * GET /api/validar-disponibilidad-dominio?dominio=redyypatricia.com&boda_id=5
+     */
+    public function checkDomainAvailability(Request $request)
+    {
+        $data = $request->validate([
+            'dominio' => 'required|string|max:150',
+            'boda_id' => 'nullable|integer|exists:bodas,id',
+        ]);
+
+        $dominio = $data['dominio'];
+        $bodaId = $data['boda_id'] ?? null;
+
+        $verifier = new DomainVerificationService();
+        $available = $verifier->isDomainAvailable($dominio, $bodaId);
+
+        return response()->json([
+            'disponible' => $available,
+            'dominio' => $dominio,
+        ]);
     }
 }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Invitado;
 use App\Models\Boda;
 use App\Models\TarjetaDiseno;
+use App\Services\RsvpCardGenerator;
+use App\Services\RsvpGenerationProgress;
 
 class GenerateRsvpCardsJob implements ShouldQueue
 {
@@ -19,6 +21,8 @@ class GenerateRsvpCardsJob implements ShouldQueue
 
     public int $bodaId;
     public ?int $requestedBy;
+    public $tries = 1;
+    public $timeout = 300; // ajusta según tu servidor
 
     public function __construct(int $bodaId, ?int $requestedBy = null)
     {
@@ -28,35 +32,75 @@ class GenerateRsvpCardsJob implements ShouldQueue
 
     public function handle()
     {
-        $boda = Boda::with('invitados')->findOrFail($this->bodaId);
-        $card = TarjetaDiseno::firstOrCreate(['boda_id' => $boda->id]);
+        $card = TarjetaDiseno::where('boda_id', $this->bodaId)->first();
+        if (!$card) return;
 
-        $card->estado_generacion = 'procesando';
-        $card->ultimo_conteo_generado = 0;
-        $card->save();
+        try {
+            // Inicializa y marca estado en progreso para el tracker en cache
+            $bodaForCount = Boda::withCount('invitados')->findOrFail($this->bodaId);
+            $total = (int)($bodaForCount->invitados_count ?? 0);
+            
+            \Log::info("GenerateRsvpCardsJob START", ['boda_id' => $this->bodaId, 'total' => $total]);
+            
+            RsvpGenerationProgress::init($this->bodaId, $total);
+            $card->estado_generacion = 'procesando';
+            $card->ultimo_conteo_generado = 0;
+            $card->save();
+            RsvpGenerationProgress::setEstado($this->bodaId, 'procesando');
 
-        $generator = new \App\Services\RsvpCardGenerator();
+            $boda = Boda::with('invitados')->findOrFail($this->bodaId);
+            $design = TarjetaDiseno::where('boda_id', $this->bodaId)->first();
 
-        $count = 0;
+            $generator = new RsvpCardGenerator();
 
-        foreach ($boda->invitados as $inv) {
-            // genera png y retorna path relativo en storage public (ej: tarjetas/rsvp/..../xxx.png)
-            $path = $generator->generateForInvitado($inv, $card);
+            $count = 0;
+            foreach ($boda->invitados as $inv) {
+                try {
+                    $path = $generator->generateForInvitado($inv, $design);
 
-            // IMPORTANTE: marca al invitado como generado
-            $inv->rsvp_card_path = $path;
-            $inv->rsvp_card_generated_at = now();
-            $inv->save();
+                    //  Solo cuenta si realmente generó archivo
+                    if ($path) {
+                        $count++;
+                        $card->ultimo_conteo_generado = $count;
+                        RsvpGenerationProgress::increment($this->bodaId, 1);
+                        
+                        \Log::debug("GenerateRsvpCardsJob generated", ['inv_id' => $inv->id, 'count' => $count, 'total' => $total]);
 
-            $count++;
+                        if ($count % 5 === 0) {
+                            $card->save();
+                        }
+                    } else {
+                        \Log::warning("No se generó tarjeta para invitado {$inv->id} (path null)");
+                    }
+                } catch (\Throwable $eInv) {
+                    \Log::error("Error generando tarjeta invitado {$inv->id}: " . $eInv->getMessage());
+                }
+            }
 
-            // actualiza progreso (puedes hacerlo cada 1 o cada N)
+            $card->estado_generacion = 'finalizado';
+            $card->ultima_generacion_at = now();
             $card->ultimo_conteo_generado = $count;
             $card->save();
+            RsvpGenerationProgress::setEstado($this->bodaId, 'finalizado');
+            
+            \Log::info("GenerateRsvpCardsJob DONE", ['boda_id' => $this->bodaId, 'generadas' => $count, 'total' => $total]);
+        } catch (\Throwable $e) {
+            \Log::error("Fallo Job GenerateRsvpCardsJob boda {$this->bodaId}: " . $e->getMessage());
+            $card->estado_generacion = 'error';
+            $card->ultima_generacion_at = now();
+            $card->save();
+            RsvpGenerationProgress::fail($this->bodaId, $e->getMessage());
         }
+    }
+    public function failed(\Throwable $e): void
+    {
+        $card = TarjetaDiseno::where('boda_id', $this->bodaId)->first();
+        if (!$card) return;
 
-        $card->estado_generacion = 'finalizado';
+        $card->estado_generacion = 'error';
         $card->ultima_generacion_at = now();
         $card->save();
+
+        \Log::error("Job FAILED GenerateRsvpCardsJob boda {$this->bodaId}: " . $e->getMessage());
     }
 }

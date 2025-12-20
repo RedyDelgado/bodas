@@ -63,6 +63,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Dominio base para bodas
+    |--------------------------------------------------------------------------
+    |
+    | Subdominio base donde se hospedarán las bodas cuando no usen dominio propio.
+    | Ej: con 'miwebdebodas.com', las bodas tendrán sub.miwebdebodas.com
+    |
+    */
+
+    'bodas_base_domain' => env('APP_BODAS_BASE_DOMAIN', 'miwebdebodas.test'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

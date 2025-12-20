@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axiosClient from "../../../shared/config/axiosClient";
+import { DomainManagementModal } from "../components/DomainManagementModal";
 
 // React Icons
 import {
@@ -81,6 +82,9 @@ export function BodaDashboardPage() {
   const [resumen, setResumen] = useState(null);
   const [bodasUsuario, setBodasUsuario] = useState([]);
 
+  // Modal de gestión de dominios
+  const [modalDominioAbierto, setModalDominioAbierto] = useState(false);
+
   // --------- NAV ---------
   const handleIrDashboard = () => {
     if (!bodaId) return;
@@ -101,6 +105,16 @@ export function BodaDashboardPage() {
     const sub = resumen?.boda?.subdominio;
     if (!sub) return;
     window.open(`/boda/${sub}`, "_blank");
+  };
+
+  const handleRecargarResumen = async () => {
+    if (!bodaId) return;
+    try {
+      const res = await axiosClient.get(`/mis-bodas/${bodaId}/resumen`);
+      setResumen(res.data);
+    } catch (error) {
+      console.error("Error al recargar resumen", error);
+    }
   };
 
   useEffect(() => {
@@ -537,6 +551,25 @@ export function BodaDashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Botón flotante para gestionar dominio */}
+      <div className="fixed bottom-6 right-6">
+        <button
+          onClick={() => setModalDominioAbierto(true)}
+          className="px-4 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-semibold shadow-lg hover:bg-slate-800 flex items-center gap-2"
+        >
+          <FiGlobe className="w-4 h-4" />
+          Configurar dominio
+        </button>
+      </div>
+
+      {/* Modal de gestión de dominios */}
+      <DomainManagementModal
+        boda={resumen?.boda}
+        isOpen={modalDominioAbierto}
+        onClose={() => setModalDominioAbierto(false)}
+        onSuccess={handleRecargarResumen}
+      />
     </div>
   );
 }

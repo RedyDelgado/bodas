@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http as HttpClient;
 use App\Models\Boda;
-use App\Models\TarjetaDiseno;
 use App\Models\Invitado;
 use App\Models\User;
+use App\Models\TarjetaDiseno;
+use App\Jobs\GenerateRsvpCardsJob;
+use App\Services\RsvpGenerationProgress;
 
 class CardDesignController extends Controller
 {
+
     protected function ensureOwnerOrAbort(Boda $boda): void
     {
         /** @var User|null $user */
@@ -34,12 +37,17 @@ class CardDesignController extends Controller
         $this->ensureOwnerOrAbort($boda);
 
         $data = $request->input('design') ?: null;
-
         if (is_string($data)) {
-            $designJson = json_decode($data, true) ?: null;
+            $designJson = json_decode($data, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'message' => 'El diseño JSON es inválido: ' . json_last_error_msg(),
+                ], 422);
+            }
         } else {
-            $designJson = $data ? $data : null;
+            $designJson = $data;
         }
+
 
         $templatePath = null;
         if ($request->hasFile('template')) {
@@ -52,9 +60,9 @@ class CardDesignController extends Controller
         $card = TarjetaDiseno::updateOrCreate(
             ['boda_id' => $boda->id],
             [
-                'plantilla_ruta' => $templatePath ?: TarjetaDiseno::where('boda_id', $boda->id)->value('plantilla_ruta'),
-                'diseno_json' => $designJson ?: TarjetaDiseno::where('boda_id', $boda->id)->value('diseno_json'),
-                'creado_por' => Auth::id(),
+                'plantilla_ruta' => $templatePath ?? TarjetaDiseno::where('boda_id', $boda->id)->value('plantilla_ruta'),
+                'diseno_json'    => $designJson  ?? TarjetaDiseno::where('boda_id', $boda->id)->value('diseno_json'),
+                'creado_por'     => Auth::id(),
                 'estado_generacion' => 'guardado',
             ]
         );
@@ -87,32 +95,87 @@ class CardDesignController extends Controller
         return response()->json(['card_design' => $card]);
     }
 
-    public function generate(Request $request, Boda $boda)
-    {
-        $this->ensureOwnerOrAbort($boda);
+public function generate(Request $request, Boda $boda)
+{
+    $this->ensureOwnerOrAbort($boda);
 
-        // Dispatch background job to generate cards for all invitados
-        $card = TarjetaDiseno::firstOrCreate(['boda_id' => $boda->id]);
-        $card->estado_generacion = 'en_cola';
-        $card->ultimo_conteo_generado = 0;
-        $card->ultima_generacion_at = null;
+    $card = TarjetaDiseno::firstOrCreate(['boda_id' => $boda->id]);
+
+    // ✅ 1) Validar primero
+    if (!$card->plantilla_ruta || !Storage::disk('public')->exists($card->plantilla_ruta)) {
+        // opcional: para no dejarlo colgado
+        $card->estado_generacion = 'guardado';
         $card->save();
 
-        \App\Jobs\GenerateRsvpCardsJob::dispatch($boda->id, auth()->id());
-
-        return response()->json(['message' => 'Generación en cola (background). Se procesará pronto.', 'card_design' => $card]);
+        return response()->json(['message' => 'Primero sube una plantilla y guarda el diseño.'], 422);
     }
+
+    if (empty($card->diseno_json) || !is_array($card->diseno_json)) {
+        $card->estado_generacion = 'guardado';
+        $card->save();
+
+        return response()->json(['message' => 'No hay configuración de diseño guardada.'], 422);
+    }
+
+    // ✅ 2) Recién aquí marcamos en cola
+    $card->estado_generacion = 'en_cola';
+    $card->ultimo_conteo_generado = 0;
+    $card->ultima_generacion_at = null;
+    $card->save();
+
+    // 🧹 Limpiar tarjetas antiguas ANTES de regenerar (evita acumulación)
+    $folder = "tarjetas/generadas/{$boda->id}";
+    if (Storage::disk('public')->exists($folder)) {
+        try {
+            $oldFiles = Storage::disk('public')->files($folder);
+            foreach ($oldFiles as $file) {
+                Storage::disk('public')->delete($file);
+            }
+            \Log::info("CardDesigner: limpió tarjetas antiguas", ['folder' => $folder, 'count' => count($oldFiles)]);
+        } catch (\Throwable $e) {
+            \Log::warning("CardDesigner: error limpiando antiguas: " . $e->getMessage());
+        }
+    }
+
+    // Tracker en cache para progreso en tiempo real
+    $totalInv = $boda->invitados()->count();
+    RsvpGenerationProgress::init($boda->id, (int)$totalInv);
+
+    // ✅ 3) Encolar job
+    GenerateRsvpCardsJob::dispatch($boda->id, auth()->id());
+
+    return response()->json([
+        'message' => 'Generación en cola (background).',
+        'card_design' => $card
+    ]);
+}
+
     public function progress(Request $request, Boda $boda)
     {
         $this->ensureOwnerOrAbort($boda);
 
+        // Mezcla cache + BD para no quedarnos con 0/total si el cache cae
+        $cacheProg = RsvpGenerationProgress::get($boda->id);
         $card = TarjetaDiseno::where('boda_id', $boda->id)->first();
-        $total = $boda->invitados()->count();
+
+        $totalDb = (int) $boda->invitados()->count();
+        $totalCache = (int)($cacheProg['total'] ?? 0);
+        $total = $totalCache > 0 ? $totalCache : $totalDb;
+
+        $generadasCache = (int)($cacheProg['generadas'] ?? 0);
+        $generadasDb = (int)($card?->ultimo_conteo_generado ?? 0);
+        $generadas = max($generadasCache, $generadasDb);
+
+        $estadoCache = $cacheProg['estado'] ?? 'idle';
+        $estado = $estadoCache !== 'idle'
+            ? $estadoCache
+            : ($card?->estado_generacion ?? 'sin_diseno');
 
         return response()->json([
-            'estado' => $card?->estado_generacion ?? 'sin_diseno',
-            'generadas' => (int)($card?->ultimo_conteo_generado ?? 0),
-            'total' => (int)$total,
+            'estado' => $estado,
+            'generadas' => $generadas,
+            'total' => $total,
+            'mensaje' => $cacheProg['error'] ?? null,
             'ultima_generacion_at' => $card?->ultima_generacion_at,
         ]);
     }

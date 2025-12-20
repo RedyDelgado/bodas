@@ -36,3 +36,10 @@ export async function logoutApi() {
   const { data } = await axiosClient.post("/auth/logout");
   return data;
 }
+
+/** Registro de usuario + boda inicial */
+export async function registerApi(payload) {
+  // payload: { name, email, password, nombre_pareja, subdominio, fecha_boda?, ciudad? }
+  const { data } = await axiosClient.post("/auth/register", payload);
+  return data; // { token, usuario, boda }
+}

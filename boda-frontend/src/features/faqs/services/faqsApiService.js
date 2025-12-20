@@ -8,5 +8,8 @@ import axiosClient from "../../../shared/config/axiosClient";
  */
 export async function getFaqsApi() {
   const response = await axiosClient.get("/public/faqs");
-  return response.data.data || response.data;
+  const payload = response.data?.data ?? response.data;
+  if (Array.isArray(payload)) return payload;
+  console.warn("Respuesta inesperada en getFaqsApi", payload);
+  return [];
 }

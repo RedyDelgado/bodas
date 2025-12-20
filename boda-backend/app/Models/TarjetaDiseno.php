@@ -28,4 +28,5 @@ class TarjetaDiseno extends Model
     {
         return $this->belongsTo(Boda::class, 'boda_id');
     }
+    
 }

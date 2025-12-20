@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\PublicRsvpController;
 use App\Http\Controllers\Api\FaqBodaController;
 use App\Http\Controllers\Api\PublicRsvpCardController;
 use App\Http\Controllers\Api\CardDesignController;
+use App\Http\Controllers\Api\RsvpGenerationProgressController;
+use App\Http\Controllers\Api\RsvpCardDownloadController;
 /*
 |--------------------------------------------------------------------------
 | Rutas públicas
@@ -25,6 +27,8 @@ use App\Http\Controllers\Api\CardDesignController;
 
 // login
 Route::post('/auth/login', [AuthController::class, 'login']);
+// registro
+Route::post('/auth/register', [AuthController::class, 'register']);
 
 // Ejemplo: listado público de plantillas y planes para la landing
 Route::get('/public/planes', [PlanController::class, 'indexPublico']);
@@ -230,6 +234,17 @@ Route::middleware('auth:sanctum')->group(function () {
         // Estado del diseño
         Route::get('/mis-bodas/{boda}/card-design/status', [CardDesignController::class, 'status']);
         Route::get('/mis-bodas/{boda}/card-design/progress', [CardDesignController::class, 'progress']);
+        Route::get('/boda/{bodaId}/rsvp-progress', [RsvpGenerationProgressController::class, 'show']);
+
+        // Descargas de tarjetas
+        Route::get('/invitados/{invitado}/rsvp-card/download', [RsvpCardDownloadController::class, 'downloadInvitado']);
+        Route::get('/mis-bodas/{boda}/tarjetas/descargar-zip', [RsvpCardDownloadController::class, 'downloadAllZip']);
+
+        // Gestión de dominios propios
+        Route::post('/mis-bodas/{boda}/dominio', [BodaController::class, 'setDomainPropia']);
+        Route::delete('/mis-bodas/{boda}/dominio', [BodaController::class, 'removeDomainPropia']);
+        Route::post('/mis-bodas/{boda}/dominio/verificar', [BodaController::class, 'verifyDomainPropia']);
+        Route::get('/validar-disponibilidad-dominio', [BodaController::class, 'checkDomainAvailability']);
 
     });
 });
