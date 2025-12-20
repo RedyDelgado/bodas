@@ -253,6 +253,7 @@ export function AdminLayout() {
         <nav className="flex-1 px-3 py-4 text-sm space-y-1">
           <NavLink
             to="/panel"
+            end
             className={({ isActive }) =>
               `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
                 isActive
@@ -265,50 +266,42 @@ export function AdminLayout() {
             <span>Dashboard</span>
           </NavLink>
 
-          <NavLink
-            to="/admin/bodas"
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                isActive
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`
-            }
-          >
-            <IconCalendar className="w-4 h-4" />
-            <span>Bodas</span>
-          </NavLink>
+          {/* Solo superadmin ve Planes */}
+          {usuario?.rol?.nombre === "superadmin" && (
+            <NavLink
+              to="/admin/planes"
+              className={({ isActive }) =>
+                `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                  isActive
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`
+              }
+            >
+              <IconLayers className="w-4 h-4" />
+              <span>Planes</span>
+            </NavLink>
+          )}
+
+          {/* Solo superadmin ve Plantillas */}
+          {usuario?.rol?.nombre === "superadmin" && (
+            <NavLink
+              to="/admin/plantillas"
+              className={({ isActive }) =>
+                `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                  isActive
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`
+              }
+            >
+              <IconLayers className="w-4 h-4" />
+              <span>Plantillas</span>
+            </NavLink>
+          )}
 
           <NavLink
-            to="/admin/planes"
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                isActive
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`
-            }
-          >
-            <IconLayers className="w-4 h-4" />
-            <span>Planes</span>
-          </NavLink>
-
-          <NavLink
-            to="/admin/plantillas"
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                isActive
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`
-            }
-          >
-            <IconLayers className="w-4 h-4" />
-            <span>Plantillas</span>
-          </NavLink>
-
-          <NavLink
-            to="/admin/ajustes"
+            to={usuario?.rol?.nombre === "superadmin" ? "/admin/ajustes" : "/panel/ajustes"}
             className={({ isActive }) =>
               `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
                 isActive

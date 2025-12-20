@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 use App\Models\{ Role, Plan, Plantilla, Boda, ConfiguracionBoda };
 
 class AuthController extends Controller
@@ -105,8 +107,8 @@ class AuthController extends Controller
                 'plan_id'                 => $plan->id,
                 'plantilla_id'            => $plantilla->id,
                 'nombre_pareja'           => $data['nombre_pareja'],
-                'nombre_novio_1'          => null,
-                'nombre_novio_2'          => null,
+                'nombre_novio_1'          => 'Novio 1',
+                'nombre_novio_2'          => 'Novio 2',
                 'correo_contacto'         => $data['email'],
                 'fecha_boda'              => $data['fecha_boda'] ?? null,
                 'ciudad'                  => $data['ciudad'] ?? null,
@@ -138,5 +140,102 @@ class AuthController extends Controller
                 'error'   => $e->getMessage(),
             ], 422);
         }
+    }
+
+    /**
+     * Solicitar enlace de recuperación de contraseña
+     * RUTA: POST /api/auth/forgot-password
+     */
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json([
+                'message' => 'Enlace de recuperación enviado a tu correo.'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No se pudo enviar el enlace. Verifica tu correo.'
+        ], 400);
+    }
+
+    /**
+     * Restablecer contraseña
+     * RUTA: POST /api/auth/reset-password
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json([
+                'message' => 'Contraseña restablecida exitosamente.'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No se pudo restablecer la contraseña.'
+        ], 400);
+    }
+
+    /**
+     * Actualizar perfil del usuario autenticado
+     * RUTA: PUT /api/user/profile
+     */
+    public function updateProfile(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $data = $request->validate([
+            'name'     => 'sometimes|required|string|min:3',
+            'telefono' => 'nullable|string|max:30',
+            'password' => 'nullable|string|min:6',
+        ]);
+
+        // Actualizar nombre y teléfono
+        if (isset($data['name'])) {
+            $user->name = $data['name'];
+        }
+        if (isset($data['telefono'])) {
+            $user->telefono = $data['telefono'];
+        }
+
+        // Actualizar contraseña solo si se proporcionó
+        if (isset($data['password']) && $data['password']) {
+            $user->password = Hash::make($data['password']);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Perfil actualizado correctamente',
+            'usuario' => $user->load('rol')
+        ]);
     }
 }

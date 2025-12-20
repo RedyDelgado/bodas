@@ -12,11 +12,13 @@ import { ProtectedRoute } from "../shared/components/routing/ProtectedRoute.jsx"
 import { LandingPage } from "../features/public/pages/LandingPage.jsx";
 import { LoginPage } from "../features/auth/pages/LoginPage.jsx";
 import { RegisterPage } from "../features/auth/pages/RegisterPage.jsx";
+import { ForgotPasswordPage } from "../features/auth/pages/ForgotPasswordPage.jsx";
 import { DemoBodaPage } from "../features/bodas/pages/DemoBodaPage.jsx";
 import { AdminDashboardPage } from "../features/admin/pages/AdminDashboardPage.jsx";
 import { BodaDashboardPage } from "../features/bodas/pages/BodaDashboardPage.jsx";
 import { BodaConfigPage } from "../features/bodas/pages/BodaConfigPage";
 import BodaPublicPage from "../features/public/pages/BodaPublicPage";
+import { UserSettingsPage } from "../features/user/pages/UserSettingsPage.jsx";
 import { BodaInvitadosPage } from "../features/bodas/pages/BodaInvitadosPage.jsx";
 import { RsvpPage } from "../features/public/pages/RsvpPage.jsx";
 import FullCardDesignerPage from "../features/bodas/pages/FullCardDesignerPage.jsx";
@@ -46,6 +48,7 @@ export function AppRouter() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registro" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/demo-boda/:slug" element={<DemoBodaPage />} />
           <Route path="/rsvp/:codigo" element={<RsvpPage />} />
         </Route>
@@ -83,6 +86,7 @@ export function AppRouter() {
           <Route path="configuracion" element={<BodaConfigPage />} />
           <Route path="invitados" element={<BodaInvitadosPage />} />
           <Route path="disenar-tarjeta" element={<FullCardDesignerPage />} />
+          <Route path="ajustes" element={<UserSettingsPage />} />
           {/* Más adelante: /panel/fotos, /panel/estadisticas, etc. */}
         </Route>
 

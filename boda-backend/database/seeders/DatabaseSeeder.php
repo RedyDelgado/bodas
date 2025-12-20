@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             PlantillasSeeder::class,
             AjustesMarcaSeeder::class,
             FaqsPlataformaSeeder::class,
+            SuperAdminSeeder::class, // Superadministrador
             UsuariosYBodasSeeder::class,
             FaqsBodaSeeder::class,
         ]);

@@ -90,8 +90,20 @@ export function AuthProvider({ children }) {
       return { ok: true, user: userData, boda: data.boda };
     } catch (err) {
       console.error("Error en registro:", err);
-      setError("No se pudo completar el registro.");
-      return { ok: false, error: err };
+      
+      // Extraer mensaje de error específico del backend
+      let errorMsg = "No se pudo completar el registro.";
+      if (err.response?.data?.message) {
+        errorMsg = err.response.data.message;
+      } else if (err.response?.data?.errors) {
+        // Laravel validation errors
+        const errors = err.response.data.errors;
+        const firstError = Object.values(errors)[0];
+        errorMsg = Array.isArray(firstError) ? firstError[0] : firstError;
+      }
+      
+      setError(errorMsg);
+      return { ok: false, error: errorMsg };
     }
   }
 

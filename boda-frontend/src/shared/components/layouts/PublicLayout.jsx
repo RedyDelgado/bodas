@@ -26,16 +26,6 @@ export function PublicLayout() {
               }
             >
               Inicio
-            <NavLink
-              to="/registro"
-              className={({ isActive }) =>
-                `px-3 py-1 rounded-full ${
-                  isActive ? "bg-slate-900 text-white" : "text-slate-700"
-                }`
-              }
-            >
-              Crear cuenta
-            </NavLink>
             </NavLink>
             <NavLink
               to="/demo-boda/demo-ejemplo"
@@ -62,8 +52,8 @@ export function PublicLayout() {
             <NavLink
               to="/registro"
               className={({ isActive }) =>
-                `px-3 py-1 rounded-full ${
-                  isActive ? "bg-slate-900 text-white" : "text-slate-700"
+                `px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800 ${
+                  isActive ? "ring-2 ring-slate-400" : ""
                 }`
               }
             >

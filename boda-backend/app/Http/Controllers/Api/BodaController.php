@@ -143,6 +143,28 @@ class BodaController extends Controller
         }
     }
 
+    /**
+     * Obtener la boda del usuario autenticado (primera boda)
+     * RUTA: GET /api/bodas/mi-boda
+     */
+    public function getMiBoda(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $boda = Boda::where('user_id', $user->id)
+            ->with(['plan', 'plantilla'])
+            ->first();
+
+        if (!$boda) {
+            return response()->json([
+                'message' => 'No tienes bodas registradas'
+            ], 404);
+        }
+
+        return response()->json($boda);
+    }
+
     public function indexPropias(Request $request)
     {
         /** @var User $user */
@@ -202,6 +224,26 @@ class BodaController extends Controller
         return response()->json($boda->fresh()->load(['plan', 'plantilla']));
     }
 
+    /**
+     * Cambiar el estado de la boda (activa/suspendida)
+     * RUTA: PUT /api/mis-bodas/{boda}/estado
+     */
+    public function cambiarEstado(Request $request, Boda $boda)
+    {
+        $this->ensureOwnerOrAbort($boda);
+
+        $data = $request->validate([
+            'estado' => ['required', 'in:activa,suspendida,borrador'],
+        ]);
+
+        $boda->update($data);
+
+        return response()->json([
+            'message' => 'Estado actualizado correctamente',
+            'boda' => $boda->fresh()->load(['plan', 'plantilla'])
+        ]);
+    }
+
 public function resumenPropia(Request $request, Boda $boda)
 {
     $this->ensureOwnerOrAbort($boda);
@@ -241,11 +283,17 @@ public function resumenPropia(Request $request, Boda $boda)
     // Armamos el payload EXACTO que espera el frontend
     return response()->json([
         'boda' => [
-            'id'           => $boda->id,
-            'nombre_pareja'=> $boda->nombre_pareja,
-            'subdominio'   => $boda->subdominio,
-            'fecha_boda'   => $boda->fecha_boda,
-            'total_vistas' => $boda->total_vistas,
+            'id'                => $boda->id,
+            'nombre_pareja'     => $boda->nombre_pareja,
+            'nombre_novio_1'    => $boda->nombre_novio_1,
+            'nombre_novio_2'    => $boda->nombre_novio_2,
+            'subdominio'        => $boda->subdominio,
+            'fecha_boda'        => $boda->fecha_boda,
+            'ciudad'            => $boda->ciudad,
+            'estado'            => $boda->estado,
+            'total_vistas'      => $boda->total_vistas,
+            'usa_dominio_personalizado' => $boda->usa_dominio_personalizado,
+            'dominio_personalizado'     => $boda->dominio_personalizado,
         ],
         'invitados' => [
             'total'                        => $totalInvitados,

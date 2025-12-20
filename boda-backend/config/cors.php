@@ -11,9 +11,6 @@ return [
 
     'allowed_origins' => ['*'],
 
-    // Si quieres ir a lo seguro en desarrollo, puedes usar:
-    // 'allowed_origins' => ['*'],
-
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
@@ -22,5 +19,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 ];

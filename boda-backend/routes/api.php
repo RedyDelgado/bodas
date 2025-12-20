@@ -29,6 +29,9 @@ use App\Http\Controllers\Api\RsvpCardDownloadController;
 Route::post('/auth/login', [AuthController::class, 'login']);
 // registro
 Route::post('/auth/register', [AuthController::class, 'register']);
+// recuperación de contraseña
+Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
 
 // Ejemplo: listado público de plantillas y planes para la landing
 Route::get('/public/planes', [PlanController::class, 'indexPublico']);
@@ -102,6 +105,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+    // Actualizar perfil del usuario
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+
     /*
     |--------------------------------------------------------------------------
     | Rutas para SUPERADMIN
@@ -174,12 +180,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('role:admin_boda,superadmin')->group(function () {
 
+        // Obtener boda del usuario autenticado (para ajustes)
+        Route::get('/mi-boda', [BodaController::class, 'getMiBoda']);
+
         // Bodas del usuario autenticado
         Route::get('/mis-bodas', [BodaController::class, 'indexPropias']);
         Route::get('/mis-bodas/{boda}', [BodaController::class, 'showPropia']);
 
         // Actualizar datos de la boda propia (pero NO cambiar plan desde aquí)
         Route::put('/mis-bodas/{boda}', [BodaController::class, 'updatePropia']);
+
+        // Cambiar el estado de la boda (activar/desactivar)
+        Route::put('/mis-bodas/{boda}/estado', [BodaController::class, 'cambiarEstado']);
 
         // Configuración de la boda propia
         Route::get('/mis-bodas/{boda}/configuracion', [ConfiguracionBodaController::class, 'showPropia']);

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
+import { FiSend } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
 
 export function RsvpForm({ initialCode = "" }) {
   const [codigo, setCodigo] = useState(initialCode);
@@ -150,9 +152,19 @@ export function RsvpForm({ initialCode = "" }) {
           <button
             type="submit"
             disabled={estado === "loading"}
-            className="w-full md:w-auto inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-medium bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
           >
-            {estado === "loading" ? "Enviando..." : "Enviar respuesta"}
+            {estado === "loading" ? (
+              <>
+                <ImSpinner2 className="animate-spin" size={18} />
+                Enviando...
+              </>
+            ) : (
+              <>
+                <FiSend size={18} />
+                Enviar respuesta
+              </>
+            )}
           </button>
         </div>
       </form>

@@ -1,5 +1,6 @@
 // src/features/bodas/components/DomainManagementModal.jsx
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { FiX, FiCheckCircle, FiAlertCircle, FiGlobe } from "react-icons/fi";
 import {
   setDomainPropio,
@@ -116,15 +117,28 @@ export function DomainManagementModal({ boda, isOpen, onClose, onSuccess }) {
     }
   };
 
+  if (!isOpen) return null;
+
   const dominioActual = boda?.dominio_personalizado;
   const verificado = boda?.dominio_verificado_at !== null;
   const baseDomain = "miwebdebodas.test"; // Cambiar por tu dominio real
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full mx-4 max-h-[90vh] overflow-auto">
+  if (!isOpen) return null;
+
+  const modalContent = (
+    <div 
+      className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black/60 backdrop-blur-sm overflow-y-auto"
+      style={{ zIndex: 99999 }}
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-2xl shadow-2xl max-w-xl w-full mx-4 my-8 relative"
+        style={{ maxHeight: 'calc(100vh - 4rem)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 4rem)' }}>
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-slate-200 px-5 py-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-white border-b border-slate-200 px-5 py-4 flex items-center justify-between z-10 rounded-t-2xl">
           <div className="flex items-center gap-2">
             <FiGlobe className="w-5 h-5 text-slate-700" />
             <h2 className="text-lg font-semibold text-slate-900">
@@ -234,16 +248,92 @@ export function DomainManagementModal({ boda, isOpen, onClose, onSuccess }) {
           )}
 
           {/* Instrucciones DNS */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
             <p className="text-xs font-semibold text-blue-900">
-              Instrucciones de configuración DNS
+              📋 Cómo conectar tu dominio (Paso a paso)
             </p>
-            <ol className="text-xs text-blue-800 space-y-1 list-decimal list-inside">
-              <li>Ve al panel de tu proveedor de dominio (GoDaddy, Namecheap, etc.)</li>
-              <li>Crea un registro A que apunte a la IP de nuestro servidor</li>
-              <li>Guarda el dominio aquí y haz clic en "Verificar DNS"</li>
-              <li>Una vez verificado, tu página será accesible desde tu dominio</li>
+            <ol className="text-xs text-blue-800 space-y-2 list-decimal list-inside pl-1">
+              <li>
+                <strong>Entra al panel de tu dominio</strong> (GoDaddy, Namecheap, Hostinger, etc.)
+              </li>
+              <li>
+                <strong>Busca la sección "DNS" o "Gestión de DNS"</strong>
+              </li>
+              <li>
+                <strong>Agrega un nuevo registro tipo "A" con estos valores:</strong>
+                <div className="mt-1.5 ml-4 space-y-1 bg-white border border-blue-200 rounded p-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-medium min-w-[60px]">Tipo:</span>
+                    <code className="bg-blue-100 px-2 py-0.5 rounded text-blue-900">A</code>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-medium min-w-[60px]">Host:</span>
+                    <code className="bg-blue-100 px-2 py-0.5 rounded text-blue-900">@</code>
+                    <span className="text-blue-600 text-[10px]">(o dejar vacío)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-medium min-w-[60px]">Apunta a:</span>
+                    <code className="bg-green-100 px-2 py-0.5 rounded text-green-900 font-semibold">161.97.169.31</code>
+                    <span className="text-blue-600 text-[10px]">(IP de nuestro servidor)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-medium min-w-[60px]">TTL:</span>
+                    <code className="bg-blue-100 px-2 py-0.5 rounded text-blue-900">3600</code>
+                    <span className="text-blue-600 text-[10px]">(1 hora)</span>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <strong>Guarda los cambios</strong> en tu proveedor de dominio
+              </li>
+              <li>
+                <strong>Regresa a este modal</strong>, ingresa tu dominio arriba ⬆️ y guárdalo
+              </li>
+              <li>
+                <strong>Espera 5-15 minutos</strong> (el DNS tarda en propagarse por internet)
+              </li>
+              <li>
+                <strong>Haz clic en el botón "Verificar DNS"</strong> que aparecerá en este modal
+              </li>
             </ol>
+            
+            <div className="pt-2 border-t border-blue-200 space-y-2">
+              <p className="text-xs font-medium text-blue-900">
+                💡 ¿Necesitas ayuda o tienes dudas?
+              </p>
+              <a 
+                href="mailto:redy.delgado@gmail.com?subject=Ayuda con configuración de dominio personalizado&body=Hola, necesito ayuda para configurar mi dominio personalizado. Mi dominio es: [ESCRIBE TU DOMINIO AQUÍ]"
+                className="inline-flex items-center gap-1.5 text-xs text-blue-700 hover:text-blue-900 font-medium hover:underline"
+              >
+                📧 Escríbenos a redy.delgado@gmail.com
+              </a>
+              <p className="text-xs text-blue-700">
+                Te ayudamos con todo el proceso completamente gratis. ¡Respuesta en menos de 24 horas! ⚡
+              </p>
+            </div>
+          </div>
+
+          {/* Sección de donación */}
+          <div className="bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 rounded-lg p-4 space-y-2">
+            <p className="text-xs font-semibold text-rose-900">
+              ❤️ Apoya esta plataforma
+            </p>
+            <p className="text-xs text-rose-800 leading-relaxed">
+              Esta plataforma es gratuita y se mantiene gracias al apoyo de parejas como tú. 
+              Con una donación de <strong>$1 USD (o más si deseas)</strong> nos ayudas a mantenerla 
+              en línea y seguir ayudando a más parejas a celebrar su amor.
+            </p>
+            <a
+              href="https://www.paypal.com/invoice/u/4TMAF3X2DP4YE5M88" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 text-white text-xs font-medium rounded-lg hover:bg-rose-700 transition-colors"
+            >
+              💝 Donar (desde $1 USD)
+            </a>
+            <p className="text-xs text-rose-600">
+              ¡Cada donación cuenta! Gracias por tu apoyo. 🙏
+            </p>
           </div>
 
           {/* Subdominio alternativo */}
@@ -286,7 +376,11 @@ export function DomainManagementModal({ boda, isOpen, onClose, onSuccess }) {
             </div>
           )}
         </div>
+        </div>
       </div>
     </div>
   );
+
+  // Renderizar en un portal fuera del layout
+  return ReactDOM.createPortal(modalContent, document.body);
 }

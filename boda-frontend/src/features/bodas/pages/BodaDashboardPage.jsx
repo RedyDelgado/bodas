@@ -15,7 +15,16 @@ import {
   FiUserCheck,
   FiImage,
   FiEye,
+  FiEdit2,
+  FiSave,
+  FiX,
+  FiHeart,
+  FiCalendar,
+  FiMapPin,
+  FiToggleLeft,
+  FiToggleRight,
 } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
 
 /* Iconos coherentes con BodaInvitadosPage */
 function IconChevronLeft(props) {
@@ -85,6 +94,19 @@ export function BodaDashboardPage() {
   // Modal de gestión de dominios
   const [modalDominioAbierto, setModalDominioAbierto] = useState(false);
 
+  // Estado de edición de datos de la boda
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [datosEdicion, setDatosEdicion] = useState({
+    nombre_pareja: '',
+    nombre_novio_1: '',
+    nombre_novio_2: '',
+    fecha_boda: '',
+    ciudad: ''
+  });
+  const [guardandoDatos, setGuardandoDatos] = useState(false);
+  const [mensajeDatos, setMensajeDatos] = useState({ tipo: '', texto: '' });
+  const [cambiandoEstado, setCambiandoEstado] = useState(false);
+
   // --------- NAV ---------
   const handleIrDashboard = () => {
     if (!bodaId) return;
@@ -117,11 +139,95 @@ export function BodaDashboardPage() {
     }
   };
 
+  // Función para entrar en modo edición
+  const handleEditarDatos = () => {
+    if (!resumen?.boda) return;
+    const { nombre_pareja, nombre_novio_1, nombre_novio_2, fecha_boda, ciudad } = resumen.boda;
+    setDatosEdicion({
+      nombre_pareja: nombre_pareja || '',
+      nombre_novio_1: nombre_novio_1 || '',
+      nombre_novio_2: nombre_novio_2 || '',
+      fecha_boda: fecha_boda || '',
+      ciudad: ciudad || ''
+    });
+    setModoEdicion(true);
+    setMensajeDatos({ tipo: '', texto: '' });
+  };
+
+  // Función para cancelar edición
+  const handleCancelarEdicion = () => {
+    setModoEdicion(false);
+    setDatosEdicion({
+      nombre_pareja: '',
+      nombre_novio_1: '',
+      nombre_novio_2: '',
+      fecha_boda: '',
+      ciudad: ''
+    });
+    setMensajeDatos({ tipo: '', texto: '' });
+  };
+
+  // Función para guardar cambios
+  const handleGuardarDatos = async () => {
+    if (!bodaId) return;
+    
+    setGuardandoDatos(true);
+    setMensajeDatos({ tipo: '', texto: '' });
+    
+    try {
+      await axiosClient.put(`/mis-bodas/${bodaId}`, datosEdicion);
+      await handleRecargarResumen();
+      setModoEdicion(false);
+      setMensajeDatos({ tipo: 'success', texto: 'Datos actualizados correctamente' });
+      
+      // Limpiar mensaje después de 3 segundos
+      setTimeout(() => {
+        setMensajeDatos({ tipo: '', texto: '' });
+      }, 3000);
+    } catch (error) {
+      console.error('Error al actualizar datos:', error);
+      const errorMsg = error.response?.data?.message || 'Error al actualizar los datos';
+      setMensajeDatos({ tipo: 'error', texto: errorMsg });
+    } finally {
+      setGuardandoDatos(false);
+    }
+  };
+
+  // Función para cambiar el estado de la boda (activar/desactivar)
+  const handleCambiarEstado = async (nuevoEstado) => {
+    if (!bodaId) return;
+    
+    setCambiandoEstado(true);
+    
+    try {
+      await axiosClient.put(`/mis-bodas/${bodaId}/estado`, { estado: nuevoEstado });
+      await handleRecargarResumen();
+      setMensajeDatos({ 
+        tipo: 'success', 
+        texto: nuevoEstado === 'activa' 
+          ? 'Boda activada. La página pública ya está visible.' 
+          : 'Boda suspendida. La página pública ya no es visible.'
+      });
+      
+      // Limpiar mensaje después de 3 segundos
+      setTimeout(() => {
+        setMensajeDatos({ tipo: '', texto: '' });
+      }, 3000);
+    } catch (error) {
+      console.error('Error al cambiar estado:', error);
+      const errorMsg = error.response?.data?.message || 'Error al cambiar el estado';
+      setMensajeDatos({ tipo: 'error', texto: errorMsg });
+    } finally {
+      setCambiandoEstado(false);
+    }
+  };
+
   useEffect(() => {
     const fetchResumen = async (id) => {
       try {
         setEstado("loading");
         const res = await axiosClient.get(`/mis-bodas/${id}/resumen`);
+        console.log('Datos de la boda cargados:', res.data.boda); // Debug
         setResumen(res.data);
         setEstado("ok");
       } catch (error) {
@@ -377,6 +483,221 @@ export function BodaDashboardPage() {
             <FiGlobe className="w-3.5 h-3.5" />
             Ver página pública
           </button>
+        </div>
+      </div>
+
+      {/* SECCIÓN: DATOS DE LA BODA */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
+          <div className="flex items-center gap-2">
+            <FiHeart className="text-slate-700" size={20} />
+            <h2 className="text-lg font-semibold text-slate-800">Datos de la Boda</h2>
+          </div>
+          
+          {!modoEdicion ? (
+            <button
+              onClick={handleEditarDatos}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              <FiEdit2 className="w-3.5 h-3.5" />
+              Editar
+            </button>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                onClick={handleCancelarEdicion}
+                disabled={guardandoDatos}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
+              >
+                <FiX className="w-3.5 h-3.5" />
+                Cancelar
+              </button>
+              <button
+                onClick={handleGuardarDatos}
+                disabled={guardandoDatos}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
+              >
+                {guardandoDatos ? (
+                  <>
+                    <ImSpinner2 className="w-3.5 h-3.5 animate-spin" />
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <FiSave className="w-3.5 h-3.5" />
+                    Guardar
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {mensajeDatos.texto && (
+          <div className={`mb-4 rounded-lg px-4 py-3 text-sm ${
+            mensajeDatos.tipo === 'success' 
+              ? 'bg-green-50 border border-green-200 text-green-700' 
+              : 'bg-red-50 border border-red-200 text-red-700'
+          }`}>
+            {mensajeDatos.texto}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Nombre de la pareja */}
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">
+              Nombre de la pareja
+            </label>
+            {modoEdicion ? (
+              <input
+                type="text"
+                value={datosEdicion.nombre_pareja}
+                onChange={(e) => setDatosEdicion(prev => ({ ...prev, nombre_pareja: e.target.value }))}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                placeholder="Ej: María & Juan"
+              />
+            ) : (
+              <p className="text-sm font-medium text-slate-800">
+                {boda?.nombre_pareja || '—'}
+              </p>
+            )}
+          </div>
+
+          {/* Nombre Novio 1 */}
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">
+              Nombre Novio/a 1
+            </label>
+            {modoEdicion ? (
+              <input
+                type="text"
+                value={datosEdicion.nombre_novio_1}
+                onChange={(e) => setDatosEdicion(prev => ({ ...prev, nombre_novio_1: e.target.value }))}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                placeholder="Primer novio/a"
+              />
+            ) : (
+              <p className="text-sm text-slate-800">
+                {boda?.nombre_novio_1 && boda.nombre_novio_1.trim() !== '' ? boda.nombre_novio_1 : '—'}
+              </p>
+            )}
+          </div>
+
+          {/* Nombre Novio 2 */}
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">
+              Nombre Novio/a 2
+            </label>
+            {modoEdicion ? (
+              <input
+                type="text"
+                value={datosEdicion.nombre_novio_2}
+                onChange={(e) => setDatosEdicion(prev => ({ ...prev, nombre_novio_2: e.target.value }))}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                placeholder="Segundo novio/a"
+              />
+            ) : (
+              <p className="text-sm text-slate-800">
+                {boda?.nombre_novio_2 && boda.nombre_novio_2.trim() !== '' ? boda.nombre_novio_2 : '—'}
+              </p>
+            )}
+          </div>
+
+          {/* Fecha de la boda */}
+          <div>
+            <label className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+              <FiCalendar className="w-3.5 h-3.5" />
+              Fecha de la boda
+            </label>
+            {modoEdicion ? (
+              <input
+                type="date"
+                value={datosEdicion.fecha_boda}
+                onChange={(e) => setDatosEdicion(prev => ({ ...prev, fecha_boda: e.target.value }))}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+              />
+            ) : (
+              <p className="text-sm text-slate-800">
+                {boda?.fecha_boda ? new Date(boda.fecha_boda).toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                }) : '—'}
+              </p>
+            )}
+          </div>
+
+          {/* Ciudad */}
+          <div>
+            <label className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+              <FiMapPin className="w-3.5 h-3.5" />
+              Ciudad
+            </label>
+            {modoEdicion ? (
+              <input
+                type="text"
+                value={datosEdicion.ciudad}
+                onChange={(e) => setDatosEdicion(prev => ({ ...prev, ciudad: e.target.value }))}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                placeholder="Ej: Lima, Perú"
+              />
+            ) : (
+              <p className="text-sm text-slate-800">
+                {boda?.ciudad && boda.ciudad.trim() !== '' ? boda.ciudad : '—'}
+              </p>
+            )}
+          </div>
+
+          {/* Estado de la boda (activar/desactivar) */}
+          <div className="md:col-span-2">
+            <label className="block text-xs font-medium text-slate-500 mb-2">
+              Estado de la página pública
+            </label>
+            <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-lg px-4 py-3">
+              <div className="flex items-center gap-3">
+                {boda?.estado === 'activa' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Activa
+                  </span>
+                ) : boda?.estado === 'borrador' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">
+                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                    Borrador
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-100 text-red-800 text-xs font-medium">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    Suspendida
+                  </span>
+                )}
+                <p className="text-xs text-slate-600">
+                  {boda?.estado === 'activa' 
+                    ? 'Tu página pública es visible para todos' 
+                    : 'Tu página pública está oculta'}
+                </p>
+              </div>
+              
+              <button
+                type="button"
+                onClick={() => handleCambiarEstado(boda?.estado === 'activa' ? 'suspendida' : 'activa')}
+                disabled={cambiandoEstado}
+                className={`relative inline-flex h-7 w-12 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 ${
+                  boda?.estado === 'activa' ? 'bg-green-600' : 'bg-slate-400'
+                }`}
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200 ${
+                    boda?.estado === 'activa' ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Si desactivas la boda, la página pública dejará de estar disponible temporalmente. Puedes reactivarla cuando quieras.
+            </p>
+          </div>
         </div>
       </div>
 
