@@ -9,12 +9,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://161.97.169.31', // Frontend en producción
-        'http://161.97.169.31:80',
-    ],
+    'allowed_origins' => ['*'],
 
     // Si quieres ir a lo seguro en desarrollo, puedes usar:
     // 'allowed_origins' => ['*'],

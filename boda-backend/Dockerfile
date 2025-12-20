@@ -17,6 +17,10 @@ WORKDIR /var/www/html
 # 3) Copiar código
 COPY . /var/www/html
 
+# 3.1) Instalar Composer dentro de la imagen
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # 4) Permisos
 RUN chown -R www-data:www-data /var/www/html
 
@@ -25,3 +29,6 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' \
     /etc/apache2/sites-available/000-default.conf && \
     sed -ri -e 's!/var/www/html!/var/www/html/public!g' \
     /etc/apache2/apache2.conf
+
+# 6) Al iniciar el contenedor, instalar dependencias y arrancar Apache
+CMD ["bash", "-lc", "composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader && apache2-foreground"]
