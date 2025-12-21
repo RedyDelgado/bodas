@@ -8,12 +8,17 @@ REPO_ROOT="/root/wedding"
 DOCKER_DIR="/root/wedding/boda-backend"
 
 echo "🚀 Iniciando despliegue a $SERVER_IP..."
+echo "📡 Estableciendo conexión SSH..."
 
-ssh -o StrictHostKeyChecking=no root@$SERVER_IP << EOF
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 -o TCPKeepAlive=yes root@$SERVER_IP << EOF
+    set -x  # Mostrar cada comando antes de ejecutarlo
+    
     # 1. Actualizar código desde la raíz del repositorio
-    echo "════════════════════════════════════════════════════"
+    echo "═══════════════════════════════════════════════════="
     echo "  ACTUALIZANDO CÓDIGO"
-    echo "════════════════════════════════════════════════════"
+    echo "═══════════════════════════════════════════════════="
+    echo "DEBUG: REPO_ROOT=$REPO_ROOT"
+    echo "DEBUG: DOCKER_DIR=$DOCKER_DIR"
     
     if [ -d "$REPO_ROOT" ]; then
         cd $REPO_ROOT
@@ -66,21 +71,59 @@ ENVEOF
     # ---------------------------------------
 
     echo ""
-    echo "[2/7] Deteniendo servicios antiguos..."
-    docker compose down -v 2>/dev/null || true
+    echo "[2/7] LIMPIEZA TOTAL (VPS Dedicado)..."
+    echo "🧨 Modo Destructivo: Eliminando TODO antes de desplegar..."
+    
+    # Matar todo lo que se mueva
+    docker kill \$(docker ps -q) 2>/dev/null || true
+    docker rm -f \$(docker ps -aq) 2>/dev/null || true
+    
+    # Borrar volúmenes para resetear DB y redes
+    docker volume prune -f || true
+    docker network prune -f || true
 
     echo ""
     echo "[3/7] Construyendo imágenes Docker..."
-    docker compose build --no-cache
+    if ! docker compose build --no-cache; then
+        echo "❌ Error al construir imágenes. Abortando..."
+        exit 1
+    fi
 
     echo ""
     echo "[4/7] Levantando servicios..."
-    docker compose up -d
-    echo "Esperando a que los servicios estén listos..."
-    sleep 20
+    echo "Ejecutando: docker compose up -d"
+    
+    if ! docker compose up -d; then
+        echo "❌ Error al levantar servicios. Mostrando logs..."
+        docker compose logs --tail=50
+        exit 1
+    fi
+    
+    echo "✅ Contenedores iniciados. Verificando estado..."
+    docker compose ps
+    
+    echo "Esperando a que los servicios se estabilicen..."
+    for i in {1..6}; do
+        echo "  Verificación \$i/6 (cada 5 segundos)..."
+        sleep 5
+        docker compose ps app mysql | grep -q "Up" && echo "  ✓ Servicios principales activos" || echo "  ⏳ Servicios aún iniciando..."
+    done
+    
+    echo "Estado final de contenedores:"
+    docker compose ps
 
     echo ""
     echo "[5/7] Ajustando permisos..."
+    # Verificar que el contenedor app esté corriendo
+    echo "Verificando estado del contenedor app..."
+    docker compose ps app
+    
+    if ! docker compose ps app | grep -q "Up"; then
+        echo "⚠️  El contenedor 'app' no está en estado 'Up'. Intentando continuar de todos modos..."
+        docker compose logs app --tail=30
+        echo "⚠️  Continuando con precaución..."
+    fi
+    
     # Asegurar que Apache (www-data) pueda escribir en storage y cache
     docker compose exec -T -u root app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
