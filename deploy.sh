@@ -34,16 +34,21 @@ ssh -o StrictHostKeyChecking=no root@$SERVER_IP << EOF
     sleep 20
 
     echo ""
-    echo "[5/7] Generando clave de aplicación..."
+    echo "[5/7] Ajustando permisos..."
+    # Asegurar que Apache (www-data) pueda escribir en storage y cache
+    docker compose exec -T -u root app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+    echo ""
+    echo "[6/7] Generando clave de aplicación..."
     docker compose exec -T app php artisan key:generate
 
     echo ""
-    echo "[6/7] Migrando base de datos..."
+    echo "[7/7] Migrando base de datos..."
     docker compose exec -T app php artisan migrate --force
     # docker compose exec -T app php artisan db:seed --force # Descomentar si se necesita seed
 
     echo ""
-    echo "[7/7] Optimizando aplicación..."
+    echo "[8/7] Optimizando aplicación..."
     docker compose exec -T app php artisan cache:clear
     docker compose exec -T app php artisan config:cache
     docker compose exec -T app php artisan route:cache
