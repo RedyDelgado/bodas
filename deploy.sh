@@ -1,85 +1,56 @@
 #!/bin/bash
-# Script de despliegue en Contabo
-# Uso: bash deploy.sh 161.97.16.31
+# Script de despliegue a Contabo (Producción)
+# IP: 161.97.169.31
+# Ejecutar: bash deploy.sh
 
-set -e
+SERVER_IP="161.97.169.31"
+REMOTE_DIR="/root/wedding/boda-backend"
 
-SERVER_IP=${1:-161.97.16.31}
-PROJECT_DIR="/opt/wedding/boda-backend"
+echo "🚀 Iniciando despliegue a $SERVER_IP..."
 
-echo "🚀 Desplegando MiWebDeBodas a $SERVER_IP"
-echo "=================================================="
+ssh -o StrictHostKeyChecking=no root@$SERVER_IP << EOF
+    cd $REMOTE_DIR
 
-# Paso 1: Clonar/actualizar repositorio
-echo "📦 Clonando repositorio..."
-if [ ! -d "$PROJECT_DIR" ]; then
-  mkdir -p /opt/wedding
-  cd /opt/wedding
-  git clone https://github.com/TuUsuario/wedding.git . 2>/dev/null || {
-    echo "⚠️  Clona manualmente o sube via scp:"
-    echo "   scp -r C:\\xampp\\htdocs\\wedding\\* root@$SERVER_IP:$PROJECT_DIR/"
-  }
-fi
+    echo "════════════════════════════════════════════════════"
+    echo "  ACTUALIZANDO CÓDIGO Y DESPLEGANDO"
+    echo "════════════════════════════════════════════════════"
 
-cd $PROJECT_DIR
+    echo ""
+    echo "[1/7] Actualizando repositorio..."
+    git pull origin main || echo "⚠️ No se pudo hacer git pull, continuando con versión actual..."
 
-# Paso 2: Crear .env
-echo "🔧 Generando .env..."
-cat > .env << EOF
-APP_NAME=MiWebDeBodas
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=http://$SERVER_IP
+    echo ""
+    echo "[2/7] Deteniendo servicios antiguos..."
+    docker compose down -v 2>/dev/null || true
 
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=db_wedding
-DB_USERNAME=db_wedding
-DB_PASSWORD=SecurePass2025!
+    echo ""
+    echo "[3/7] Construyendo imágenes Docker..."
+    docker compose build --no-cache
 
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-QUEUE_CONNECTION=database
+    echo ""
+    echo "[4/7] Levantando servicios..."
+    docker compose up -d
+    echo "Esperando a que los servicios estén listos..."
+    sleep 20
 
-APP_BODAS_BASE_DOMAIN=redyypatricia.com
-APP_SERVER_IP=$SERVER_IP
+    echo ""
+    echo "[5/7] Generando clave de aplicación..."
+    docker compose exec -T app php artisan key:generate
 
-MAIL_MAILER=log
+    echo ""
+    echo "[6/7] Migrando base de datos..."
+    docker compose exec -T app php artisan migrate --force
+    # docker compose exec -T app php artisan db:seed --force # Descomentar si se necesita seed
+
+    echo ""
+    echo "[7/7] Optimizando aplicación..."
+    docker compose exec -T app php artisan cache:clear
+    docker compose exec -T app php artisan config:cache
+    docker compose exec -T app php artisan route:cache
+    
+    echo ""
+    echo "════════════════════════════════════════════════════"
+    echo "✓✓✓ DESPLIEGUE COMPLETADO EXITOSAMENTE ✓✓✓"
+    echo "════════════════════════════════════════════════════"
+    echo "🌐 URL: https://$SERVER_IP"
 EOF
-
-# Paso 3: Construir e iniciar servicios
-echo "🐳 Construyendo imágenes Docker..."
-SERVER_IP=$SERVER_IP docker compose -f docker-compose.prod.yml build --no-cache
-
-echo "🚀 Iniciando servicios..."
-SERVER_IP=$SERVER_IP docker compose -f docker-compose.prod.yml up -d
-
-# Paso 4: Ejecutar migraciones
-echo "📊 Ejecutando migraciones..."
-sleep 5
-docker exec boda_app php artisan migrate --force
-
-# Paso 5: Crear almacenamiento
-echo "💾 Creando enlace de almacenamiento..."
-docker exec boda_app php artisan storage:link
-
-# Paso 6: Generar clave si no existe
-echo "🔑 Generando clave de aplicación..."
-docker exec boda_app php artisan key:generate --force 2>/dev/null || true
-
-echo ""
-echo "✅ ¡Despliegue completado!"
-echo "=================================================="
-echo "📍 Frontend:  http://$SERVER_IP"
-echo "📍 Backend:   http://$SERVER_IP/api"
-echo "📍 PhpMyAdmin: http://$SERVER_IP:8080"
-echo ""
-echo "🔐 Credenciales phpMyAdmin:"
-echo "   Usuario: db_wedding"
-echo "   Password: SecurePass2025!"
-echo ""
-echo "💡 Para cambiar contraseña MySQL, edita .env y ejecuta:"
-echo "   docker compose -f docker-compose.prod.yml down"
-echo "   docker volume rm boda-backend_.docker-mysql"
-echo "   docker compose -f docker-compose.prod.yml up -d"
