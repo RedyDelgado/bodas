@@ -124,3 +124,19 @@ docker compose ps
 echo ""
 echo "Logs recientes del backend:"
 docker compose logs app --tail=20
+
+echo ""
+echo "════════════════════════════════════════════════════"
+echo "  PRUEBA AUTOMÁTICA DE LOGIN"
+echo "════════════════════════════════════════════════════"
+echo "Probando login con superadmin..."
+
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"email":"redy.delgado@gmail.com","password":"R3DY-ARDOS"}' \
+  -v || echo "⚠️  Error en login (ver detalles arriba)"
+
+echo ""
+echo "Si el login falló, revisa los logs del backend:"
+echo "  docker compose logs app --tail=50"
