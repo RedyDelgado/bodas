@@ -91,8 +91,9 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: mysql
-      PMA_USER: ${DB_USERNAME:-db_wedding}
-      PMA_PASSWORD: ${DB_PASSWORD:-secret123}
+      # No definimos usuario ni password para forzar el login manual
+      # PMA_USER: ...
+      # PMA_PASSWORD: ...
     ports:
       - "8080:80"
     depends_on:
