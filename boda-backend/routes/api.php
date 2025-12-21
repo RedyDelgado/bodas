@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\PlanController;
@@ -94,6 +95,22 @@ Route::get('/fonts/file/{file}', function ($file) {
     ]);
 });
 Route::get('/public/rsvp/validar/{codigo}', [PublicRsvpController::class, 'validar']);
+
+// Healthcheck simple para producción
+Route::get('/health', function () {
+    try {
+        DB::connection()->getPdo();
+        return response()->json([
+            'status' => 'ok',
+            'db' => 'connected',
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'db' => 'failed',
+        ], 500);
+    }
+});
 
 /*
 |--------------------------------------------------------------------------

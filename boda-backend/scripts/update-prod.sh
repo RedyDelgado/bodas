@@ -1,11 +1,11 @@
 #!/bin/bash
 # Actualiza y reinicia la plataforma en Contabo
-# Uso: sudo bash /opt/wedding/boda-backend/scripts/update-prod.sh [SERVER_IP]
+# Uso: sudo bash /root/wedding/boda-backend/scripts/update-prod.sh [SERVER_IP]
 
 set -euo pipefail
 
-SERVER_IP=${1:-161.97.16.31}
-BACKEND_DIR="/opt/wedding/boda-backend"
+SERVER_IP=${1:-161.97.169.31}
+BACKEND_DIR="/root/wedding/boda-backend"
 
 cd "$BACKEND_DIR"
 
