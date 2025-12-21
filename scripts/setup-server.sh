@@ -7,6 +7,7 @@ DEPLOY_DIR="/root/wedding"
 BACKEND_DIR="/root/wedding/boda-backend"
 TRAEFIK_EMAIL="redy.delgado@gmail.com"
 DB_PASSWORD="BodaSecure2025!"
+TRAEFIK_EMAIL="redy.delgado@gmail.com"
 
 # Colores
 GREEN='\033[0;32m'
@@ -77,6 +78,7 @@ APP_URL=https://$DOMAIN
 
 APP_BODAS_BASE_DOMAIN=$DOMAIN
 APP_SERVER_IP=$DOMAIN
+TRAEFIK_ACME_EMAIL=$TRAEFIK_EMAIL
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null

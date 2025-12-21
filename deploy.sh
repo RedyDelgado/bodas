@@ -4,20 +4,32 @@
 # Ejecutar: bash deploy.sh
 
 SERVER_IP="161.97.169.31"
-REMOTE_DIR="/root/wedding/boda-backend"
+REPO_ROOT="/root/wedding"
+DOCKER_DIR="/root/wedding/boda-backend"
 
 echo "🚀 Iniciando despliegue a $SERVER_IP..."
 
 ssh -o StrictHostKeyChecking=no root@$SERVER_IP << EOF
-    cd $REMOTE_DIR
-
+    # 1. Actualizar código desde la raíz del repositorio
     echo "════════════════════════════════════════════════════"
-    echo "  ACTUALIZANDO CÓDIGO Y DESPLEGANDO"
+    echo "  ACTUALIZANDO CÓDIGO"
     echo "════════════════════════════════════════════════════"
+    
+    if [ -d "$REPO_ROOT" ]; then
+        cd $REPO_ROOT
+        echo "📂 Directorio del repositorio: $REPO_ROOT"
+        echo "[1/7] Obteniendo últimos cambios..."
+        git fetch origin
+        git reset --hard origin/main
+    else
+        echo "❌ Error: No se encuentra el directorio $REPO_ROOT"
+        echo "   Ejecuta primero scripts/setup-server.sh en el servidor."
+        exit 1
+    fi
 
-    echo ""
-    echo "[1/7] Actualizando repositorio..."
-    git pull origin main || echo "⚠️ No se pudo hacer git pull, continuando con versión actual..."
+    # 2. Ejecutar Docker desde la carpeta del backend
+    cd $DOCKER_DIR
+    echo "📂 Directorio de Docker: $DOCKER_DIR"
 
     echo ""
     echo "[2/7] Deteniendo servicios antiguos..."
@@ -45,7 +57,10 @@ ssh -o StrictHostKeyChecking=no root@$SERVER_IP << EOF
     echo ""
     echo "[7/7] Migrando base de datos..."
     docker compose exec -T app php artisan migrate --force
-    # docker compose exec -T app php artisan db:seed --force # Descomentar si se necesita seed
+    
+    echo "   - Asegurando roles y superadmin..."
+    docker compose exec -T app php artisan db:seed --class=RolesSeeder --force
+    docker compose exec -T app php artisan db:seed --class=SuperAdminSeeder --force
 
     echo ""
     echo "[8/7] Optimizando aplicación..."
