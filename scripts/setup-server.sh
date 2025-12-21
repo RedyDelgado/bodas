@@ -61,7 +61,7 @@ else
     rm -rf "$DEPLOY_DIR"
     mkdir -p /root
     cd /root
-    git clone https://github.com/RedyDelgado/bodas.git wedding
+    git clone https://github.com/RedyDelgado/wedding.git wedding
 fi
 cd "$BACKEND_DIR"
 echo -e "${GREEN}✓ Repositorio listo${NC}"
@@ -85,9 +85,12 @@ LOG_LEVEL=warning
 DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
-DB_DATABASE=bodas_db
-DB_USERNAME=bodas_user
+DB_DATABASE=db_wedding
+DB_USERNAME=db_wedding
 DB_PASSWORD=$DB_PASSWORD
+
+CORS_ALLOWED_ORIGINS="http://$DOMAIN,https://$DOMAIN"
+CORS_SUPPORTS_CREDENTIALS=true
 
 BROADCAST_DRIVER=log
 CACHE_DRIVER=file
