@@ -22,9 +22,10 @@ ssh -o StrictHostKeyChecking=no root@$SERVER_IP << EOF
         git fetch origin
         git reset --hard origin/main
     else
-        echo "❌ Error: No se encuentra el directorio $REPO_ROOT"
-        echo "   Ejecuta primero scripts/setup-server.sh en el servidor."
-        exit 1
+        echo "⚠️  El repositorio no existe. Clonando por primera vez..."
+        cd /root
+        git clone https://github.com/RedyDelgado/wedding.git wedding
+        cd $REPO_ROOT
     fi
 
     # 2. Ejecutar Docker desde la carpeta del backend
