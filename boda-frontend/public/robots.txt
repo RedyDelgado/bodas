@@ -1,0 +1,43 @@
+# robots.txt - Directivas para motores de búsqueda
+# Versión: 2025-12-20
+
+# Permitir a todos los bots
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /superadmin/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /*.pdf$
+Disallow: /api/
+
+# Específico para Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Específico para Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Específico para Google Images
+User-agent: Googlebot-Image
+Allow: /
+
+# Rate limiting para bots agresivos
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Configuración global
+Sitemap: https://miwebdebodas.com/sitemap.xml
+Sitemap: https://miwebdebodas.com/sitemap-bodas.xml
+Sitemap: https://miwebdebodas.com/sitemap-faqs.xml
+
+# Tiempo de rastreo preferido (en UTC)
+# Permitir rastreo en horarios de bajo tráfico
+# Lunes a Viernes: 2:00 AM - 5:00 AM UTC
+Request-rate: 1/10s
