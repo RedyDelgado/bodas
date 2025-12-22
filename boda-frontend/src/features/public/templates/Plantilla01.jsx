@@ -449,11 +449,13 @@ const stopCelebration = () => {
 
   const mensajeFinal =
     configuracion?.textoMensajeFinal ||
+    configuracion?.texto_mensaje_final ||
     configuracion?.frase_final ||
     "Tu presencia es nuestro mejor regalo. Gracias por acompañarnos en este día irrepetible.";
 
   const textoHistoria =
     configuracion?.textoHistoriaPareja ||
+    configuracion?.texto_historia_pareja ||
     configuracion?.texto_historia ||
     "Este espacio está pensado para contar, con tus propias palabras, cómo se conocieron y qué los une.";
 
