@@ -5,6 +5,7 @@ services:
     image: traefik:v2.11
     container_name: boda_traefik
     command:
+      - --log.level=DEBUG
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.file.filename=/etc/traefik/dynamic.yml
