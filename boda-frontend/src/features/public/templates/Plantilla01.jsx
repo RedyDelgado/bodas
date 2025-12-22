@@ -31,7 +31,7 @@ const FLORES_LATERAL = "/img/flores.png"; //
 /** =================== BASE URL PARA FOTOS =================== */
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const STORAGE_BASE_URL =
-  import.meta.env.VITE_STORAGE_URL || API_BASE_URL.replace(/\/+$/, "");
+  import.meta.env.VITE_STORAGE_URL || `${API_BASE_URL.replace(/\/+$/, "")}/storage`;
 
 /** Normaliza la URL de la foto */
 function resolveFotoUrl(path) {
