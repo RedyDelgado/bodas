@@ -20,17 +20,10 @@ http:
         certResolver: le
 
     # ---------------------------------------------------------
-    # DOMINIOS DE BODAS: Solo página pública de la boda
+    # DOMINIOS DE BODAS: Solo API pública y storage
     # Para agregar: || Host(`nuevodominio.com`)
-    # Nota: /api/public/* retorna datos de esa boda por dominio
+    # NO servimos frontend aquí, solo /api/public/* y /storage/*
     # ---------------------------------------------------------
-    bodas-frontend:
-      entryPoints:
-        - websecure
-      rule: Host(`redyypatricia.com`) || Host(`www.redyypatricia.com`)
-      service: frontend@docker
-      tls:
-        certResolver: le
 
     bodas-api-public:
       entryPoints:
