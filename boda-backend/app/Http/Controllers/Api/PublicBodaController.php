@@ -54,10 +54,27 @@ class PublicBodaController extends Controller
 
         $boda->increment('total_vistas');
 
+        $fotoPortada = $boda->fotos->firstWhere('es_portada', 1)
+            ?? $boda->fotos->first();
+
+        $totalInvitados   = (int) $boda->total_invitados;
+        $totalConfirmados = (int) $boda->total_confirmados;
+        $porcentaje = $totalInvitados > 0
+            ? round(($totalConfirmados * 100) / $totalInvitados)
+            : 0;
+
+        $invitadosResumen = [
+            'total_invitados'        => $totalInvitados,
+            'total_confirmados'      => $totalConfirmados,
+            'porcentaje_confirmados' => $porcentaje,
+        ];
+
         return response()->json([
-            'boda'          => $boda,
-            'configuracion' => $boda->configuracion,
-            'fotos'         => $boda->fotos,
+            'boda'               => $boda,
+            'configuracion'      => $boda->configuracion,
+            'fotos'              => $boda->fotos,
+            'invitados_resumen'  => $invitadosResumen,
+            'foto_portada'       => $fotoPortada ? $fotoPortada->url_imagen : null,
         ]);
     }
 
