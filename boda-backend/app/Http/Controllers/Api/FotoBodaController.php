@@ -54,7 +54,13 @@ class FotoBodaController extends Controller
             return $url;
         }
 
-        return asset('storage/' . ltrim($url, '/'));
+        $path = ltrim($url, '/');
+
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        return '/storage/' . $path;
     }
 
 

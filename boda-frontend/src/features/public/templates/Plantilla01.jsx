@@ -29,19 +29,25 @@ import {
 } from "../../../shared/styles/colors";
 const FLORES_LATERAL = "/img/flores.png"; //
 /** =================== BASE URL PARA FOTOS =================== */
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-const STORAGE_BASE_URL =
-  import.meta.env.VITE_STORAGE_URL || `${API_BASE_URL.replace(/\/+$/, "")}/storage`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const STORAGE_BASE_URL = import.meta.env.VITE_STORAGE_URL || "/storage";
 
 /** Normaliza la URL de la foto */
 function resolveFotoUrl(path) {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  if (path.startsWith("/")) {
-    return `${STORAGE_BASE_URL}${path}`;
-  }
-  return `${STORAGE_BASE_URL}/${path.replace(/^\/+/, "")}`;
+
+  // Si ya viene como "/storage/...", úsalo directo (tenant + https)
+  if (path.startsWith("/storage/")) return path;
+
+  const base = STORAGE_BASE_URL.replace(/\/+$/, "");
+
+  // Si viene "/fotos_boda/..." lo convertimos a "/storage/fotos_boda/..."
+  if (path.startsWith("/")) return `${base}${path}`;
+
+  return `${base}/${path.replace(/^\/+/, "")}`;
 }
+
 
 /** Fecha larga "jueves, 2 de julio de 2026" */
 function formatFechaLarga(fechaStr) {
