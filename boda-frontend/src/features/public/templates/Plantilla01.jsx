@@ -720,7 +720,7 @@ const stopCelebration = () => {
           <HeroBackground
             url={heroSlides[heroPrevIndex].image}
             position={heroPosicion}
-            zClass="-z-30"
+            zClass="z-[1]"
           />
         )}
 
@@ -730,14 +730,14 @@ const stopCelebration = () => {
             key={urlHero}
             url={urlHero}
             position={heroPosicion}
-            zClass="-z-20"
+            zClass="z-[2]"
             extraClass="hero-fade"
           />
         )}
 
         {/* Overlay premium: asegura contraste siempre */}
         <div
-          className="absolute inset-0 -z-10 pointer-events-none"
+          className="absolute inset-0 z-[5] pointer-events-none"
           style={{
             background: `
       radial-gradient(ellipse at center,
@@ -756,7 +756,7 @@ const stopCelebration = () => {
         />
 
         {/* SEPARADOR INFERIOR EN FORMA DE OLA */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] overflow-hidden">
           <svg
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
