@@ -1,12 +1,24 @@
 // src/shared/components/layouts/PublicLayout.jsx
 import React from "react";
 import { Outlet, Link, NavLink } from "react-router-dom";
+import { useDomainDetection } from "../../hooks/useDomainDetection";
 
 /**
  * Layout público:
  * - Se usará para: Landing (/), Login (/login), Demo de boda (/demo-boda/:slug)
  */
 export function PublicLayout() {
+  const { isDomainBoda } = useDomainDetection();
+
+  // En dominios personalizados NO mostramos header/footer de la plataforma
+  if (isDomainBoda) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <Outlet />
+      </main>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       {/* Header */}
