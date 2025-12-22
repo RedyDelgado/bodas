@@ -18,6 +18,7 @@ import { AdminDashboardPage } from "../features/admin/pages/AdminDashboardPage.j
 import { BodaDashboardPage } from "../features/bodas/pages/BodaDashboardPage.jsx";
 import { BodaConfigPage } from "../features/bodas/pages/BodaConfigPage";
 import BodaPublicPage from "../features/public/pages/BodaPublicPage";
+import DomainBodaPage from "../features/public/pages/DomainBodaPage.jsx";
 import { UserSettingsPage } from "../features/user/pages/UserSettingsPage.jsx";
 import { BodaInvitadosPage } from "../features/bodas/pages/BodaInvitadosPage.jsx";
 import { RsvpPage } from "../features/public/pages/RsvpPage.jsx";
@@ -28,6 +29,9 @@ import GestionUsuariosPage from "../features/superadmin/pages/GestionUsuariosPag
 import GestionBodasPage from "../features/superadmin/pages/GestionBodasPage.jsx";
 import IpsBloqueadasPage from "../features/superadmin/pages/IpsBloqueadasPage.jsx";
 import SesionesActivasPage from "../features/superadmin/pages/SesionesActivasPage.jsx";
+
+// Hook para detectar dominio personalizado
+import { useDomainDetection } from "../shared/hooks/useDomainDetection.js";
 
 // Si no tienes NotFound aún, puedes crearlo luego.
 function NotFoundPage() {
@@ -45,13 +49,23 @@ function NotFoundPage() {
   );
 }
 
+/**
+ * Componente envolvente que detecta si estamos en un dominio personalizado
+ * y sirve DomainBodaPage en lugar de LandingPage.
+ */
+function HomeOrDomainBoda() {
+  const { isDomainBoda } = useDomainDetection();
+  return isDomainBoda ? <DomainBodaPage /> : <LandingPage />;
+}
+
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Rutas públicas con layout general */}
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<LandingPage />} />
+          {/* "/" → LandingPage si es dominio base, DomainBodaPage si es dominio personalizado */}
+          <Route path="/" element={<HomeOrDomainBoda />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registro" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
