@@ -1333,33 +1333,9 @@ const stopCelebration = () => {
 
         {/* FLORES: SOLO EN LOS MÁRGENES (CENTRO ENMASCARADO) */}
         <div
-          className="pointer-events-none absolute inset-0 z-30 overflow-visible"
+          className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
           style={{
-            // Ancho del "marco" central: min(7xl, 100% - 2.5rem)
-            "--frameW": "min(80rem, calc(100% - 2.5rem))",
-            // Máscara: negro = visible, transparente = oculto (zona central)
-            WebkitMaskImage: `
-        linear-gradient(to right,
-          rgba(0,0,0,1) 0,
-          rgba(0,0,0,1) calc((100% - var(--frameW)) / 2),
-          rgba(0,0,0,0) calc((100% - var(--frameW)) / 2),
-          rgba(0,0,0,0) calc(100% - (100% - var(--frameW)) / 2),
-          rgba(0,0,0,1) calc(100% - (100% - var(--frameW)) / 2),
-          rgba(0,0,0,1) 100%
-        )
-      `,
-            maskImage: `
-        linear-gradient(to right,
-          rgba(0,0,0,1) 0,
-          rgba(0,0,0,1) calc((100% - var(--frameW)) / 2),
-          rgba(0,0,0,0) calc((100% - var(--frameW)) / 2),
-          rgba(0,0,0,0) calc(100% - (100% - var(--frameW)) / 2),
-          rgba(0,0,0,1) calc(100% - (100% - var(--frameW)) / 2),
-          rgba(0,0,0,1) 100%
-        )
-      `,
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
+            // Sin máscara CSS - solo vamos a mostrar imágenes en los laterales
           }}
         >
           {/* Izquierda arriba */}
