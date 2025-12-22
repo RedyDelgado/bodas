@@ -84,10 +84,14 @@ for i in {1..6}; do
     docker compose ps
 done
 
-# 7. Permisos
+# 7. Permisos y directorios de storage
 echo ""
-echo "[5/7] Ajustando permisos..."
-docker compose exec -T -u root app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache || echo "⚠️  Error ajustando permisos (continuando)"
+echo "[5/7] Ajustando permisos y creando directorios de storage..."
+docker compose exec -T app bash -c "
+mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data &&
+chmod -R 775 storage bootstrap/cache &&
+chown -R www-data:www-data storage bootstrap/cache
+" || echo "⚠️  Error ajustando permisos (continuando)"
 
 # 8. Key generate
 echo ""
@@ -99,9 +103,12 @@ echo ""
 echo "[7/7] Migrando base de datos..."
 docker compose exec -T app php artisan migrate --force || echo "⚠️  Error en migraciones"
 
-echo "   - Asegurando roles y superadmin..."
+echo "   - Asegurando roles, planes, plantillas y superadmin..."
 docker compose exec -T app php artisan db:seed --class=RolesSeeder --force || echo "⚠️  Error en RolesSeeder"
+docker compose exec -T app php artisan db:seed --class=PlanesSeeder --force || echo "⚠️  Error en PlanesSeeder"
+docker compose exec -T app php artisan db:seed --class=PlantillasSeeder --force || echo "⚠️  Error en PlantillasSeeder"
 docker compose exec -T app php artisan db:seed --class=SuperAdminSeeder --force || echo "⚠️  Error en SuperAdminSeeder"
+
 
 # 10. Optimización
 echo ""
