@@ -1,4 +1,4 @@
-version: '3.8'
+## Nota: Compose v2 ignora `version`. Se elimina para evitar confusión.
 
 services:
   app:
@@ -45,8 +45,7 @@ services:
       dockerfile: Dockerfile
       args:
         # En producción sin Traefik, el backend expone 8000
-        VITE_API_URL: /api
-        VITE_STORAGE_URL: /storage
+        VITE_API_URL: http://${SERVER_IP}:8000/api
         VITE_USE_FAKE: "false"
     container_name: boda_frontend
     ports:
