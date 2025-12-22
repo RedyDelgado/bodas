@@ -102,10 +102,16 @@ class PublicBodaController extends Controller
             : null,
 
         'fotos' => $boda->fotos->map(function ($f) {
+            // Añadir /storage/ al inicio si no es una URL completa
+            $urlImagen = $f->url_imagen;
+            if ($urlImagen && !str_starts_with($urlImagen, 'http://') && !str_starts_with($urlImagen, 'https://')) {
+                $urlImagen = '/storage/' . ltrim($urlImagen, '/');
+            }
+            
             return [
                 'id'                 => $f->id,
                 'boda_id'            => $f->boda_id,
-                'url_imagen'         => $f->url_imagen,
+                'url_imagen'         => $urlImagen,
                 'es_portada'         => (bool) $f->es_portada,
                 'es_galeria_privada' => $f->es_galeria_privada,
                 'orden'              => $f->orden,
@@ -118,7 +124,9 @@ class PublicBodaController extends Controller
         'invitados_resumen' => $invitadosResumen,
 
         'foto_portada' => $fotoPortada
-            ? $fotoPortada->url_imagen
+            ? (str_starts_with($fotoPortada->url_imagen, 'http') 
+                ? $fotoPortada->url_imagen 
+                : '/storage/' . ltrim($fotoPortada->url_imagen, '/'))
             : null,
     ]);
 }
