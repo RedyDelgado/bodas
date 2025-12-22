@@ -28,17 +28,17 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12 px-4">
-      <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-xl overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-8 py-8 text-center">
-          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="bg-slate-800 px-8 py-8 text-center">
+          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
             <FiMail className="text-white" size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">
+          <h1 className="text-2xl font-semibold text-white mb-2">
             ¿Olvidaste tu contraseña?
           </h1>
-          <p className="text-blue-100 text-sm">
+          <p className="text-slate-300 text-sm">
             Te enviaremos un enlace para restablecerla
           </p>
         </div>
@@ -46,9 +46,9 @@ export function ForgotPasswordPage() {
         {/* Form Content */}
         <div className="px-8 py-8">
           {!enviado ? (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Correo electrónico
                 </label>
                 <input
@@ -56,14 +56,14 @@ export function ForgotPasswordPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all"
-                  placeholder="tu@email.com"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                  placeholder="tucorreo@ejemplo.com"
                   disabled={cargando}
                 />
               </div>
 
               {error && (
-                <div className="text-sm text-red-700 bg-red-50 border-2 border-red-200 rounded-lg px-4 py-3">
+                <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
                   {error}
                 </div>
               )}
@@ -71,7 +71,7 @@ export function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl py-4 text-base font-semibold hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-slate-900 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
               >
                 {cargando ? (
                   <>
@@ -83,7 +83,7 @@ export function ForgotPasswordPage() {
                   </>
                 ) : (
                   <>
-                    <FiMail size={20} />
+                    <FiMail size={18} />
                     Enviar enlace de recuperación
                   </>
                 )}
@@ -92,39 +92,43 @@ export function ForgotPasswordPage() {
               <div className="text-center">
                 <a
                   href="/login"
-                  className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-800 font-medium"
+                  className="inline-flex items-center gap-2 text-xs text-slate-600 hover:text-slate-800 font-medium"
                 >
-                  <FiArrowLeft size={16} />
+                  <FiArrowLeft size={14} />
                   Volver al inicio de sesión
                 </a>
               </div>
             </form>
           ) : (
-            <div className="text-center space-y-6">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                <FiCheck className="text-green-600" size={40} />
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <FiCheck className="text-green-600" size={32} />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">
+                <h3 className="text-lg font-semibold text-slate-800 mb-1">
                   ¡Correo enviado!
                 </h3>
                 <p className="text-sm text-slate-600">
                   {mensaje}
                 </p>
-                <p className="text-sm text-slate-500 mt-2">
+                <p className="text-xs text-slate-500 mt-2">
                   Revisa tu bandeja de entrada y sigue las instrucciones.
                 </p>
               </div>
               <a
                 href="/login"
-                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-semibold"
+                className="inline-flex items-center gap-2 text-xs text-slate-600 hover:text-slate-800 font-medium"
               >
-                <FiArrowLeft size={16} />
+                <FiArrowLeft size={14} />
                 Volver al inicio de sesión
               </a>
             </div>
           )}
         </div>
+
+        <p className="px-8 pb-6 text-xs text-slate-400 text-center">
+          Plataforma de gestión de páginas de boda.
+        </p>
       </div>
     </div>
   );
