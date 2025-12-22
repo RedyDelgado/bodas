@@ -73,7 +73,7 @@ services:
       args:
         # En producción usa /api como URL relativa
         VITE_API_URL: ${VITE_API_URL:-/api}
-        VITE_STORAGE_URL: ${VITE_STORAGE_URL:-http://${SERVER_IP}}
+        VITE_STORAGE_URL: ${VITE_STORAGE_URL:-http://${SERVER_IP}/storage}
         VITE_USE_FAKE: ${VITE_USE_FAKE:-false}
     container_name: boda_frontend
     ports:
