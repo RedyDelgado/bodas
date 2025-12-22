@@ -1296,7 +1296,7 @@ const stopCelebration = () => {
                         style={{ borderColor: `${COLOR_DORADO}2B` }}
                       >
                         <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500 mb-2">
-                          Padrinos principales
+                          Padrinos Religiosos
                         </div>
                         <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words whitespace-pre-line">
                           {textoPadrinosMayores ? (
