@@ -1020,15 +1020,15 @@ const stopCelebration = () => {
                         backgroundColor: "white",
                       }}
                     >
-                      {/* Foto */}
-                      <div className="relative h-[320px] sm:h-[380px] lg:h-[440px]">
+                      {/* Foto - altura ajustada para mobile (más alta) */}
+                      <div className="relative h-[420px] sm:h-[480px] lg:h-[520px]">
                         {historiaFoto ? (
                           <img
                             src={historiaFoto}
                             alt=""
                             aria-hidden
                             className="absolute inset-0 w-full h-full object-cover"
-                            style={{ objectPosition: "center 35%" }}
+                            style={{ objectPosition: "center 30%" }}
                             loading="lazy"
                             decoding="async"
                           />
