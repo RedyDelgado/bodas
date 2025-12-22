@@ -1,3 +1,30 @@
+http:
+  routers:
+    # ---------------------------------------------------------
+    # LISTA DE DOMINIOS DE BODAS (Frontend)
+    # Para agregar una nueva pareja, simplemente añade: || Host(`nuevodominio.com`)
+    # ---------------------------------------------------------
+    bodas-frontend:
+      entryPoints:
+        - websecure
+      # AQUÍ AGREGAS LOS DOMINIOS:
+      rule: Host(`redyypatricia.com`) || Host(`www.redyypatricia.com`)
+      service: frontend@docker
+      tls:
+        certResolver: le
+
+    # ---------------------------------------------------------
+    # LISTA DE DOMINIOS PARA API (Backend)
+    # Deben ser los mismos dominios de arriba
+    # ---------------------------------------------------------
+    bodas-api:
+      entryPoints:
+        - websecure
+      rule: (Host(`redyypatricia.com`) || Host(`www.redyypatricia.com`)) && (PathPrefix(`/api`) || PathPrefix(`/storage`))
+      service: app@docker
+      tls:
+        certResolver: le
+
 tls:
   options:
     default:
