@@ -8,16 +8,12 @@ http:
         - websecure
       rule: Host(`161.97.169.31`)
       service: frontend@docker
-      tls:
-        certResolver: le
 
     platform-api:
       entryPoints:
         - websecure
       rule: Host(`161.97.169.31`) && (PathPrefix(`/api`) || PathPrefix(`/storage`))
       service: api@docker
-      tls:
-        certResolver: le
 
     # ---------------------------------------------------------
     # DOMINIOS DE BODAS: Frontend público + API pública + storage
