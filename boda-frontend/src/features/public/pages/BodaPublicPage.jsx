@@ -1,8 +1,9 @@
 // src/features/public/pages/BodaPublicPage.jsx
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../../shared/config/axiosClient";
 import Plantilla01 from "../templates/Plantilla01";
+import SEOHead from "../../../shared/components/SEOHead";
 
 const LOADER_COLOR = "#1E293B"; // azul para ícono y texto
 const COLOR_DORADO = "#D4AF37";
@@ -89,6 +90,34 @@ useEffect(() => {
   const nombre = boda?.nombre_pareja?.trim();
   document.title = nombre ? `${nombre}` : "MiWebDeBodas";
 }, [boda?.nombre_pareja]);
+
+  // ============= Datos para SEO dinámico =============
+  const seoData = useMemo(() => {
+    if (!boda) return null;
+
+    const currentUrl = window.location.href;
+    
+    // Obtener nombre de la pareja (priorizando nombres individuales)
+    const nombrePareja = (boda.nombre_novio_1 && boda.nombre_novio_2)
+      ? `${boda.nombre_novio_1} & ${boda.nombre_novio_2}`
+      : (boda.nombre_pareja || "Nuestra boda");
+
+    // Descripción personalizada
+    const descripcion = configuracion?.texto_bienvenida 
+      || `Te invitamos a celebrar nuestra boda. ${nombrePareja}. ¡Confirma tu asistencia!`;
+
+    // Imagen para compartir (usar la primera foto de hero o una por defecto)
+    const imagen = fotos && fotos.length > 0 && fotos[0]?.url
+      ? fotos[0].url
+      : 'https://miwebdebodas.com/og-image.png';
+
+    return {
+      title: `${nombrePareja} - Nuestra Boda | MiWebDeBodas`,
+      description: descripcion.substring(0, 160), // Limitar a 160 caracteres
+      image: imagen,
+      url: currentUrl
+    };
+  }, [boda, configuracion, fotos]);
 
 
 
@@ -229,12 +258,24 @@ useEffect(() => {
   }
 
   return (
-    <Plantilla01
-      boda={boda}
-      configuracion={configuracion}
-      fotos={fotos}
-      invitadosResumen={invitadosResumen}
-    />
+    <>
+      {/* Meta tags dinámicos para compartir en redes sociales */}
+      {seoData && (
+        <SEOHead
+          title={seoData.title}
+          description={seoData.description}
+          image={seoData.image}
+          url={seoData.url}
+        />
+      )}
+
+      <Plantilla01
+        boda={boda}
+        configuracion={configuracion}
+        fotos={fotos}
+        invitadosResumen={invitadosResumen}
+      />
+    </>
   );
 }
 

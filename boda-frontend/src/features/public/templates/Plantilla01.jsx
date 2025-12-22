@@ -1249,11 +1249,9 @@ const stopCelebration = () => {
                           Novios
                         </div>
                         <div className="text-sm sm:text-[15px] text-slate-800 leading-relaxed break-words">
-                          {boda?.nombre_pareja ||
-                            `${(boda?.nombre_novio_1 ?? "").trim()} & ${(
-                              boda?.nombre_novio_2 ?? ""
-                            ).trim()}`.trim() ||
-                            "Por definir"}
+                          {(boda?.nombre_novio_1 && boda?.nombre_novio_2)
+                            ? `${boda.nombre_novio_1.trim()} & ${boda.nombre_novio_2.trim()}`
+                            : (boda?.nombre_pareja || "Por definir")}
                         </div>
                       </div>
 

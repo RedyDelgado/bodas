@@ -5,9 +5,10 @@
  * Esencialmente es igual a BodaPublicPage, pero sin slug (usa Host detection).
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
 import Plantilla01 from "../templates/Plantilla01";
+import SEOHead from "../../../shared/components/SEOHead";
 
 const LOADER_COLOR = "#1E293B";
 const COLOR_DORADO = "#D4AF37";
@@ -88,6 +89,35 @@ function DomainBodaPage() {
       document.title = "Cargando… | " + dominio;
     }
   }, [boda?.nombre_pareja]);
+
+  // ============= Datos para SEO dinámico =============
+  const seoData = useMemo(() => {
+    if (!boda) return null;
+
+    const currentUrl = window.location.href;
+    const dominio = window.location.hostname;
+    
+    // Obtener nombre de la pareja (priorizando nombres individuales)
+    const nombrePareja = (boda.nombre_novio_1 && boda.nombre_novio_2)
+      ? `${boda.nombre_novio_1} & ${boda.nombre_novio_2}`
+      : (boda.nombre_pareja || "Nuestra boda");
+
+    // Descripción personalizada
+    const descripcion = configuracion?.texto_bienvenida 
+      || `Te invitamos a celebrar nuestra boda. ${nombrePareja}. ¡Confirma tu asistencia!`;
+
+    // Imagen para compartir (usar la primera foto de hero o una por defecto)
+    const imagen = fotos && fotos.length > 0 && fotos[0]?.url
+      ? fotos[0].url
+      : `https://${dominio}/og-image.png`;
+
+    return {
+      title: `${nombrePareja} - Nuestra Boda | ${dominio}`,
+      description: descripcion.substring(0, 160), // Limitar a 160 caracteres
+      image: imagen,
+      url: currentUrl
+    };
+  }, [boda, configuracion, fotos]);
 
   // ================== LOADING PREMIUM ==================
   if (estado === "loading") {
@@ -218,6 +248,16 @@ function DomainBodaPage() {
   // ================== DISPLAY BODA ==================
   return (
     <div>
+      {/* Meta tags dinámicos para compartir en redes sociales */}
+      {seoData && (
+        <SEOHead
+          title={seoData.title}
+          description={seoData.description}
+          image={seoData.image}
+          url={seoData.url}
+        />
+      )}
+
       {boda && configuracion && fotos ? (
         <Plantilla01
           boda={boda}
