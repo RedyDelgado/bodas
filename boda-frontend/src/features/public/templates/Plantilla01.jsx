@@ -32,20 +32,35 @@ const FLORES_LATERAL = "/img/flores.png"; //
 const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 const STORAGE_BASE_URL = import.meta.env.VITE_STORAGE_URL || "/storage";
 
-/** Normaliza la URL de la foto */
-function resolveFotoUrl(path) {
-  if (!path) return "";
+/** Normaliza la URL de la foto (tolera distintas variantes del backend) */
+function resolveFotoUrl(inputPath) {
+  if (!inputPath) return "";
+
+  // Aseguramos string y limpiamos espacios/backslashes
+  let path = String(inputPath).trim().replace(/\\/g, "/");
+
+  // URLs absolutas
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
 
-  // Si ya viene como "/storage/...", úsalo directo (tenant + https)
+  // Normalizaciones de prefijo comunes que llegan del backend
+  // "storage/..." -> "/storage/..."
+  if (path.startsWith("storage/")) path = `/${path}`;
+  // "fotos_boda/..." -> "/storage/fotos_boda/..."
+  if (path.startsWith("fotos_boda/")) path = `/storage/${path}`;
+  // "/fotos_boda/..." -> "/storage/fotos_boda/..."
+  if (path.startsWith("/fotos_boda/")) path = `/storage${path}`;
+
+  // Si ya viene como "/storage/..." déjalo tal cual (ruta relativa válida)
   if (path.startsWith("/storage/")) return path;
 
-  const base = STORAGE_BASE_URL.replace(/\/+$/, "");
-
-  // Si viene "/fotos_boda/..." lo convertimos a "/storage/fotos_boda/..."
-  if (path.startsWith("/")) return `${base}${path}`;
-
-  return `${base}/${path.replace(/^\/+/, "")}`;
+  // Fallback: concatenar con STORAGE_BASE_URL sin duplicar slashes
+  const base = (STORAGE_BASE_URL || "/storage").replace(/\/+$/, "");
+  const tail = path.replace(/^\/+/, "");
+  // Evitar duplicar "/storage/storage/..."
+  if (base.endsWith("/storage") && tail.startsWith("storage/")) {
+    return `/${tail}`; // => "/storage/..."
+  }
+  return `${base}/${tail}`;
 }
 
 
