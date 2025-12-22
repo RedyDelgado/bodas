@@ -1,4 +1,4 @@
 tls:
   options:
     default:
-      onDemand: true
+      minVersion: VersionTLS12
