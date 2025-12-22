@@ -1,9 +1,9 @@
 http:
   routers:
     # ---------------------------------------------------------
-    # ACCESO POR IP: Plataforma completa (login, admin, etc.)
+    # SOLO IP: Plataforma completa (login, admin, panel)
     # ---------------------------------------------------------
-    ip-frontend:
+    platform-frontend:
       entryPoints:
         - websecure
       rule: Host(`161.97.169.31`)
@@ -11,7 +11,7 @@ http:
       tls:
         certResolver: le
 
-    ip-api:
+    platform-api:
       entryPoints:
         - websecure
       rule: Host(`161.97.169.31`) && (PathPrefix(`/api`) || PathPrefix(`/storage`))
@@ -20,8 +20,9 @@ http:
         certResolver: le
 
     # ---------------------------------------------------------
-    # ACCESO POR DOMINIO: Bodas específicas
-    # Para agregar una nueva pareja, añade: || Host(`nuevodominio.com`)
+    # DOMINIOS DE BODAS: Solo página pública de la boda
+    # Para agregar: || Host(`nuevodominio.com`)
+    # Nota: /api/public/* retorna datos de esa boda por dominio
     # ---------------------------------------------------------
     bodas-frontend:
       entryPoints:
@@ -31,10 +32,18 @@ http:
       tls:
         certResolver: le
 
-    bodas-api:
+    bodas-api-public:
       entryPoints:
         - websecure
-      rule: (Host(`redyypatricia.com`) || Host(`www.redyypatricia.com`)) && (PathPrefix(`/api`) || PathPrefix(`/storage`))
+      rule: (Host(`redyypatricia.com`) || Host(`www.redyypatricia.com`)) && PathPrefix(`/api/public`)
+      service: api@docker
+      tls:
+        certResolver: le
+
+    bodas-storage:
+      entryPoints:
+        - websecure
+      rule: (Host(`redyypatricia.com`) || Host(`www.redyypatricia.com`)) && PathPrefix(`/storage`)
       service: api@docker
       tls:
         certResolver: le
