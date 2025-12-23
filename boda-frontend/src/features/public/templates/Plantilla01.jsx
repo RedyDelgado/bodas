@@ -27,7 +27,7 @@ import {
   COLOR_CORAL,
   COLOR_AZUL_OSCURO_FONDO,
 } from "../../../shared/styles/colors";
-const FLORES_LATERAL = "/img/flores.png"; //
+const FLORES_LATERAL = "../../../../public/img/flores.png"; //
 /** =================== BASE URL PARA FOTOS =================== */
 const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 const STORAGE_BASE_URL = import.meta.env.VITE_STORAGE_URL || "/storage";

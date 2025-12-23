@@ -5,6 +5,7 @@ import { useMiBodaActual } from "../hooks/useBodas";
 import { invitadosApi } from "../services/invitadosApiService";
 import * as XLSX from "xlsx";
 import CardDesignerModal from "../components/CardDesignerModal";
+import EditInvitadoModal from "../components/EditInvitadoModal";
 
 import axiosClient from "../../../shared/config/axiosClient";
 import GenerationProgressModal from "../components/GenerationProgressModal"; 
@@ -133,6 +134,10 @@ export function BodaInvitadosPage() {
     celular: "",
     pases: 1,
   });
+
+  // Estado para edición
+  const [editOpen, setEditOpen] = useState(false);
+  const [editInvitado, setEditInvitado] = useState(null);
 
   const [designerOpen, setDesignerOpen] = useState(false);
   const [cardStatus, setCardStatus] = useState(null);
@@ -292,6 +297,28 @@ useEffect(() => {
       alert("No se pudo marcar como confirmado.");
     }
   };
+
+    // --------- EDITAR INVITADO ----------
+    const handleEditar = (invitado) => {
+      setEditInvitado(invitado);
+      setEditOpen(true);
+    };
+
+    const handleSaveEdit = async (formData) => {
+      if (!editInvitado) return;
+      try {
+        const actualizado = await invitadosApi.actualizar(editInvitado.id, formData);
+        const invitadoActualizado = actualizado.invitado ?? actualizado;
+        setInvitados((prev) =>
+          prev.map((i) => (i.id === editInvitado.id ? invitadoActualizado : i))
+        );
+        setEditOpen(false);
+        setEditInvitado(null);
+      } catch (error) {
+        console.error(error);
+        alert("No se pudo editar el invitado. Revisa los datos.");
+      }
+    };
 
   // --------- IMPORTAR EXCEL / CSV ----------
   const handleImportarExcel = async (fileFromInput) => {
@@ -1099,6 +1126,13 @@ async function startGeneration({ skipConfirm = false } = {}) {
                           Confirmar
                         </button>
                       )}
+                        <button
+                          type="button"
+                          onClick={() => handleEditar(i)}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100"
+                        >
+                          Editar
+                        </button>
                       <button
                         type="button"
                         onClick={() => handleEliminar(i.id)}
@@ -1120,6 +1154,14 @@ async function startGeneration({ skipConfirm = false } = {}) {
   progress={genProgress}
   onClose={() => setGenOpen(false)}
 />
+
+        {/* Modal de edición de invitado */}
+        <EditInvitadoModal
+          open={editOpen}
+          invitado={editInvitado}
+          onClose={() => { setEditOpen(false); setEditInvitado(null); }}
+          onSave={handleSaveEdit}
+        />
 
 
     </div>
