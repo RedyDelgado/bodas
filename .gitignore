@@ -1,19 +1,96 @@
-# Ignorar sockets y carpetas temporales de Docker
+############################################
+# SISTEMA / EDITORES
+############################################
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+*.bak
+
+############################################
+# ENV / SECRETOS
+############################################
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+boda-backend/.env
+boda-frontend/.env
+
+############################################
+# BACKEND (LARAVEL) - DEPENDENCIAS Y RUNTIME
+############################################
+# Composer
+boda-backend/vendor/
+
+# Laravel runtime
+boda-backend/storage/framework/
+boda-backend/storage/logs/
+boda-backend/bootstrap/cache/
+
+# Si llegas a usar caches generados localmente
+boda-backend/.phpunit.result.cache
+boda-backend/phpunit.xml
+
+############################################
+# UPLOADS (CONTENIDO DE USUARIO)
+############################################
+boda-backend/storage/app/public/fotos_boda/
+boda-backend/storage/app/public/tarjetas/
+
+############################################
+# FRONTEND (NODE / VITE)
+############################################
+boda-frontend/node_modules/
+boda-frontend/dist/
+boda-frontend/.vite/
+boda-frontend/.cache/
+boda-frontend/npm-debug.log*
+boda-frontend/yarn-debug.log*
+boda-frontend/yarn-error.log*
+boda-frontend/pnpm-debug.log*
+
+############################################
+# LOGS GENERALES
+############################################
+*.log
+
+############################################
+# DOCKER / TRAEFIK / CERTS / DATA LOCAL
+############################################
+# Sockets o temporales de docker
 boda-backend/.docker/mysql/
 boda-backend/.docker/mysql/mysql.sock
 
-# Node modules (frontend)
-boda-frontend/node_modules/
+# Certificados Traefik (mejor volumen, no git)
+boda-backend/docker/traefik/letsencrypt/acme.json
 
-# Dependencias PHP (si usas composer dentro de la carpeta backend)
-boda-backend/vendor/
+# Si tienes archivos de data/volúmenes dentro del repo (evitar)
+**/data/
+**/db-data/
+**/mysql-data/
+**/redis-data/
 
-# Archivos de build de frontend (opcional)
-boda-frontend/dist/
+############################################
+# BUILD / CACHE / COVERAGE (si usas)
+############################################
+coverage/
+*.coverage
+npm-cache/
+.yarn/
+.pnpm-store/
 
-# Entornos
-.env
-boda-backend/.env
-boda-frontend/.env
-boda-backend/storage/
-!boda-backend/storage/.gitignore
+############################################
+# LLAVES / CERTIFICADOS (por si acaso)
+############################################
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
