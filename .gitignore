@@ -15,3 +15,5 @@ boda-frontend/dist/
 .env
 boda-backend/.env
 boda-frontend/.env
+boda-backend/storage/
+!boda-backend/storage/.gitignore
