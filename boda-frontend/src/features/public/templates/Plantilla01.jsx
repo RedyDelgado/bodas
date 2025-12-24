@@ -164,6 +164,13 @@ function HeroBackground({
   const TARGET_VW = 0.93; // 0.90–0.96
   const MAX_SCALE = 1.75; // 1.55–1.90
 
+
+  useEffect(() => {
+  console.log("✅ Plantilla01 props:boda =>", boda);
+  console.log("✅ Plantilla01 props:invitadosResumen =>", invitadosResumen);
+}, [boda, invitadosResumen]);
+
+
   useEffect(() => {
     if (!isVertical || !ratio) return;
 

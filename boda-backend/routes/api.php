@@ -184,8 +184,9 @@ Route::middleware('auth:sanctum')->group(function () {
             ->only(['index', 'store', 'update', 'destroy', 'show']);
 
         // Invitados de cualquier boda (gestión global)
-        Route::apiResource('bodas.invitados', InvitadoController::class)
-            ->shallow();
+        Route::prefix('superadmin')->group(function () {
+            Route::apiResource('bodas.invitados', InvitadoController::class)->shallow();
+            });
 
         // Ajustes de marca (normalmente 1 registro, pero dejamos CRUD)
         Route::apiResource('ajustes-marca', AjusteMarcaController::class)->only([

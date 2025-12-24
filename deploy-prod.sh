@@ -135,12 +135,26 @@ $DC -f "$COMPOSE_FILE" exec -T app sh -lc "rm -rf public/storage && ln -sfn ../s
 # ───────────────────────────────
 # 7) Permisos mínimos recomendados
 # ───────────────────────────────
-log "🔐 Ajustando permisos de storage y cache (como root)"
-$DC -f "$COMPOSE_FILE" exec -T -u root app sh -lc "\
-mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data bootstrap/cache && \
-chown -R www-data:www-data storage bootstrap/cache && \
-chmod -R ug+rwX storage bootstrap/cache \
-" || true
+log "🔐 Fix permisos Laravel (storage + bootstrap/cache) y recreación de cache/data"
+
+$DC -f "$COMPOSE_FILE" exec -T -u root app sh -lc '
+set -e
+
+# Asegura estructura típica Laravel
+rm -rf storage/framework/cache/data
+mkdir -p \
+  storage/framework/cache/data \
+  storage/framework/sessions \
+  storage/framework/views \
+  bootstrap/cache
+
+# Dueño y permisos para que PHP-FPM (www-data) pueda escribir
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+
+# Verificación rápida (opcional)
+ls -ld storage/framework/cache/data bootstrap/cache
+' || true
 
 # ───────────────────────────────
 # 8) Migraciones (no seedea por defecto)
