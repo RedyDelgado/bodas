@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
-
+const BASE_W = 1920;
+const BASE_H = 1080;
 export default function CardDesignerModal({
   open,
   onClose,
@@ -10,14 +11,16 @@ export default function CardDesignerModal({
 }) {
   const [templateFile, setTemplateFile] = useState(null);
   const [templateUrl, setTemplateUrl] = useState(null);
-  const [templateInfo, setTemplateInfo] = useState({ w: 0, h: 0 });
+  const [templateNative, setTemplateNative] = useState({ w: 0, h: 0 }); // tamaño real del archivo (solo info)
+
   const [placed, setPlaced] = useState([]);
   const [fontFamily, setFontFamily] = useState("CormorantGaramond-SemiBold");
   const [fontSize, setFontSize] = useState(18);
   const [saving, setSaving] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [textColor, setTextColor] = useState("#000000");
+  const [isLoading, setIsLoading] = useState(false);
+  const [textColor, setTextColor] = useState("#000000");
   const canvasRef = useRef(null);
+  const viewportRef = useRef(null);
   const [useSample, setUseSample] = useState(true);
   const [selectedPlacedId, setSelectedPlacedId] = useState(null);
   const [snapX, setSnapX] = useState(false);
@@ -29,19 +32,21 @@ export default function CardDesignerModal({
 
   useEffect(() => {
     if (!templateFile) return;
+
     const url = URL.createObjectURL(templateFile);
     setTemplateUrl(url);
 
     const img = new Image();
     img.onload = () => {
-      setTemplateInfo({ w: img.width, h: img.height });
+      // tamaño REAL del archivo (solo para mostrar/alertar)
+      setTemplateNative({ w: img.width, h: img.height });
     };
     img.src = url;
 
     return () => {
       URL.revokeObjectURL(url);
       setTemplateUrl(null);
-      setTemplateInfo({ w: 0, h: 0 });
+      setTemplateNative({ w: 0, h: 0 });
       setPlaced([]);
     };
   }, [templateFile]);
@@ -58,7 +63,7 @@ export default function CardDesignerModal({
 
   async function loadDesignFromBoda() {
     if (!boda?.id) return;
-      setIsLoading(true);
+    setIsLoading(true);
     try {
       const { data } = await axiosClient.get(
         `/mis-bodas/${boda.id}/card-design/status`
@@ -72,7 +77,9 @@ export default function CardDesignerModal({
         const res = await fetch(fullUrl);
         if (res.ok) {
           const blob = await res.blob();
-          setTemplateFile(new File([blob], 'plantilla.png', { type: blob.type }));
+          setTemplateFile(
+            new File([blob], "plantilla.png", { type: blob.type })
+          );
         }
       }
 
@@ -80,14 +87,14 @@ export default function CardDesignerModal({
       if (design.diseno_json) {
         const json = design.diseno_json;
         setPlaced(json.placed || []);
-        setFontFamily(json.fontFamily || 'CormorantGaramond-SemiBold');
+        setFontFamily(json.fontFamily || "CormorantGaramond-SemiBold");
         setFontSize(json.fontSize || 18);
-        setTextColor(json.color || '#000000');
+        setTextColor(json.color || "#000000");
       }
     } catch (err) {
-      console.warn('No se pudo cargar diseño previo:', err);
-        } finally {
-          setIsLoading(false);
+      console.warn("No se pudo cargar diseño previo:", err);
+    } finally {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -173,33 +180,6 @@ export default function CardDesignerModal({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    fetch("/api/fonts")
-      .then(async (res) => {
-        if (!res.ok) throw new Error("No fonts");
-        const data = await res.json();
-        if (cancelled) return;
-        const mapped = data.map((f) => ({
-          name: f.name || f.filename,
-          path: f.url || `${window.location.origin}/fonts/${f.filename}`,
-        }));
-        setLoadedFonts(mapped);
-      })
-      .catch(() => {
-        // fallback to embedded list if API fails
-        setLoadedFonts(
-          backendFonts.map((f) => ({
-            name: f.name,
-            path: `${window.location.origin}/fonts/${f.file}`,
-          }))
-        );
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
     // inject @font-face for available backend fonts so CSS can use them
     loadedFonts.forEach((f) => {
       if (!document.getElementById(`font-${f.name}`)) {
@@ -265,16 +245,19 @@ export default function CardDesignerModal({
   }
 
   function fitToScreen() {
-    if (!canvasRef.current || !templateInfo.w || !templateInfo.h) return;
-    const rect = canvasRef.current.getBoundingClientRect();
+    if (!viewportRef.current) return;
+
+    const rect = viewportRef.current.getBoundingClientRect();
+    const padding = 40;
+
     const scale = Math.floor(
       Math.min(
-        (rect.width / templateInfo.w) * 100,
-        (rect.height / templateInfo.h) * 100
+        ((rect.width - padding) / BASE_W) * 100,
+        ((rect.height - padding) / BASE_H) * 100
       )
     );
-    if (scale <= 0) return;
-    setZoom(scale);
+
+    if (scale > 0) setZoom(Math.max(10, Math.min(200, scale)));
   }
 
   async function downloadPreview() {
@@ -286,8 +269,8 @@ export default function CardDesignerModal({
       img.onload = res;
       img.onerror = rej;
     });
-    const w = templateInfo.w || img.width || 1920;
-    const h = templateInfo.h || img.height || 1080;
+    const w = BASE_W;
+    const h = BASE_H;
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
@@ -331,6 +314,9 @@ export default function CardDesignerModal({
       ctx.font = `${p.fontSize || fontSize}px "${
         p.fontFamily || fontFamily
       }", sans-serif`;
+      ctx.lineWidth = Math.max(2, Math.round((p.fontSize || fontSize) / 10));
+      ctx.strokeStyle = "rgba(0,0,0,0.65)";
+      ctx.strokeText(display, px, py);
       ctx.fillText(display, px, py);
     });
     const data = canvas.toDataURL("image/png");
@@ -349,75 +335,97 @@ export default function CardDesignerModal({
     // allow move effect
     e.dataTransfer.effectAllowed = "move";
   }
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+  function applySnapping(xPctRaw, yPctRaw) {
+    let xPct = clamp(Math.round(xPctRaw), 0, 100);
+    let yPct = clamp(Math.round(yPctRaw), 0, 100);
+
+    // 1) Snap a grilla (si está activo)
+    if (snapToGrid) {
+      let dx = (xPct / 100) * BASE_W;
+      let dy = (yPct / 100) * BASE_H;
+
+      dx = Math.round(dx / GRID_PX) * GRID_PX;
+      dy = Math.round(dy / GRID_PX) * GRID_PX;
+
+      xPct = clamp(Math.round((dx / BASE_W) * 100), 0, 100);
+      yPct = clamp(Math.round((dy / BASE_H) * 100), 0, 100);
+    }
+
+    // 2) Snap al centro
+    if (Math.abs(xPct - 50) <= snapThreshold) xPct = 50;
+    if (Math.abs(yPct - 50) <= snapThreshold) yPct = 50;
+
+    return {
+      xPct,
+      yPct,
+      snapX: xPct === 50,
+      snapY: yPct === 50,
+    };
+  }
 
   function handleDrop(e) {
     e.preventDefault();
     if (!templateUrl) return;
+
     const raw = e.dataTransfer.getData("text/plain");
+    if (!canvasRef.current || !raw) return;
+
     const rect = canvasRef.current.getBoundingClientRect();
-    let px = e.clientX - rect.left;
-    let py = e.clientY - rect.top;
 
-    // If grid is active and snapToGrid true, snap pixels to nearest grid intersection
-    if (showGrid && snapToGrid) {
-      px = Math.round(px / GRID_PX) * GRID_PX;
-      py = Math.round(py / GRID_PX) * GRID_PX;
-    }
+    const xRaw = ((e.clientX - rect.left) / rect.width) * 100;
+    const yRaw = ((e.clientY - rect.top) / rect.height) * 100;
 
-    const x = Math.round((px / rect.width) * 100);
-    const y = Math.round((py / rect.height) * 100);
+    const s = applySnapping(xRaw, yRaw);
 
-    // snapping to center (50%) within threshold%
-    setSnapX(Math.abs(x - 50) <= snapThreshold);
-    setSnapY(Math.abs(y - 50) <= snapThreshold);
+    setSnapX(s.snapX);
+    setSnapY(s.snapY);
 
-    const field = raw;
-    if (!field) return;
-    if (field.startsWith("field:")) {
-      const key = field.replace("field:", "");
-      // determine default text for the new placed element (sample or label)
-      const fld = fieldsList.find((f) => f.key === key);
-      const label = fld ? fld.label : key;
-      let defaultText = label;
-      if (useSample && invitados && invitados.length > 0) {
-        const sample = invitados[0];
-        const map = {
-          nombre_invitado: sample.nombre_invitado,
-          nombre_pareja: boda?.nombre_pareja,
-          fecha_boda: boda?.fecha_boda,
-          ciudad: boda?.ciudad,
-          codigo_clave: sample.codigo_clave,
-          pases: sample.pases,
-        };
-        defaultText = map[key] ?? label;
-      }
+    const xPct = s.xPct;
+    const yPct = s.yPct;
+
+    if (raw.startsWith("field:")) {
+      const key = raw.replace("field:", "");
+      const id = Date.now();
+
       setPlaced((p) => [
         ...p,
-        { id: Date.now(), field: key, x, y, fontSize, fontFamily, color: textColor },
+        {
+          id,
+          field: key,
+          x: xPct,
+          y: yPct,
+          fontSize,
+          fontFamily,
+          color: textColor,
+        },
       ]);
-      setSelectedPlacedId(null);
-      return;
-    }
-    if (field.startsWith("placed:")) {
-      const id = Number(field.replace("placed:", ""));
-      setPlaced((p) => p.map((it) => (it.id === id ? { ...it, x, y } : it)));
+
       setSelectedPlacedId(id);
       return;
+    }
+
+    if (raw.startsWith("placed:")) {
+      const id = Number(raw.replace("placed:", ""));
+      setPlaced((p) =>
+        p.map((it) => (it.id === id ? { ...it, x: xPct, y: yPct } : it))
+      );
+      setSelectedPlacedId(id);
     }
   }
 
   function allowDrop(e) {
     e.preventDefault();
     if (!canvasRef.current) return;
-    try {
-      const rect = canvasRef.current.getBoundingClientRect();
-      const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
-      const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
-      setSnapX(Math.abs(x - 50) <= snapThreshold);
-      setSnapY(Math.abs(y - 50) <= snapThreshold);
-    } catch (err) {
-      // ignore
-    }
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const xRaw = ((e.clientX - rect.left) / rect.width) * 100;
+    const yRaw = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const s = applySnapping(xRaw, yRaw);
+    setSnapX(s.snapX);
+    setSnapY(s.snapY);
   }
 
   async function handleSave({ silent = false } = {}) {
@@ -427,7 +435,13 @@ export default function CardDesignerModal({
       const form = new FormData();
       form.append(
         "design",
-        JSON.stringify({ placed, fontFamily, fontSize, fields: fieldsList, color: textColor })
+        JSON.stringify({
+          placed,
+          fontFamily,
+          fontSize,
+          fields: fieldsList,
+          color: textColor,
+        })
       );
       if (templateFile) form.append("template", templateFile);
 
@@ -476,15 +490,25 @@ export default function CardDesignerModal({
 
   function updateSelectedPlaced(changes) {
     if (!selectedPlacedId) return;
+
     setPlaced((p) => {
-      const updated = p.map((it) =>
-        it.id === selectedPlacedId ? { ...it, ...changes } : it
-      );
+      const updated = p.map((it) => {
+        if (it.id !== selectedPlacedId) return it;
+
+        const nextX = typeof changes.x === "number" ? changes.x : it.x ?? 50;
+        const nextY = typeof changes.y === "number" ? changes.y : it.y ?? 50;
+
+        const s = applySnapping(nextX, nextY);
+
+        return { ...it, ...changes, x: s.xPct, y: s.yPct };
+      });
+
       const sel = updated.find((it) => it.id === selectedPlacedId);
       if (sel) {
-        setSnapX(Math.abs((sel.x ?? 50) - 50) <= snapThreshold);
-        setSnapY(Math.abs((sel.y ?? 50) - 50) <= snapThreshold);
+        setSnapX(sel.x === 50);
+        setSnapY(sel.y === 50);
       }
+
       return updated;
     });
   }
@@ -511,7 +535,9 @@ export default function CardDesignerModal({
       <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-xl p-8 flex flex-col items-center gap-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
-          <p className="text-slate-700 font-medium">Cargando plantilla guardada...</p>
+          <p className="text-slate-700 font-medium">
+            Cargando plantilla guardada...
+          </p>
         </div>
       </div>
     );
@@ -567,17 +593,21 @@ export default function CardDesignerModal({
                     setTemplateFile(f);
                   }}
                 />
-                {templateInfo.w > 0 && (
+                {templateNative.w > 0 && (
                   <p className="text-[12px] text-slate-500 mt-2">
-                    Dimensiones: {templateInfo.w} x {templateInfo.h} px
+                    Archivo: {templateNative.w} x {templateNative.h} px ·
+                    Editor/Salida: {BASE_W} x {BASE_H} px
                   </p>
                 )}
-                {templateFile && templateInfo.w && (
-                  <p className="text-[12px] text-amber-700 mt-1">
-                    Si la imagen no es 1920x1080, el editor escalará
-                    visualmente.
-                  </p>
-                )}
+                {templateNative.w > 0 &&
+                  (templateNative.w !== BASE_W ||
+                    templateNative.h !== BASE_H) && (
+                    <p className="text-[12px] text-amber-700 mt-1">
+                      Tu plantilla no es {BASE_W}x{BASE_H}. Se estirará a 16:9 y
+                      el tamaño real puede variar. Recomendado: subir plantilla
+                      exacta 1920×1080.
+                    </p>
+                  )}
                 <div className="flex items-center gap-2 mt-2">
                   <input
                     id="useSample"
@@ -828,7 +858,10 @@ export default function CardDesignerModal({
             </div>
           </aside>
 
-          <main className="flex-1 p-4 overflow-hidden bg-gray-50 flex items-center justify-center">
+          <main
+            ref={viewportRef}
+            className="flex-1 p-4 overflow-hidden bg-gray-50 flex items-center justify-center"
+          >
             <div className="w-full max-w-none h-[calc(100vh-96px)] flex items-center justify-center overflow-hidden">
               <div className="border border-slate-200 rounded-lg w-full h-full overflow-hidden relative bg-gray-50 flex items-center justify-center">
                 {!templateUrl && (
@@ -846,15 +879,15 @@ export default function CardDesignerModal({
                     <div
                       ref={canvasRef}
                       style={{
-                        width: templateInfo.w ? `${templateInfo.w}px` : "100%",
-                        height: templateInfo.h ? `${templateInfo.h}px` : "100%",
+                        width: `${BASE_W}px`,
+                        height: `${BASE_H}px`,
                         maxWidth: "100%",
                         maxHeight: "100%",
                         transform: `scale(${zoom / 100})`,
                         transformOrigin: "center center",
                         position: "relative",
                         backgroundImage: `url(${templateUrl})`,
-                        backgroundSize: "contain",
+                        backgroundSize: "100% 100%",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center",
                       }}
@@ -866,7 +899,7 @@ export default function CardDesignerModal({
                             inset: 0,
                             pointerEvents: "none",
                             backgroundImage: `linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)`,
-                            backgroundSize: "40px 40px",
+                            backgroundSize: `${GRID_PX}px ${GRID_PX}px`,
                           }}
                         />
                       )}
@@ -904,8 +937,9 @@ export default function CardDesignerModal({
                               top: `${p.y}%`,
                               transform: "translate(-50%,-50%)",
                               cursor: "move",
-                              background: "rgba(0,0,0,0.6)",
-                              color: "#fff",
+                              color: p.color || textColor,
+                              textShadow: "0 1px 2px rgba(0,0,0,0.85)",
+                              background: "rgba(0,0,0,0.25)",
                               fontFamily: p.fontFamily || fontFamily,
                               fontSize: `${p.fontSize || fontSize}px`,
                               lineHeight: 1,
@@ -947,8 +981,6 @@ export default function CardDesignerModal({
           </main>
         </div>
       </div>
-
-      
     </div>
   );
 }
