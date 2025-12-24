@@ -8,7 +8,7 @@ import CardDesignerModal from "../components/CardDesignerModal";
 import EditInvitadoModal from "../components/EditInvitadoModal";
 
 import axiosClient from "../../../shared/config/axiosClient";
-import GenerationProgressModal from "../components/GenerationProgressModal"; 
+import GenerationProgressModal from "../components/GenerationProgressModal";
 
 // React Icons
 import {
@@ -146,6 +146,7 @@ export function BodaInvitadosPage() {
     estado: "en_cola",
     generadas: 0,
     total: 0,
+    mensaje: "",
   });
 
   // búsqueda
@@ -184,35 +185,33 @@ export function BodaInvitadosPage() {
     fetchInvitados();
     // fetch card design status
     (async () => {
-  try {
-    if (!bodaId) return;
-    const { data } = await axiosClient.get(
-      `/mis-bodas/${bodaId}/card-design/status`
-    );
-    setCardStatus(data?.card_design ?? null);
-  } catch (e) {
-    // ignore
-  }
-})();
-
+      try {
+        if (!bodaId) return;
+        const { data } = await axiosClient.get(
+          `/mis-bodas/${bodaId}/card-design/status`
+        );
+        setCardStatus(data?.card_design ?? null);
+      } catch (e) {
+        // ignore
+      }
+    })();
   }, [bodaId]);
 
-useEffect(() => {
-  if (designerOpen) return;
+  useEffect(() => {
+    if (designerOpen) return;
 
-  (async () => {
-    try {
-      if (!bodaId) return;
-      const { data } = await axiosClient.get(
-        `/mis-bodas/${bodaId}/card-design/status`
-      );
-      setCardStatus(data?.card_design ?? null);
-    } catch (e) {
-      // ignore
-    }
-  })();
-}, [designerOpen, bodaId]);
-
+    (async () => {
+      try {
+        if (!bodaId) return;
+        const { data } = await axiosClient.get(
+          `/mis-bodas/${bodaId}/card-design/status`
+        );
+        setCardStatus(data?.card_design ?? null);
+      } catch (e) {
+        // ignore
+      }
+    })();
+  }, [designerOpen, bodaId]);
 
   // --------- STATS ----------
   const stats = useMemo(() => {
@@ -298,27 +297,30 @@ useEffect(() => {
     }
   };
 
-    // --------- EDITAR INVITADO ----------
-    const handleEditar = (invitado) => {
-      setEditInvitado(invitado);
-      setEditOpen(true);
-    };
+  // --------- EDITAR INVITADO ----------
+  const handleEditar = (invitado) => {
+    setEditInvitado(invitado);
+    setEditOpen(true);
+  };
 
-    const handleSaveEdit = async (formData) => {
-      if (!editInvitado) return;
-      try {
-        const actualizado = await invitadosApi.actualizar(editInvitado.id, formData);
-        const invitadoActualizado = actualizado.invitado ?? actualizado;
-        setInvitados((prev) =>
-          prev.map((i) => (i.id === editInvitado.id ? invitadoActualizado : i))
-        );
-        setEditOpen(false);
-        setEditInvitado(null);
-      } catch (error) {
-        console.error(error);
-        alert("No se pudo editar el invitado. Revisa los datos.");
-      }
-    };
+  const handleSaveEdit = async (formData) => {
+    if (!editInvitado) return;
+    try {
+      const actualizado = await invitadosApi.actualizar(
+        editInvitado.id,
+        formData
+      );
+      const invitadoActualizado = actualizado.invitado ?? actualizado;
+      setInvitados((prev) =>
+        prev.map((i) => (i.id === editInvitado.id ? invitadoActualizado : i))
+      );
+      setEditOpen(false);
+      setEditInvitado(null);
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo editar el invitado. Revisa los datos.");
+    }
+  };
 
   // --------- IMPORTAR EXCEL / CSV ----------
   const handleImportarExcel = async (fileFromInput) => {
@@ -369,58 +371,64 @@ useEffect(() => {
     XLSX.writeFile(wb, "plantilla_invitados.xlsx");
   };
 
-async function fetchProgress() {
-  if (!bodaId) return null;
+  async function fetchProgress() {
+    if (!bodaId) return null;
 
-  try {
-    const { data } = await axiosClient.get(
-      `/mis-bodas/${bodaId}/card-design/progress`
-    );
+    try {
+      const { data } = await axiosClient.get(
+        `/mis-bodas/${bodaId}/card-design/progress`
+      );
 
-    setGenProgress((p) => ({
-      ...p,
-      estado: data?.estado ?? "en_cola",
-      generadas: data?.generadas ?? 0,
-      total: data?.total ?? 0,
-      mensaje: data?.mensaje ?? p.mensaje ?? "", // ✅ conserva mensaje si ya había
-    }));
+      setGenProgress((p) => ({
+        ...p,
+        estado: data?.estado ?? "en_cola",
+        generadas: data?.generadas ?? 0,
+        total: data?.total ?? 0,
+        mensaje: data?.mensaje ?? p.mensaje ?? "", // ✅ conserva mensaje si ya había
+      }));
 
-    return data;
-  } catch (err) {
-    console.error("progress error:", err);
-    const msg =
-      err?.response?.data?.message ||
-      err?.response?.data?.error ||
-      err?.message ||
-      "No se pudo consultar el progreso.";
+      return data;
+    } catch (err) {
+      console.error("progress error:", err);
 
-    setGenProgress((p) => ({
-      ...p,
-      estado: "error",
-      mensaje: msg,
-    }));
+      const status = err?.response?.status;
 
-    throw err;
+      // ✅ 429 = Too Many Requests (no marcar como error; el useEffect reintenta más lento)
+      if (status === 429) {
+        throw err;
+      }
+
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "No se pudo consultar el progreso.";
+
+      setGenProgress((p) => ({
+        ...p,
+        estado: "error",
+        mensaje: msg,
+      }));
+
+      throw err;
+    }
   }
-}
   useEffect(() => {
     if (!genOpen) return;
 
     let alive = true;
-    let timer = null;
+    let timeoutId = null;
 
     const tick = async () => {
+      if (!alive) return;
+
       try {
         const info = await fetchProgress();
         if (!alive) return;
 
         const estado = info?.estado;
-        console.log('✓ Progreso consultado:', { estado, generadas: info?.generadas, total: info?.total });
-        
-        if (estado === "finalizado" || estado === "error") {
-          clearInterval(timer);
-          console.log('✓ Generación completada/error, refrescando datos...');
 
+        if (estado === "finalizado" || estado === "error") {
           // refresca invitados para que cambie Pendiente -> Generada
           const dataInv = await invitadosApi.listarPorBoda(bodaId);
           setInvitados(Array.isArray(dataInv) ? dataInv : dataInv.data ?? []);
@@ -430,86 +438,104 @@ async function fetchProgress() {
             `/mis-bodas/${bodaId}/card-design/status`
           );
           setCardStatus(st.card_design || null);
+
+          return; // ya no reprograma
         }
       } catch (e) {
-        console.error('✗ Error consultando progreso:', e);
-        // si falla, no cierres el modal; solo marca error lógico si quieres
-        setGenProgress((p) => ({ ...p, estado: "error" }));
-        clearInterval(timer);
+        const status = e?.response?.status;
+
+        if (status === 429) {
+          if (timeoutId) clearTimeout(timeoutId);
+          timeoutId = setTimeout(tick, 4000);
+          return;
+        }
+
+        const msg =
+          e?.response?.data?.message ||
+          e?.response?.data?.error ||
+          e?.message ||
+          "Ocurrió un error consultando el progreso.";
+
+        setGenProgress((p) => ({ ...p, estado: "error", mensaje: msg }));
+        return;
       }
+
+      // reprograma normal
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(tick, 2500);
     };
 
-    // Primera consulta inmediata
     tick();
-    // Consultar cada 500ms para ser más responsivo
-    timer = setInterval(tick, 500);
 
     return () => {
       alive = false;
-      if (timer) clearInterval(timer);
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [genOpen, bodaId]);
 
-async function startGeneration({ skipConfirm = false } = {}) {
-  if (!skipConfirm) {
-    const confirmar = window.confirm(
-      "Esto regenerará todas las tarjetas para todos los invitados.\n\nLas tarjetas anteriores se sobrescribirán.\n\n¿Deseas continuar?"
-    );
-    if (!confirmar) return;
+  async function startGeneration({ skipConfirm = false } = {}) {
+    if (!skipConfirm) {
+      const confirmar = window.confirm(
+        "Esto regenerará todas las tarjetas para todos los invitados.\n\nLas tarjetas anteriores se sobrescribirán.\n\n¿Deseas continuar?"
+      );
+      if (!confirmar) return;
+    }
+
+    setGenProgress({
+      estado: "en_cola",
+      generadas: 0,
+      total: invitados.length,
+      mensaje: "", // ✅ nuevo
+    });
+    setGenOpen(true);
+
+    try {
+      // opcional: para que la UI no quede “en cola” si tu backend demora en reflejar progreso
+      setGenProgress((p) => ({ ...p, estado: "procesando" }));
+
+      await axiosClient.post(`/mis-bodas/${bodaId}/card-design/generate`);
+    } catch (err) {
+      console.error("generate error:", err);
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "Error al iniciar la generación.";
+
+      setGenProgress((p) => ({
+        ...p,
+        estado: "error",
+        mensaje: msg,
+      }));
+    }
   }
-
-  setGenProgress({
-    estado: "en_cola",
-    generadas: 0,
-    total: invitados.length,
-    mensaje: "", // ✅ nuevo
-  });
-  setGenOpen(true);
-
-  try {
-    // opcional: para que la UI no quede “en cola” si tu backend demora en reflejar progreso
-    setGenProgress((p) => ({ ...p, estado: "procesando" }));
-
-    await axiosClient.post(`/mis-bodas/${bodaId}/card-design/generate`);
-  } catch (err) {
-    console.error("generate error:", err);
-    const msg =
-      err?.response?.data?.message ||
-      err?.response?.data?.error ||
-      err?.message ||
-      "Error al iniciar la generación.";
-
-    setGenProgress((p) => ({
-      ...p,
-      estado: "error",
-      mensaje: msg,
-    }));
-  }
-}
 
   // --------- DESCARGAS ----------
   const handleDescargarTarjeta = async (invitado) => {
     try {
       const { data } = await axiosClient.get(
         `/invitados/${invitado.id}/rsvp-card/download`,
-        { responseType: 'blob' }
+        { responseType: "blob" }
       );
-      
+
       const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      
-      const ext = invitado.rsvp_card_path?.endsWith('.webp') ? 'webp' : 'png';
-      const nombreArchivo = (invitado.nombre_invitado || 'invitado').replace(/[^a-zA-Z0-9]/g, '_');
-      link.setAttribute('download', `${nombreArchivo}.${ext}`);
-      
+
+      const ext = invitado.rsvp_card_path?.endsWith(".webp") ? "webp" : "png";
+      const nombreArchivo = (invitado.nombre_invitado || "invitado").replace(
+        /[^a-zA-Z0-9]/g,
+        "_"
+      );
+      link.setAttribute("download", `${nombreArchivo}.${ext}`);
+
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Error descargando tarjeta:', err);
-      alert('No se pudo descargar la tarjeta.');
+      console.error("Error descargando tarjeta:", err);
+      alert("No se pudo descargar la tarjeta.");
     }
   };
 
@@ -518,23 +544,26 @@ async function startGeneration({ skipConfirm = false } = {}) {
     try {
       const { data } = await axiosClient.get(
         `/mis-bodas/${bodaId}/tarjetas/descargar-zip`,
-        { responseType: 'blob' }
+        { responseType: "blob" }
       );
-      
+
       const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      
-      const nombrePareja = (boda?.nombre_pareja || 'tarjetas').replace(/[^a-zA-Z0-9]/g, '_');
-      link.setAttribute('download', `${nombrePareja}_tarjetas.zip`);
-      
+
+      const nombrePareja = (boda?.nombre_pareja || "tarjetas").replace(
+        /[^a-zA-Z0-9]/g,
+        "_"
+      );
+      link.setAttribute("download", `${nombrePareja}_tarjetas.zip`);
+
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Error descargando ZIP:', err);
-      alert('No se pudo descargar el archivo ZIP. Revisa la consola.');
+      console.error("Error descargando ZIP:", err);
+      alert("No se pudo descargar el archivo ZIP. Revisa la consola.");
     } finally {
       setDescargandoZip(false);
     }
@@ -575,8 +604,8 @@ async function startGeneration({ skipConfirm = false } = {}) {
       enlaceRsvp
         ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
         : "Te agradecemos que nos confirmes tu asistencia.",
-    ].join("\n\n"); 
-     
+    ].join("\n\n");
+
     const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
       mensaje
     )}`;
@@ -797,7 +826,8 @@ async function startGeneration({ skipConfirm = false } = {}) {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="inline-flex items-center px-4 py-2 rounded-full text-xs font-medium bg-slate-900 text-white hover:bg-slate-800"
+              disabled={genOpen}
+              className="inline-flex items-center px-4 py-2 rounded-full text-xs font-medium bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Guardar invitado
             </button>
@@ -825,21 +855,25 @@ async function startGeneration({ skipConfirm = false } = {}) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100">
+            <label
+              className={`inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 ${
+                genOpen
+                  ? "opacity-50 cursor-not-allowed pointer-events-none"
+                  : ""
+              }`}
+            >
               <input
                 type="file"
                 accept=".xlsx,.xls,.csv"
                 className="hidden"
                 onChange={(e) => {
+                  if (genOpen) return;
                   const file = e.target.files?.[0];
                   if (!file) return;
-
                   setArchivoSeleccionado(file);
-                  // Importar inmediatamente después de seleccionar
                   handleImportarExcel(file);
                 }}
               />
-
               <IconUpload className="w-4 h-4" />
               <span>Seleccionar archivo</span>
             </label>
@@ -847,7 +881,8 @@ async function startGeneration({ skipConfirm = false } = {}) {
             <button
               type="button"
               onClick={handleDescargarPlantilla}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              disabled={genOpen}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FiDownload className="w-4 h-4" />
               Descargar plantilla
@@ -897,7 +932,8 @@ async function startGeneration({ skipConfirm = false } = {}) {
                 <button
                   type="button"
                   onClick={() => setDesignerOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  disabled={genOpen}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Diseño de tarjeta
                 </button>
@@ -906,7 +942,7 @@ async function startGeneration({ skipConfirm = false } = {}) {
                     <button
                       type="button"
                       onClick={handleDescargarTodosZip}
-                      disabled={descargandoZip}
+                      disabled={descargandoZip || genOpen}
                       className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {descargandoZip ? (
@@ -1029,7 +1065,7 @@ async function startGeneration({ skipConfirm = false } = {}) {
               {invitadosFiltrados.length === 0 && (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="py-6 text-center text-xs text-slate-500"
                   >
                     No se encontraron invitados con ese criterio de búsqueda.
@@ -1091,12 +1127,16 @@ async function startGeneration({ skipConfirm = false } = {}) {
                         const generado = Boolean(
                           i.rsvp_card_path || i.rsvp_card_generated_at
                         );
-                        if (!generado) return <span className="text-xs text-slate-400">--</span>;
+                        if (!generado)
+                          return (
+                            <span className="text-xs text-slate-400">--</span>
+                          );
                         return (
                           <button
                             type="button"
                             onClick={() => handleDescargarTarjeta(i)}
-                            className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100"
+                            disabled={genOpen}
+                            className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Descargar tarjeta"
                           >
                             <FiDownload className="w-3.5 h-3.5" />
@@ -1110,7 +1150,8 @@ async function startGeneration({ skipConfirm = false } = {}) {
                         <button
                           type="button"
                           onClick={() => handleEnviarWhatsapp(i)}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100"
+                          disabled={genOpen}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <FiMessageCircle className="w-3.5 h-3.5" />
                           WhatsApp
@@ -1120,23 +1161,26 @@ async function startGeneration({ skipConfirm = false } = {}) {
                         <button
                           type="button"
                           onClick={() => handleConfirmar(i.id)}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50"
+                          disabled={genOpen}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <FiCheckCircle className="w-3.5 h-3.5" />
                           Confirmar
                         </button>
                       )}
-                        <button
-                          type="button"
-                          onClick={() => handleEditar(i)}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100"
-                        >
-                          Editar
-                        </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEditar(i)}
+                        disabled={genOpen}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Editar
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleEliminar(i.id)}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-medium text-rose-700 hover:bg-rose-100"
+                        disabled={genOpen}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-medium text-rose-700 hover:bg-rose-100 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <FiTrash2 className="w-3.5 h-3.5" />
                         Eliminar
@@ -1150,20 +1194,21 @@ async function startGeneration({ skipConfirm = false } = {}) {
         </div>
       </div>
       <GenerationProgressModal
-  open={genOpen}
-  progress={genProgress}
-  onClose={() => setGenOpen(false)}
-/>
+        open={genOpen}
+        progress={genProgress}
+        onClose={() => setGenOpen(false)}
+      />
 
-        {/* Modal de edición de invitado */}
-        <EditInvitadoModal
-          open={editOpen}
-          invitado={editInvitado}
-          onClose={() => { setEditOpen(false); setEditInvitado(null); }}
-          onSave={handleSaveEdit}
-        />
-
-
+      {/* Modal de edición de invitado */}
+      <EditInvitadoModal
+        open={editOpen}
+        invitado={editInvitado}
+        onClose={() => {
+          setEditOpen(false);
+          setEditInvitado(null);
+        }}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 }
@@ -1199,4 +1244,3 @@ function FiUploadRotated(props) {
     </svg>
   );
 }
-
