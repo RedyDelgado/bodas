@@ -927,8 +927,8 @@ export default function CardDesignerModal({
             ref={viewportRef}
             className="flex-1 p-4 overflow-hidden bg-gray-50 flex items-center justify-center"
           >
-            <div className="w-full h-[calc(100vh-96px)] flex items-center justify-center overflow-hidden">
-              <div className="border border-slate-200 rounded-lg bg-white w-full h-full flex items-center justify-center">
+            <div style={{ width: '100vw', height: 'calc(100vh - 96px)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'auto' }}>
+              <div style={{ border: '1px solid #e2e8f0', borderRadius: '0.5rem', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', width: BASE_W, height: BASE_H, minWidth: BASE_W, minHeight: BASE_H, maxWidth: BASE_W, maxHeight: BASE_H, position: 'relative', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                 {!templateUrl ? (
                   <p className="text-sm text-slate-500">
                     Sube una imagen de plantilla para empezar
@@ -937,17 +937,15 @@ export default function CardDesignerModal({
                   <div
                     className="rounded-lg overflow-hidden border bg-white flex items-center justify-center"
                     style={{
-                      // Marco visual 9:16 (solo para “sentir” el formato vertical)
+                      width: BASE_W,
+                      height: BASE_H,
                       aspectRatio: `${BASE_W} / ${BASE_H}`,
-                      height: "100%",
-                      maxHeight: "calc(100vh - 96px - 32px)",
-                      width: "auto",
-                      maxWidth: "100%",
                       position: "relative",
+                      overflow: "hidden"
                     }}
                   >
-                    {/* Contenedor que centra la stage escalada */}
-                    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                    {/* Contenedor que centra la stage escalada, SIEMPRE 1080x1920 px reales */}
+                    <div style={{ width: BASE_W, height: BASE_H, position: 'relative', overflow: 'hidden' }}>
                       <div
                         ref={canvasRef}
                         onDrop={handleDrop}
@@ -966,6 +964,7 @@ export default function CardDesignerModal({
                           backgroundRepeat: "no-repeat",
                           backgroundPosition: "center",
                           backgroundColor: "#fff",
+                          overflow: 'hidden',
                         }}
                       >
                         {showGrid && (
