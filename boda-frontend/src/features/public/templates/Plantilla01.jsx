@@ -27,7 +27,7 @@ import {
   COLOR_CORAL,
   COLOR_AZUL_OSCURO_FONDO,
 } from "../../../shared/styles/colors";
-const FLORES_LATERAL = "../../../../public/img/flores.png"; //
+const FLORES_LATERAL = "/img/flores.png";
 /** =================== BASE URL PARA FOTOS =================== */
 const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 const STORAGE_BASE_URL = import.meta.env.VITE_STORAGE_URL || "/storage";
@@ -339,6 +339,12 @@ export default function Plantilla01({
   fotos,
   invitadosResumen,
 }) {
+  
+  useEffect(() => {
+    console.log(" Plantilla01 boda =>", boda);
+    console.log(" Plantilla01 invitadosResumen =>", invitadosResumen);
+    console.log(" keys invitadosResumen =>", invitadosResumen ? Object.keys(invitadosResumen) : null);
+  }, [boda, invitadosResumen]);
   // ====================== AUDIO ======================
   const audioRef = useRef(null);
 
@@ -366,11 +372,6 @@ const stopCelebration = () => {
     a.currentTime = 0; // opcional: reinicia para la próxima vez
   } catch (e) {}
 };
-useEffect(() => {
-  console.log("✅ Plantilla01: boda =>", boda);
-  console.log("✅ Plantilla01: invitadosResumen =>", invitadosResumen);
-  console.log("✅ Plantilla01: keys invitadosResumen =>", invitadosResumen ? Object.keys(invitadosResumen) : null);
-}, [boda, invitadosResumen]);
 
 
   // (Opcional pero recomendado) fuerza preload real

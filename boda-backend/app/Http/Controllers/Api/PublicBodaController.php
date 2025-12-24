@@ -57,8 +57,9 @@ class PublicBodaController extends Controller
         $fotoPortada = $boda->fotos->firstWhere('es_portada', 1)
             ?? $boda->fotos->first();
 
-        $totalInvitados   = (int) $boda->total_invitados;
-        $totalConfirmados = (int) $boda->total_confirmados;
+        $totalInvitados = (int) $boda->invitados()->sum('pases');
+        $totalConfirmados = (int) $boda->invitados()->where('es_confirmado', 1)->sum('pases');
+
         $porcentaje = $totalInvitados > 0
             ? round(($totalConfirmados * 100) / $totalInvitados)
             : 0;
@@ -68,6 +69,15 @@ class PublicBodaController extends Controller
             'total_confirmados'      => $totalConfirmados,
             'porcentaje_confirmados' => $porcentaje,
         ];
+
+        \Log::info('PublicBodaController@showByHost', [
+    'host' => $host,
+    'boda_id' => $boda->id ?? null,
+    'totalInvitados' => $totalInvitados,
+    'totalConfirmados' => $totalConfirmados,
+    'porcentaje' => $porcentaje,
+]);
+
 
         return response()->json([
             'boda'               => $boda,
