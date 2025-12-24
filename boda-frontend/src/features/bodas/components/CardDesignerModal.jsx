@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
-const BASE_W = 1920;
-const BASE_H = 1080;
+const BASE_W = 1080;
+const BASE_H = 1920;
 export default function CardDesignerModal({
   open,
   onClose,
@@ -314,9 +314,6 @@ export default function CardDesignerModal({
       ctx.font = `${p.fontSize || fontSize}px "${
         p.fontFamily || fontFamily
       }", sans-serif`;
-      ctx.lineWidth = Math.max(2, Math.round((p.fontSize || fontSize) / 10));
-      ctx.strokeStyle = "rgba(0,0,0,0.65)";
-      ctx.strokeText(display, px, py);
       ctx.fillText(display, px, py);
     });
     const data = canvas.toDataURL("image/png");
@@ -582,7 +579,7 @@ export default function CardDesignerModal({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Sube una plantilla (1920x1080 recomendada)
+                  Sube una plantilla (1080x1920 recomendada)
                 </label>
                 <input
                   type="file"
@@ -603,9 +600,9 @@ export default function CardDesignerModal({
                   (templateNative.w !== BASE_W ||
                     templateNative.h !== BASE_H) && (
                     <p className="text-[12px] text-amber-700 mt-1">
-                      Tu plantilla no es {BASE_W}x{BASE_H}. Se estirará a 16:9 y
+                      Tu plantilla no es {BASE_W}x{BASE_H}. Se estirará a 9:16 y
                       el tamaño real puede variar. Recomendado: subir plantilla
-                      exacta 1920×1080.
+                      exacta 1080×1920.
                     </p>
                   )}
                 <div className="flex items-center gap-2 mt-2">
@@ -938,8 +935,6 @@ export default function CardDesignerModal({
                               transform: "translate(-50%,-50%)",
                               cursor: "move",
                               color: p.color || textColor,
-                              textShadow: "0 1px 2px rgba(0,0,0,0.85)",
-                              background: "rgba(0,0,0,0.25)",
                               fontFamily: p.fontFamily || fontFamily,
                               fontSize: `${p.fontSize || fontSize}px`,
                               lineHeight: 1,
