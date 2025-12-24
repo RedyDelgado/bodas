@@ -136,7 +136,7 @@ $DC -f "$COMPOSE_FILE" exec -T app sh -lc "rm -rf public/storage && ln -sfn ../s
 # 7) Permisos mínimos recomendados
 # ───────────────────────────────
 log "🔐 Ajustando permisos de storage y cache (como root)"
-$DC -f "$COMPOSE_FILE" exec -T -u root app sh -lc "composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader"
+$DC -f "$COMPOSE_FILE" exec -T -u root app sh -lc "\
 mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data bootstrap/cache && \
 chown -R www-data:www-data storage bootstrap/cache && \
 chmod -R ug+rwX storage bootstrap/cache \
