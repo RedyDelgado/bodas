@@ -95,6 +95,7 @@ export default function CardDesignerModal({
         setFontFamily(json.fontFamily || "CormorantGaramond-SemiBold");
         setFontSize(json.fontSize || 18);
         setTextColor(json.color || "#000000");
+        setTemplateFit(json.templateFit || "contain");
       }
     } catch (err) {
       console.warn("No se pudo cargar diseño previo:", err);
@@ -279,10 +280,25 @@ export default function CardDesignerModal({
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
+
     const ctx = canvas.getContext("2d");
     drawTemplate(ctx, img, w, h, templateFit);
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+
+    // helper: centra usando métricas reales del texto (evita desfase vs HTML)
+    function drawTextCentered(ctx, text, x, y) {
+      ctx.textAlign = "center";
+      ctx.textBaseline = "alphabetic";
+
+      const m = ctx.measureText(text);
+      const ascent = m.actualBoundingBoxAscent ?? 0;
+      const descent = m.actualBoundingBoxDescent ?? 0;
+
+      // Ajuste vertical real (si el navegador soporta métricas)
+      const dy = ascent || descent ? (ascent - descent) / 2 : 0;
+
+      ctx.fillText(text, x, y + dy);
+    }
+
     // ensure fonts used by the design are loaded before drawing text
     try {
       const usedFonts = Array.from(
@@ -291,6 +307,7 @@ export default function CardDesignerModal({
       await Promise.all(
         usedFonts.map((f) => document.fonts.load(`16px "${f}"`))
       );
+      await document.fonts.ready;
     } catch (err) {
       // ignore font load failures
     }
@@ -319,7 +336,7 @@ export default function CardDesignerModal({
       ctx.font = `${p.fontSize || fontSize}px "${
         p.fontFamily || fontFamily
       }", sans-serif`;
-      ctx.fillText(display, px, py);
+      drawTextCentered(ctx, display, px, py);
     });
     const data = canvas.toDataURL("image/png");
     const a = document.createElement("a");
@@ -474,6 +491,7 @@ export default function CardDesignerModal({
           fontSize,
           fields: fieldsList,
           color: textColor,
+          templateFit,
         })
       );
       if (templateFile) form.append("template", templateFile);
