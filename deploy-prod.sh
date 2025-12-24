@@ -109,7 +109,7 @@ done
 cd "$BACKEND_DIR"
 
 log "🐳 Build & Up (sin borrar volúmenes)"
-$DC -f "$COMPOSE_FILE" build app
+$DC -f "$COMPOSE_FILE" build app queue
 
 if [ "$SKIP_FRONTEND" != "1" ]; then
   $DC -f "$COMPOSE_FILE" build frontend
@@ -135,9 +135,9 @@ $DC -f "$COMPOSE_FILE" exec -T app sh -lc "rm -rf public/storage && ln -sfn ../s
 # ───────────────────────────────
 # 7) Permisos mínimos recomendados
 # ───────────────────────────────
-log "🔐 Ajustando permisos de storage y cache"
-$DC -f "$COMPOSE_FILE" exec -T app sh -lc "\
-mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data && \
+log "🔐 Ajustando permisos de storage y cache (como root)"
+$DC -f "$COMPOSE_FILE" exec -T -u root app sh -lc "composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader"
+mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data bootstrap/cache && \
 chown -R www-data:www-data storage bootstrap/cache && \
 chmod -R ug+rwX storage bootstrap/cache \
 " || true
