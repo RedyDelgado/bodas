@@ -137,11 +137,11 @@ class RsvpCardGenerator
         $slugPareja = Str::slug((string)($boda?->nombre_pareja ?? 'boda'), '_');
         $slugInv    = Str::slug((string)($inv->nombre_invitado ?? 'invitado'), '_');
 
-        $filename = "{$bodaId}_{$slugPareja}_{$slugInv}.png";
+        $filename = "{$bodaId}_{$slugPareja}_{$slugInv}.jpg";
 
         // Evita nombres exagerados
         if (strlen($filename) > 180) {
-            $filename = substr($filename, 0, 170) . ".png";
+            $filename = substr($filename, 0, 170) . ".jpg";
         }
 
         $path = "{$folder}/{$filename}";
@@ -158,8 +158,9 @@ class RsvpCardGenerator
             }
         }
 
-        // 6) Encode PNG (compatible y controlado)
-        $bytes = $this->encodePng($img);
+
+        // 6) Encode JPEG (más liviano, calidad 88)
+        $bytes = $this->encodeJpeg($img);
 
         \Log::info("RSVP GEN encoded", [
             'inv' => $inv->id,
@@ -191,22 +192,17 @@ class RsvpCardGenerator
         return $path;
     }
 
-    private function encodePng($img): string
+    private function encodeJpeg($img): string
     {
-        // Intento 1: v3 (PngEncoder)
+        // JPEG calidad 88/100 (ajustable)
         try {
-            return (string) $img->encode(new PngEncoder(9));
-        } catch (\Throwable $e1) {
-            // Intento 2: v2 (encode('png', quality))
-            try {
-                return (string) $img->encode('png', 9);
-            } catch (\Throwable $e2) {
-                \Log::error('RSVP GEN: PNG encode failed', [
-                    'e1' => $e1->getMessage(),
-                    'e2' => $e2->getMessage(),
-                ]);
-                return (string) $img->toPng();
-            }
+            return (string) $img->encode('jpg', 88);
+        } catch (\Throwable $e) {
+            \Log::error('RSVP GEN: JPEG encode failed', [
+                'e' => $e->getMessage(),
+            ]);
+            // Fallback: PNG si falla JPEG
+            return (string) $img->encode('png', 9);
         }
     }
 

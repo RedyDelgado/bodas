@@ -328,10 +328,11 @@ export default function CardDesignerModal({
       ctx.fillText(display, px, py);
     });
 
-    const data = canvas.toDataURL("image/png");
+    // Exportar como JPEG comprimido (calidad 0.88)
+    const data = canvas.toDataURL("image/jpeg", 0.88);
     const a = document.createElement("a");
     a.href = data;
-    a.download = `prediseno_${Date.now()}.png`;
+    a.download = `prediseno_${Date.now()}.jpg`;
     a.click();
   }
 
