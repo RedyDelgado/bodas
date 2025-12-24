@@ -339,12 +339,6 @@ export default function Plantilla01({
   fotos,
   invitadosResumen,
 }) {
-  
-  useEffect(() => {
-    console.log(" Plantilla01 boda =>", boda);
-    console.log(" Plantilla01 invitadosResumen =>", invitadosResumen);
-    console.log(" keys invitadosResumen =>", invitadosResumen ? Object.keys(invitadosResumen) : null);
-  }, [boda, invitadosResumen]);
   // ====================== AUDIO ======================
   const audioRef = useRef(null);
 

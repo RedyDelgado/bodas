@@ -24,7 +24,7 @@ class Invitado extends Model
         'fecha_confirmacion',
         'notas',
 
-        // ✅ NUEVO: RSVP card cache
+        //  NUEVO: RSVP card cache
         'rsvp_card_path',
         'rsvp_card_hash',
         'rsvp_card_generated_at',
@@ -35,7 +35,7 @@ class Invitado extends Model
         'es_confirmado'      => 'boolean',
         'fecha_confirmacion' => 'datetime',
 
-        // ✅ NUEVO
+        // NUEVO
         'rsvp_card_generated_at' => 'datetime',
     ];
 
@@ -58,16 +58,29 @@ class Invitado extends Model
                     \App\Jobs\GenerateRsvpCardJob::dispatch($invitado->id);
                 }
             } catch (\Throwable $e) {
-                \Log::warning('auto-generate rsvp card failed for invitado '.$invitado->id.': '.$e->getMessage());
+                \Log::warning('auto-generate rsvp card failed for invitado ' . $invitado->id . ': ' . $e->getMessage());
             }
         });
 
-        // ✅ Opcional recomendado:
+        //  Opcional recomendado:
         // Si cambian campos “que afectan el texto”, invalidamos cache para regenerar
-        static::updating(function (Invitado $invitado) {
-            if ($invitado->isDirty(['nombre_invitado', 'celular', 'correo', 'nombre_acompanante'])) {
-                $invitado->invalidateRsvpCardCache();
+
+        static::updated(function (Invitado $invitado) {
+
+            // Ajusta esta lista a lo que realmente aparece en la tarjeta
+            if (! $invitado->wasChanged(['nombre_invitado', 'pases', 'celular'])) {
+                return;
             }
+
+            // 1) invalidar cache (guardar NULL) sin disparar eventos otra vez
+            $invitado->forceFill([
+                'rsvp_card_path' => null,
+                'rsvp_card_hash' => null,
+                'rsvp_card_generated_at' => null,
+            ])->saveQuietly();
+
+            // 2) regenerar SOLO esta tarjeta (después de commit)
+            \App\Jobs\GenerateRsvpCardJob::dispatch($invitado->id)->afterCommit();
         });
     }
 
