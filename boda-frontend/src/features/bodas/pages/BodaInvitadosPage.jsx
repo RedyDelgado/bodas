@@ -303,24 +303,28 @@ export function BodaInvitadosPage() {
     setEditOpen(true);
   };
 
-  const handleSaveEdit = async (formData) => {
-    if (!editInvitado) return;
-    try {
-      const actualizado = await invitadosApi.actualizar(
-        editInvitado.id,
-        formData
-      );
-      const invitadoActualizado = actualizado.invitado ?? actualizado;
-      setInvitados((prev) =>
-        prev.map((i) => (i.id === editInvitado.id ? invitadoActualizado : i))
-      );
-      setEditOpen(false);
-      setEditInvitado(null);
-    } catch (error) {
-      console.error(error);
-      alert("No se pudo editar el invitado. Revisa los datos.");
-    }
-  };
+const handleSaveEdit = async (formData) => {
+  if (!editInvitado) return;
+
+  try {
+    const actualizado = await invitadosApi.actualizar(editInvitado.id, formData);
+    const invitadoActualizado = actualizado.invitado ?? actualizado;
+
+    setInvitados((prev) =>
+      prev.map((i) => (i.id === editInvitado.id ? invitadoActualizado : i))
+    );
+
+    setEditOpen(false);
+    setEditInvitado(null);
+
+    return invitadoActualizado;
+  } catch (error) {
+    console.error(error);
+    // Deja tu alert si quieres, pero OJO: si lo dejas, verás alert + mensaje en modal
+    // alert("No se pudo editar el invitado. Revisa los datos.");
+    throw error; // ✅ clave para que el modal muestre el error
+  }
+};
 
   // --------- IMPORTAR EXCEL / CSV ----------
   const handleImportarExcel = async (fileFromInput) => {

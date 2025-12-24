@@ -66,20 +66,19 @@ class Invitado extends Model
         // Si cambian campos “que afectan el texto”, invalidamos cache para regenerar
 
         static::updated(function (Invitado $invitado) {
-
-            // Ajusta esta lista a lo que realmente aparece en la tarjeta
             if (! $invitado->wasChanged(['nombre_invitado', 'pases', 'celular'])) {
                 return;
             }
 
-            // 1) invalidar cache (guardar NULL) sin disparar eventos otra vez
+            $hasDesign = \App\Models\TarjetaDiseno::where('boda_id', $invitado->boda_id)->exists();
+            if (! $hasDesign) return;
+
             $invitado->forceFill([
                 'rsvp_card_path' => null,
                 'rsvp_card_hash' => null,
                 'rsvp_card_generated_at' => null,
             ])->saveQuietly();
 
-            // 2) regenerar SOLO esta tarjeta (después de commit)
             \App\Jobs\GenerateRsvpCardJob::dispatch($invitado->id)->afterCommit();
         });
     }
