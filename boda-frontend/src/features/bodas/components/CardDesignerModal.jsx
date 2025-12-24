@@ -274,6 +274,7 @@ export default function CardDesignerModal({
       img.onload = res;
       img.onerror = rej;
     });
+
     const w = BASE_W;
     const h = BASE_H;
     const canvas = document.createElement("canvas");
@@ -283,39 +284,24 @@ export default function CardDesignerModal({
     const ctx = canvas.getContext("2d");
     drawTemplate(ctx, img, w, h, templateFit);
 
-    // helper: centra usando métricas reales del texto (evita desfase vs HTML)
-    function drawTextCentered(ctx, text, x, y) {
-      ctx.textAlign = "center";
-      ctx.textBaseline = "alphabetic";
-
-      const m = ctx.measureText(text);
-      const ascent = m.actualBoundingBoxAscent ?? 0;
-      const descent = m.actualBoundingBoxDescent ?? 0;
-
-      // Ajuste vertical real (si el navegador soporta métricas)
-      const dy = ascent || descent ? (ascent - descent) / 2 : 0;
-
-      ctx.fillText(text, x, y + dy);
-    }
-
     // ensure fonts used by the design are loaded before drawing text
     try {
       const usedFonts = Array.from(
         new Set(placed.map((p) => p.fontFamily || fontFamily).filter(Boolean))
       );
+      await Promise.all(usedFonts.map((f) => ensureFontLoaded(f)));
       await Promise.all(
         usedFonts.map((f) => document.fonts.load(`16px "${f}"`))
       );
       await document.fonts.ready;
-    } catch (err) {
-      // ignore font load failures
-    }
+    } catch (err) {}
+
     placed.forEach((p) => {
       const px = (p.x / 100) * w;
       const py = (p.y / 100) * h;
+
       const fld = fieldsList.find((f) => f.key === p.field);
       const label = fld ? fld.label : p.field;
-      // determine display text: explicit -> sample -> label
       let display = label;
 
       if (useSample && invitados && invitados.length > 0) {
@@ -330,13 +316,18 @@ export default function CardDesignerModal({
         };
         display = map[p.field] ?? label;
       }
-      // draw text in black by default (contrasts most templates)
+
       ctx.fillStyle = p.color || textColor || "#000000";
       ctx.font = `${p.fontSize || fontSize}px "${
         p.fontFamily || fontFamily
       }", sans-serif`;
-      drawTextCentered(ctx, display, px, py);
+
+      // ✅ CENTRADO IGUAL AL DOM (center + middle)
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(display, px, py);
     });
+
     const data = canvas.toDataURL("image/png");
     const a = document.createElement("a");
     a.href = data;
@@ -1028,6 +1019,8 @@ export default function CardDesignerModal({
                                 fontFamily: p.fontFamily || fontFamily,
                                 fontSize: `${p.fontSize || fontSize}px`,
                                 lineHeight: 1,
+                                padding: 0,
+                                whiteSpace: "nowrap",
                               }}
                             >
                               {display}
