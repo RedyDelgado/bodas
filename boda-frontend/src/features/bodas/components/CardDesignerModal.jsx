@@ -29,7 +29,7 @@ export default function CardDesignerModal({
   const [snapThreshold, setSnapThreshold] = useState(3); // percent
   const [snapToGrid, setSnapToGrid] = useState(true);
   const GRID_PX = 40; // grid size in px for overlay
-
+  const [templateFit, setTemplateFit] = useState("contain");
   useEffect(() => {
     if (!templateFile) return;
 
@@ -60,7 +60,12 @@ export default function CardDesignerModal({
       loadDesignFromBoda();
     }
   }, [open]);
-
+  useEffect(() => {
+    if (open && templateUrl) {
+      // ajusta automáticamente la primera vez
+      setTimeout(() => fitToScreen(), 0);
+    }
+  }, [open, templateUrl]);
   async function loadDesignFromBoda() {
     if (!boda?.id) return;
     setIsLoading(true);
@@ -275,7 +280,7 @@ export default function CardDesignerModal({
     canvas.width = w;
     canvas.height = h;
     const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0, w, h);
+    drawTemplate(ctx, img, w, h, templateFit);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     // ensure fonts used by the design are loaded before drawing text
@@ -327,6 +332,27 @@ export default function CardDesignerModal({
     e.dataTransfer.setData("text/plain", `field:${fieldKey}`);
   }
 
+  function drawTemplate(ctx, img, w, h, mode) {
+    const iw = img.width;
+    const ih = img.height;
+
+    if (mode === "stretch") {
+      ctx.drawImage(img, 0, 0, w, h);
+      return;
+    }
+
+    const scale =
+      mode === "cover" ? Math.max(w / iw, h / ih) : Math.min(w / iw, h / ih);
+
+    const dw = iw * scale;
+    const dh = ih * scale;
+
+    const dx = (w - dw) / 2;
+    const dy = (h - dh) / 2;
+
+    ctx.drawImage(img, dx, dy, dw, dh);
+  }
+
   function onPlacedDragStart(e, placedId) {
     e.dataTransfer.setData("text/plain", `placed:${placedId}`);
     // allow move effect
@@ -334,25 +360,35 @@ export default function CardDesignerModal({
   }
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
-  function applySnapping(xPctRaw, yPctRaw) {
-    let xPct = clamp(Math.round(xPctRaw), 0, 100);
-    let yPct = clamp(Math.round(yPctRaw), 0, 100);
+  const round2 = (n) => Math.round(n * 100) / 100;
 
-    // 1) Snap a grilla (si está activo)
-    if (snapToGrid) {
+  function applySnapping(xPctRaw, yPctRaw, opts = {}) {
+    const { useGrid = snapToGrid, useCenter = true } = opts;
+
+    // NO redondees acá, deja decimales
+    let xPct = clamp(xPctRaw, 0, 100);
+    let yPct = clamp(yPctRaw, 0, 100);
+
+    // 1) Snap a grilla (solo si corresponde)
+    if (useGrid) {
       let dx = (xPct / 100) * BASE_W;
       let dy = (yPct / 100) * BASE_H;
 
       dx = Math.round(dx / GRID_PX) * GRID_PX;
       dy = Math.round(dy / GRID_PX) * GRID_PX;
 
-      xPct = clamp(Math.round((dx / BASE_W) * 100), 0, 100);
-      yPct = clamp(Math.round((dy / BASE_H) * 100), 0, 100);
+      xPct = (dx / BASE_W) * 100;
+      yPct = (dy / BASE_H) * 100;
     }
 
-    // 2) Snap al centro
-    if (Math.abs(xPct - 50) <= snapThreshold) xPct = 50;
-    if (Math.abs(yPct - 50) <= snapThreshold) yPct = 50;
+    // 2) Snap al centro (solo si corresponde)
+    if (useCenter) {
+      if (Math.abs(xPct - 50) <= snapThreshold) xPct = 50;
+      if (Math.abs(yPct - 50) <= snapThreshold) yPct = 50;
+    }
+
+    xPct = round2(xPct);
+    yPct = round2(yPct);
 
     return {
       xPct,
@@ -488,6 +524,10 @@ export default function CardDesignerModal({
   function updateSelectedPlaced(changes) {
     if (!selectedPlacedId) return;
 
+    const isManualMove =
+      Object.prototype.hasOwnProperty.call(changes, "x") ||
+      Object.prototype.hasOwnProperty.call(changes, "y");
+
     setPlaced((p) => {
       const updated = p.map((it) => {
         if (it.id !== selectedPlacedId) return it;
@@ -495,7 +535,11 @@ export default function CardDesignerModal({
         const nextX = typeof changes.x === "number" ? changes.x : it.x ?? 50;
         const nextY = typeof changes.y === "number" ? changes.y : it.y ?? 50;
 
-        const s = applySnapping(nextX, nextY);
+        // Si viene de inputs X/Y => NO grilla (obedece exacto)
+        const s = applySnapping(nextX, nextY, {
+          useGrid: isManualMove ? false : snapToGrid,
+          useCenter: isManualMove ? false : true,
+        });
 
         return { ...it, ...changes, x: s.xPct, y: s.yPct };
       });
@@ -581,6 +625,20 @@ export default function CardDesignerModal({
                 <label className="block text-xs font-medium text-slate-600 mb-1">
                   Sube una plantilla (1080x1920 recomendada)
                 </label>
+                <div className="mt-2">
+                  <label className="block text-xs text-slate-500 mb-1">
+                    Ajuste de plantilla
+                  </label>
+                  <select
+                    value={templateFit}
+                    onChange={(e) => setTemplateFit(e.target.value)}
+                    className="w-full rounded-md border px-2 py-1 text-sm"
+                  >
+                    <option value="contain">Contain (sin deformar)</option>
+                    <option value="cover">Cover (llena, puede recortar)</option>
+                    <option value="stretch">Stretch (deforma)</option>
+                  </select>
+                </div>
                 <input
                   type="file"
                   accept="image/*"
@@ -815,6 +873,7 @@ export default function CardDesignerModal({
                     <label className="text-sm text-slate-500">X (%)</label>
                     <input
                       type="number"
+                      step="0.1"
                       value={
                         placed.find((p) => p.id === selectedPlacedId)?.x ?? 50
                       }
@@ -826,6 +885,7 @@ export default function CardDesignerModal({
                     <label className="text-sm text-slate-500">Y (%)</label>
                     <input
                       type="number"
+                      step="0.1"
                       value={
                         placed.find((p) => p.id === selectedPlacedId)?.y ?? 50
                       }
@@ -859,115 +919,130 @@ export default function CardDesignerModal({
             ref={viewportRef}
             className="flex-1 p-4 overflow-hidden bg-gray-50 flex items-center justify-center"
           >
-            <div className="w-full max-w-none h-[calc(100vh-96px)] flex items-center justify-center overflow-hidden">
-              <div className="border border-slate-200 rounded-lg w-full h-full overflow-hidden relative bg-gray-50 flex items-center justify-center">
-                {!templateUrl && (
+            <div className="w-full h-[calc(100vh-96px)] flex items-center justify-center overflow-hidden">
+              <div className="border border-slate-200 rounded-lg bg-white w-full h-full flex items-center justify-center">
+                {!templateUrl ? (
                   <p className="text-sm text-slate-500">
                     Sube una imagen de plantilla para empezar
                   </p>
-                )}
-
-                {templateUrl && (
+                ) : (
                   <div
-                    onDrop={handleDrop}
-                    onDragOver={allowDrop}
-                    className="relative w-full h-full overflow-hidden flex items-center justify-center"
+                    className="rounded-lg overflow-hidden border bg-white flex items-center justify-center"
+                    style={{
+                      // Marco visual 9:16 (solo para “sentir” el formato vertical)
+                      aspectRatio: `${BASE_W} / ${BASE_H}`,
+                      height: "100%",
+                      maxHeight: "calc(100vh - 96px - 32px)",
+                      width: "auto",
+                      maxWidth: "100%",
+                      position: "relative",
+                    }}
                   >
-                    <div
-                      ref={canvasRef}
-                      style={{
-                        width: `${BASE_W}px`,
-                        height: `${BASE_H}px`,
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        transform: `scale(${zoom / 100})`,
-                        transformOrigin: "center center",
-                        position: "relative",
-                        backgroundImage: `url(${templateUrl})`,
-                        backgroundSize: "100% 100%",
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "center",
-                      }}
-                    >
-                      {showGrid && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            pointerEvents: "none",
-                            backgroundImage: `linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)`,
-                            backgroundSize: `${GRID_PX}px ${GRID_PX}px`,
-                          }}
-                        />
-                      )}
-                      {placed.map((p) => {
-                        const fld = fieldsList.find((f) => f.key === p.field);
-                        const label = fld ? fld.label : p.field;
-                        // display priority: explicit text on element -> sample mapping -> label
-                        let display = label;
-
-                        if (useSample && invitados && invitados.length > 0) {
-                          const sample = invitados[0];
-                          const map = {
-                            nombre_invitado: sample.nombre_invitado,
-                            nombre_pareja: boda?.nombre_pareja,
-                            fecha_boda: boda?.fecha_boda,
-                            ciudad: boda?.ciudad,
-                            codigo_clave: sample.codigo_clave,
-                            pases: sample.pases,
-                          };
-                          display = map[p.field] ?? label;
-                        }
-                        return (
+                    {/* Contenedor que centra la stage escalada */}
+                    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                      <div
+                        ref={canvasRef}
+                        onDrop={handleDrop}
+                        onDragOver={allowDrop}
+                        style={{
+                          width: `${BASE_W}px`,
+                          height: `${BASE_H}px`,
+                          position: "relative",
+                          transform: `scale(${zoom / 100})`,
+                          transformOrigin: "center center",
+                          backgroundImage: `url(${templateUrl})`,
+                          backgroundSize:
+                            templateFit === "stretch"
+                              ? "100% 100%"
+                              : templateFit,
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "center",
+                          backgroundColor: "#fff",
+                        }}
+                      >
+                        {showGrid && (
                           <div
-                            key={p.id}
-                            draggable
-                            onDragStart={(e) => onPlacedDragStart(e, p.id)}
-                            onClick={() => handleSelectPlaced(p.id)}
-                            className={`absolute px-2 py-1 rounded-md ${
-                              selectedPlacedId === p.id
-                                ? "ring-2 ring-emerald-500"
-                                : ""
-                            }`}
                             style={{
-                              left: `${p.x}%`,
-                              top: `${p.y}%`,
-                              transform: "translate(-50%,-50%)",
-                              cursor: "move",
-                              color: p.color || textColor,
-                              fontFamily: p.fontFamily || fontFamily,
-                              fontSize: `${p.fontSize || fontSize}px`,
-                              lineHeight: 1,
+                              position: "absolute",
+                              inset: 0,
+                              pointerEvents: "none",
+                              backgroundImage:
+                                "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)",
+                              backgroundSize: `${GRID_PX}px ${GRID_PX}px`,
                             }}
-                          >
-                            {display}
-                          </div>
-                        );
-                      })}
-                      {snapX && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: "50%",
-                            top: 0,
-                            bottom: 0,
-                            width: 1,
-                            background: "rgba(16,185,129,0.9)",
-                          }}
-                        />
-                      )}
-                      {snapY && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: 0,
-                            right: 0,
-                            height: 1,
-                            background: "rgba(16,185,129,0.9)",
-                          }}
-                        />
-                      )}
+                          />
+                        )}
+
+                        {placed.map((p) => {
+                          const fld = fieldsList.find((f) => f.key === p.field);
+                          const label = fld ? fld.label : p.field;
+                          let display = label;
+
+                          if (useSample && invitados && invitados.length > 0) {
+                            const sample = invitados[0];
+                            const map = {
+                              nombre_invitado: sample.nombre_invitado,
+                              nombre_pareja: boda?.nombre_pareja,
+                              fecha_boda: boda?.fecha_boda,
+                              ciudad: boda?.ciudad,
+                              codigo_clave: sample.codigo_clave,
+                              pases: sample.pases,
+                            };
+                            display = map[p.field] ?? label;
+                          }
+
+                          return (
+                            <div
+                              key={p.id}
+                              draggable
+                              onDragStart={(e) => onPlacedDragStart(e, p.id)}
+                              onClick={() => handleSelectPlaced(p.id)}
+                              className={`absolute px-2 py-1 rounded-md ${
+                                selectedPlacedId === p.id
+                                  ? "ring-2 ring-emerald-500"
+                                  : ""
+                              }`}
+                              style={{
+                                left: `${p.x}%`,
+                                top: `${p.y}%`,
+                                transform: "translate(-50%,-50%)",
+                                cursor: "move",
+                                color: p.color || textColor,
+                                fontFamily: p.fontFamily || fontFamily,
+                                fontSize: `${p.fontSize || fontSize}px`,
+                                lineHeight: 1,
+                              }}
+                            >
+                              {display}
+                            </div>
+                          );
+                        })}
+
+                        {snapX && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: "50%",
+                              top: 0,
+                              bottom: 0,
+                              width: 1,
+                              background: "rgba(16,185,129,0.9)",
+                            }}
+                          />
+                        )}
+                        {snapY && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              left: 0,
+                              right: 0,
+                              height: 1,
+                              background: "rgba(16,185,129,0.9)",
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
