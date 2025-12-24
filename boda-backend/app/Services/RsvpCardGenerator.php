@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\Encoders\PngEncoder;
+use Intervention\Image\Encoders\JpegEncoder;
 
 class RsvpCardGenerator
 {
@@ -196,13 +197,14 @@ class RsvpCardGenerator
     {
         // JPEG calidad 88/100 (ajustable)
         try {
-            return (string) $img->encode('jpg', 88);
+            // Intervention Image v3: usar JpegEncoder
+            return (string) $img->encode(new JpegEncoder(quality: 88));
         } catch (\Throwable $e) {
             \Log::error('RSVP GEN: JPEG encode failed', [
                 'e' => $e->getMessage(),
             ]);
             // Fallback: PNG si falla JPEG
-            return (string) $img->encode('png', 9);
+            return (string) $img->encode(new PngEncoder(9));
         }
     }
 
