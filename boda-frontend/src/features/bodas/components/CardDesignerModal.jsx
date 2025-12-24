@@ -62,8 +62,7 @@ export default function CardDesignerModal({
   }, [open]);
   useEffect(() => {
     if (open && templateUrl) {
-      // ajusta automáticamente la primera vez
-      setTimeout(() => fitToScreen(), 0);
+      setZoom(100); // arranca 1:1
     }
   }, [open, templateUrl]);
   async function loadDesignFromBoda() {
@@ -1015,7 +1014,7 @@ export default function CardDesignerModal({
                               draggable
                               onDragStart={(e) => onPlacedDragStart(e, p.id)}
                               onClick={() => handleSelectPlaced(p.id)}
-                              className={`absolute px-2 py-1 rounded-md ${
+                              className={`absolute rounded-md ${
                                 selectedPlacedId === p.id
                                   ? "ring-2 ring-emerald-500"
                                   : ""
