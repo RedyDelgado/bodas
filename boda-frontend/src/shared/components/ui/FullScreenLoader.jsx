@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+/**
+ * FullScreenLoader - Intro tipo "sobre" con sello.
+ * - Mantiene el loader visible al menos minDurationMs
+ * - Se cierra solo cuando done=true y ya cumplió el mínimo
+ * - Bloquea interacción (pointer-events:auto)
+ */
 const ENVELOPE_CSS = `
   :root{
     --env:#f5f1e6;
@@ -22,6 +28,8 @@ const ENVELOPE_CSS = `
     --dSides: 950ms;
     --dTop: 1240ms;
     --dBottom: 1320ms;
+
+    --fadeOut: 320ms;
   }
 
   .mw-intro{
@@ -34,7 +42,19 @@ const ENVELOPE_CSS = `
       radial-gradient(1100px 520px at 50% -10%, rgba(15,23,42,.06), transparent 60%),
       linear-gradient(180deg, #fff, #f8fafc);
     perspective: 1600px;
-    pointer-events:none; /* bloquea clicks */
+
+    /* IMPORTANTE: bloquea interacción */
+    pointer-events:auto;
+    cursor: wait;
+  }
+
+  .mw-intro.mw-fadeout{
+    animation: mwFadeOut var(--fadeOut) ease forwards;
+  }
+
+  @keyframes mwFadeOut{
+    from{ opacity: 1; }
+    to{ opacity: 0; }
   }
 
   .mw-envelope{
@@ -231,31 +251,66 @@ const ENVELOPE_CSS = `
   }
 `;
 
-export function FullScreenLoader({ message = "Cargando..." }) {
+export function FullScreenLoader({
+  done = false,               // true cuando tu app ya está lista
+  message = "Cargando...",
+  minDurationMs = 2800,       // 2400–3000ms recomendado para que se “sienta”
+  startDelayMs = 180,         // evita parpadeo
+  auxDelayMs = 1800,          // muestra mensaje auxiliar si ya pasó 1.8s
+  longWaitMs = 7000,          // “demorando más de lo normal”
+  fadeOutMs = 320,            // fade final
+}) {
   if (typeof document === "undefined") return null;
 
-  const START_DELAY_MS = 280;
-  const INTRO_TOTAL_MS = 3950;
-  const LONG_WAIT_MS = 7000;
+  const startAtRef = useRef(0);
 
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [showAux, setShowAux] = useState(false);
   const [showLong, setShowLong] = useState(false);
+  const [fading, setFading] = useState(false);
 
+  // Montaje: disparar animación y timers de mensaje
   useEffect(() => {
-    const t0 = setTimeout(() => setOpen(true), START_DELAY_MS);
-    const t1 = setTimeout(() => setShowAux(true), START_DELAY_MS + INTRO_TOTAL_MS);
-    const t2 = setTimeout(() => setShowLong(true), LONG_WAIT_MS);
+    startAtRef.current = performance.now();
+
+    const t0 = setTimeout(() => setOpen(true), startDelayMs);
+    const t1 = setTimeout(() => setShowAux(true), auxDelayMs);
+    const t2 = setTimeout(() => setShowLong(true), longWaitMs);
 
     return () => {
       clearTimeout(t0);
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, []);
+  }, [startDelayMs, auxDelayMs, longWaitMs]);
+
+  // Cierre controlado: solo cuando done=true y ya cumplió minDuration
+  useEffect(() => {
+    if (!done) return;
+
+    const elapsed = performance.now() - startAtRef.current;
+    const remaining = Math.max(0, minDurationMs - elapsed);
+
+    const t = setTimeout(() => {
+      setFading(true);
+      const tFade = setTimeout(() => setVisible(false), fadeOutMs);
+      // limpiar tFade si se desmonta antes
+      return () => clearTimeout(tFade);
+    }, remaining);
+
+    return () => clearTimeout(t);
+  }, [done, minDurationMs, fadeOutMs]);
+
+  if (!visible) return null;
 
   return createPortal(
-    <div className={`mw-intro ${open ? "open" : ""}`} aria-label="Cargando">
+    <div
+      className={`mw-intro ${open ? "open" : ""} ${fading ? "mw-fadeout" : ""}`}
+      aria-label="Cargando"
+      aria-busy="true"
+      role="status"
+    >
       <style dangerouslySetInnerHTML={{ __html: ENVELOPE_CSS }} />
 
       <div className="mw-envelope" aria-hidden="true">
@@ -285,10 +340,13 @@ export function FullScreenLoader({ message = "Cargando..." }) {
         </svg>
       </div>
 
-      {/* Auxiliar solo si sigue demorando */}
       {showAux && (
-        <div className="absolute inset-x-0 bottom-10 flex justify-center px-4" style={{ zIndex: 99999 }}>
-          <div className="flex items-center gap-3 rounded-2xl bg-white/85 backdrop-blur-md border border-slate-200 shadow-xl px-4 py-3 max-w-[620px] w-full sm:w-auto pointer-events-none">
+        <div
+          className="absolute inset-x-0 bottom-10 flex justify-center px-4"
+          style={{ zIndex: 99999 }}
+          aria-hidden="true"
+        >
+          <div className="flex items-center gap-3 rounded-2xl bg-white/85 backdrop-blur-md border border-slate-200 shadow-xl px-4 py-3 max-w-[620px] w-full sm:w-auto">
             <div className="h-9 w-9 rounded-full border-2 border-slate-400/40 border-t-slate-700 animate-spin" />
             <div className="min-w-0">
               <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase text-slate-700 truncate">
