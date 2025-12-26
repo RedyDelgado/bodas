@@ -9,6 +9,8 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
 import Plantilla01 from "../templates/Plantilla01";
 import SEOHead from "../../../shared/components/SEOHead";
+import { useLoadingOverlay } from "../../../shared/context/LoadingOverlayContext";
+import { useEffect } from "react";
 
 const LOADER_COLOR = "#1E293B";
 const COLOR_DORADO = "#D4AF37";
@@ -20,7 +22,14 @@ function DomainBodaPage() {
   const [invitadosResumen, setInvitadosResumen] = useState(null);
   const [estado, setEstado] = useState("loading");
   const [mensajeError, setMensajeError] = useState("");
+  const { showLoader, hideLoader } = useLoadingOverlay();
 
+  useEffect(() => {
+    if (estado === "loading") showLoader("Cargando la boda...");
+    else hideLoader();
+
+    return () => hideLoader();
+  }, [estado]);
   const fetchData = useCallback(async () => {
     try {
       setEstado("loading");
@@ -37,7 +46,8 @@ function DomainBodaPage() {
         invitados_resumen: apiInvitadosResumen,
       } = response.data;
 
-      const fotosNormalizadas = (Array.isArray(apiFotosRaw) ? apiFotosRaw : []) || [];
+      const fotosNormalizadas =
+        (Array.isArray(apiFotosRaw) ? apiFotosRaw : []) || [];
 
       setBoda(apiBoda);
       setConfiguracion(apiConfig);
@@ -96,26 +106,29 @@ function DomainBodaPage() {
 
     const currentUrl = window.location.href;
     const dominio = window.location.hostname;
-    
+
     // Obtener nombre de la pareja (priorizando nombres individuales)
-    const nombrePareja = (boda.nombre_novio_1 && boda.nombre_novio_2)
-      ? `${boda.nombre_novio_1} & ${boda.nombre_novio_2}`
-      : (boda.nombre_pareja || "Nuestra boda");
+    const nombrePareja =
+      boda.nombre_novio_1 && boda.nombre_novio_2
+        ? `${boda.nombre_novio_1} & ${boda.nombre_novio_2}`
+        : boda.nombre_pareja || "Nuestra boda";
 
     // Descripción personalizada
-    const descripcion = configuracion?.texto_bienvenida 
-      || `Te invitamos a celebrar nuestra boda. ${nombrePareja}. ¡Confirma tu asistencia!`;
+    const descripcion =
+      configuracion?.texto_bienvenida ||
+      `Te invitamos a celebrar nuestra boda. ${nombrePareja}. ¡Confirma tu asistencia!`;
 
     // Imagen para compartir (usar la primera foto de hero o una por defecto)
-    const imagen = fotos && fotos.length > 0 && fotos[0]?.url
-      ? fotos[0].url
-      : `https://${dominio}/og-image.png`;
+    const imagen =
+      fotos && fotos.length > 0 && fotos[0]?.url
+        ? fotos[0].url
+        : `https://${dominio}/og-image.png`;
 
     return {
       title: `${nombrePareja} - Nuestra Boda | ${dominio}`,
       description: descripcion.substring(0, 160), // Limitar a 160 caracteres
       image: imagen,
-      url: currentUrl
+      url: currentUrl,
     };
   }, [boda, configuracion, fotos]);
 
@@ -123,72 +136,7 @@ function DomainBodaPage() {
   if (estado === "loading") {
     return (
       <PremiumShell>
-        <div
-          className="w-full max-w-lg rounded-[2rem] border bg-white/80 backdrop-blur-md shadow-xl p-7 sm:p-9"
-          style={{ borderColor: `${COLOR_DORADO}40` }}
-        >
-          <div className="flex items-center gap-5">
-            {/* Loader ring */}
-            <div className="relative w-20 h-20">
-              <div
-                className="absolute inset-0 rounded-full border-2 opacity-40"
-                style={{ borderColor: `${COLOR_DORADO}55` }}
-              />
-              <div
-                className="absolute inset-0 rounded-full border-2 border-transparent animate-spin"
-                style={{
-                  borderTopColor: COLOR_DORADO,
-                  borderRightColor: `${COLOR_DORADO}55`,
-                }}
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <img
-                  src="/img/pareja-boda.png"
-                  alt="Pareja de novios"
-                  className="w-12 h-12 object-contain animate-[float_2.2s_ease-in-out_infinite]"
-                />
-              </div>
-            </div>
-
-            <div className="min-w-0">
-              <p
-                className="text-lg sm:text-xl font-semibold"
-                style={{ color: LOADER_COLOR }}
-              >
-                Cargando la boda…
-              </p>
-              <p className="mt-1 text-sm text-slate-600">
-                Estamos preparando tu invitación con estilo ✨
-              </p>
-
-              {/* dots */}
-              <div className="mt-3 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-slate-300 animate-pulse" />
-                <span className="w-2 h-2 rounded-full bg-slate-300 animate-pulse [animation-delay:150ms]" />
-                <span className="w-2 h-2 rounded-full bg-slate-300 animate-pulse [animation-delay:300ms]" />
-              </div>
-            </div>
-          </div>
-
-          {/* hint */}
-          <div
-            className="mt-6 h-px w-full"
-            style={{
-              background: `linear-gradient(90deg, transparent, ${COLOR_DORADO}55, transparent)`,
-            }}
-          />
-          <p className="mt-4 text-xs text-slate-500">
-            Tip: si subiste fotos en alta resolución, puede tardar un poco más.
-          </p>
-
-          {/* keyframes float */}
-          <style>{`
-            @keyframes float {
-              0%,100% { transform: translateY(0); }
-              50% { transform: translateY(-4px); }
-            }
-          `}</style>
-        </div>
+        <div className="min-h-screen" />
       </PremiumShell>
     );
   }
