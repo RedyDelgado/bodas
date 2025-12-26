@@ -9,8 +9,7 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import axiosClient from "../../../shared/config/axiosClient";
 import Plantilla01 from "../templates/Plantilla01";
 import SEOHead from "../../../shared/components/SEOHead";
-import { useLoadingOverlay } from "../../../shared/context/LoadingOverlayContext";
-import { useEffect } from "react";
+import { useLoadingOverlay } from "../../../shared/context/LoadingOverlayContext"; 
 
 const LOADER_COLOR = "#1E293B";
 const COLOR_DORADO = "#D4AF37";
