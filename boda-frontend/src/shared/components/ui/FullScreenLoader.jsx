@@ -3,9 +3,10 @@ import { createPortal } from "react-dom";
 
 /**
  * FullScreenLoader - Intro tipo "sobre" con sello.
- * - Mantiene el loader visible al menos minDurationMs
- * - Se cierra solo cuando done=true y ya cumplió el mínimo
- * - Bloquea interacción (pointer-events:auto)
+ * - Mantiene el loader visible al menos minDurationMs.
+ * - Se cierra solo cuando done=true y ya cumplió el mínimo.
+ * - Llama onHidden() cuando termina de ocultarse (para desmontarlo desde el Provider).
+ * - Sobre centrado y visible (no full-screen imperceptible).
  */
 const ENVELOPE_CSS = `
   :root{
@@ -38,12 +39,14 @@ const ENVELOPE_CSS = `
     z-index:9999;
     display:grid;
     place-items:center;
+
     background:
       radial-gradient(1100px 520px at 50% -10%, rgba(15,23,42,.06), transparent 60%),
       linear-gradient(180deg, #fff, #f8fafc);
+
     perspective: 1600px;
 
-    /* IMPORTANTE: bloquea interacción */
+    /* Bloquea interacción */
     pointer-events:auto;
     cursor: wait;
   }
@@ -57,10 +60,18 @@ const ENVELOPE_CSS = `
     to{ opacity: 0; }
   }
 
+  /* === CONTENEDOR DEL SOBRE (VISIBLE) === */
   .mw-envelope{
-    position:absolute;
-    inset:-20vh -20vw;
+    position:relative;
+    width: min(780px, 88vw);
+    height: min(520px, 54vh);
     transform-style:preserve-3d;
+
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(2,6,23,.18);
+    border: 1px solid rgba(15,23,42,.10);
+    background: linear-gradient(180deg, var(--env), var(--env2));
   }
 
   .mw-env-base{
@@ -144,15 +155,15 @@ const ENVELOPE_CSS = `
     left:50%;
     top:50%;
     transform: translate(-50%,-50%);
-    width: clamp(120px, 10vw, 170px);
-    height: clamp(120px, 10vw, 170px);
+    width: clamp(120px, 12vw, 180px);
+    height: clamp(120px, 12vw, 180px);
     border-radius:999px;
     background:
       radial-gradient(circle at 30% 22%, rgba(255,255,255,.22), transparent 46%),
       radial-gradient(circle at 60% 75%, rgba(255,255,255,.10), transparent 55%),
       linear-gradient(180deg, var(--seal2), var(--seal));
     box-shadow: 0 22px 55px rgba(2,6,23,.30);
-    z-index:10;
+    z-index:20;
     display:grid;
     place-items:center;
     user-select:none;
@@ -185,8 +196,8 @@ const ENVELOPE_CSS = `
   }
 
   .mw-seal svg{
-    width: clamp(52px, 4vw, 72px);
-    height: clamp(52px, 4vw, 72px);
+    width: clamp(52px, 4.4vw, 76px);
+    height: clamp(52px, 4.4vw, 76px);
     filter: drop-shadow(0 8px 14px rgba(0,0,0,.20));
   }
 
@@ -252,17 +263,19 @@ const ENVELOPE_CSS = `
 `;
 
 export function FullScreenLoader({
-  done = false,               // true cuando tu app ya está lista
+  done = false,
   message = "Cargando...",
-  minDurationMs = 2800,       // 2400–3000ms recomendado para que se “sienta”
-  startDelayMs = 180,         // evita parpadeo
-  auxDelayMs = 1800,          // muestra mensaje auxiliar si ya pasó 1.8s
-  longWaitMs = 7000,          // “demorando más de lo normal”
-  fadeOutMs = 320,            // fade final
+  minDurationMs = 2800,
+  startDelayMs = 180,
+  auxDelayMs = 1800,
+  longWaitMs = 7000,
+  fadeOutMs = 320,
+  onHidden, // 👈 callback cuando ya desapareció
 }) {
   if (typeof document === "undefined") return null;
 
   const startAtRef = useRef(0);
+  const hiddenCalledRef = useRef(false);
 
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -270,9 +283,10 @@ export function FullScreenLoader({
   const [showLong, setShowLong] = useState(false);
   const [fading, setFading] = useState(false);
 
-  // Montaje: disparar animación y timers de mensaje
+  // Montaje: disparar animación
   useEffect(() => {
     startAtRef.current = performance.now();
+    hiddenCalledRef.current = false;
 
     const t0 = setTimeout(() => setOpen(true), startDelayMs);
     const t1 = setTimeout(() => setShowAux(true), auxDelayMs);
@@ -294,13 +308,21 @@ export function FullScreenLoader({
 
     const t = setTimeout(() => {
       setFading(true);
-      const tFade = setTimeout(() => setVisible(false), fadeOutMs);
-      // limpiar tFade si se desmonta antes
+
+      const tFade = setTimeout(() => {
+        setVisible(false);
+
+        if (!hiddenCalledRef.current) {
+          hiddenCalledRef.current = true;
+          if (typeof onHidden === "function") onHidden();
+        }
+      }, fadeOutMs);
+
       return () => clearTimeout(tFade);
     }, remaining);
 
     return () => clearTimeout(t);
-  }, [done, minDurationMs, fadeOutMs]);
+  }, [done, minDurationMs, fadeOutMs, onHidden]);
 
   if (!visible) return null;
 
@@ -321,23 +343,23 @@ export function FullScreenLoader({
           <div className="mw-flap-right" />
           <div className="mw-flap-bottom" />
         </div>
-      </div>
 
-      <div className="mw-seal" aria-hidden="true">
-        <div className="mw-ring" />
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <defs>
-            <linearGradient id="mw_g" x1="0" x2="1">
-              <stop offset="0" stopColor="rgba(255,255,255,.92)" />
-              <stop offset=".55" stopColor="rgba(255,255,255,.70)" />
-              <stop offset="1" stopColor="rgba(255,255,255,.92)" />
-            </linearGradient>
-          </defs>
-          <path
-            fill="url(#mw_g)"
-            d="M32 55s-18-11.7-24-22.8C2.5 21.1 9.2 10 20.7 10c5.7 0 9.1 3 11.3 6.2C34.2 13 37.6 10 43.3 10 54.8 10 61.5 21.1 56 32.2 50 43.3 32 55 32 55z"
-          />
-        </svg>
+        <div className="mw-seal" aria-hidden="true">
+          <div className="mw-ring" />
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <defs>
+              <linearGradient id="mw_g" x1="0" x2="1">
+                <stop offset="0" stopColor="rgba(255,255,255,.92)" />
+                <stop offset=".55" stopColor="rgba(255,255,255,.70)" />
+                <stop offset="1" stopColor="rgba(255,255,255,.92)" />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#mw_g)"
+              d="M32 55s-18-11.7-24-22.8C2.5 21.1 9.2 10 20.7 10c5.7 0 9.1 3 11.3 6.2C34.2 13 37.6 10 43.3 10 54.8 10 61.5 21.1 56 32.2 50 43.3 32 55 32 55z"
+            />
+          </svg>
+        </div>
       </div>
 
       {showAux && (

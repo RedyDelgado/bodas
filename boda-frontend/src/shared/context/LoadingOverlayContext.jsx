@@ -1,43 +1,62 @@
-
-// src/shared/context/LoadingOverlayContext.jsx
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import { FullScreenLoader } from "../components/ui/FullScreenLoader";
 
 const LoadingOverlayContext = createContext(null);
 
 export function LoadingOverlayProvider({ children }) {
+  const keyRef = useRef(0);
+
   const [state, setState] = useState({
-    visible: false,
+    mounted: false,   // si está montado en DOM
+    done: false,      // si ya puede cerrarse
     message: "Cargando...",
+    key: 0,           // fuerza remount para reiniciar animación
   });
 
   const showLoader = (message = "Cargando...") => {
+    keyRef.current += 1;
     setState({
-      visible: true,
+      mounted: true,
+      done: false,
       message,
+      key: keyRef.current,
     });
   };
 
+  // Ya NO desmontamos de golpe. Solo marcamos done=true.
   const hideLoader = () => {
-    setState((prev) => ({
-      ...prev,
-      visible: false,
-    }));
+    setState((prev) => {
+      if (!prev.mounted) return prev;
+      return { ...prev, done: true };
+    });
+  };
+
+  const handleHidden = () => {
+    // Cuando el loader terminó su fade-out y ya se ocultó,
+    // recién lo desmontamos para limpiar el DOM.
+    setState((prev) => ({ ...prev, mounted: false }));
   };
 
   return (
     <LoadingOverlayContext.Provider
       value={{
-        visible: state.visible,
-        message: state.message,
         showLoader,
         hideLoader,
+        visible: state.mounted && !state.done,
+        message: state.message,
       }}
     >
       {children}
 
-      {/* ✅ SOLO se muestra cuando visible === true */}
-      {state.visible && <FullScreenLoader message={state.message} />}
+      {state.mounted && (
+        <FullScreenLoader
+          key={state.key}
+          done={state.done}
+          message={state.message}
+          minDurationMs={2800} // <-- aquí controlas el mínimo real
+          onHidden={handleHidden}
+        />
+      )}
     </LoadingOverlayContext.Provider>
   );
 }
