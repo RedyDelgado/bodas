@@ -2,36 +2,37 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 /**
- * FullScreenLoader (sobre fullscreen estilo HTML)
- * - Corre SIEMPRE la animación completa del sobre (START_DELAY + INTRO_TOTAL).
- * - Si done=true antes de terminar la intro, espera a que termine y recién cierra.
- * - Si done=false y ya terminó la intro, muestra el auxiliar (spinner + texto) hasta done=true.
- * - Cuando termina el fade-out, llama onHidden() para que el Provider lo desmonte.
+ * SOBRE fullscreen (sin carta):
+ * - El sello NO se mueve (solo se desvanece).
+ * - Se abren los 4 pliegues.
+ * - Cuando TOP y BOTTOM ya casi están abiertos (~85%), el sobre y sello se vuelven transparentes
+ *   y se ve la web debajo.
+ * - Sin “X” de pliegues.
+ *
+ * Props:
+ *  done: boolean -> true cuando tu app ya terminó de cargar
+ *  onHidden: () => void -> se llama cuando el overlay ya terminó el fade y puedes desmontarlo desde el Provider
  */
 const ENVELOPE_CSS = `
   :root{
     --env:#f5f1e6;
     --env2:#efe8d8;
-    --crease: rgba(15,23,42,.10);
 
     --seal:#9b1417;
     --seal2:#c21f26;
 
     --ease: cubic-bezier(.2,.9,.2,1);
-    --ease2: cubic-bezier(.16,1,.3,1);
 
-    --sealDur: 1050ms;
     --sideDur: 1600ms;
     --topDur: 1450ms;
     --bottomDur: 1400ms;
 
-    --dSeal: 220ms;
     --dSides: 950ms;
     --dTop: 1240ms;
     --dBottom: 1320ms;
   }
 
-  *{box-sizing:border-box}
+  *{ box-sizing:border-box; }
 
   .mw-intro{
     position:fixed;
@@ -44,24 +45,28 @@ const ENVELOPE_CSS = `
       linear-gradient(180deg, #fff, #f8fafc);
     perspective: 1600px;
 
-    /* bloquea interacción */
     pointer-events:auto;
     cursor: wait;
 
     opacity:1;
+
+    /* REVEAL cuando TOP y BOTTOM casi están abiertos (≈ 2500ms) */
+    --revealDelay: calc(var(--dBottom) + 1180ms);
   }
 
+  /* Fade final del overlay completo */
   .mw-intro.mw-fadeout{
     animation: mwFadeOut var(--fadeMs) ease forwards;
   }
-  @keyframes mwFadeOut{ from{opacity:1} to{opacity:0} }
+  @keyframes mwFadeOut{ to{ opacity:0; } }
 
-  /* sobre oversized para que nunca se vean bordes (igual HTML) */
+  /* SOBRE oversized fullscreen */
   .mw-envelope{
     position:absolute;
     inset:-20vh -20vw;
     transform-style:preserve-3d;
     pointer-events:none;
+    opacity:1;
   }
 
   .mw-env-base{
@@ -71,19 +76,9 @@ const ENVELOPE_CSS = `
     transform: translateZ(0);
   }
 
-  .mw-env-base::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-      linear-gradient(135deg, transparent 49.3%, var(--crease) 50%, transparent 50.7%),
-      linear-gradient(225deg, transparent 49.3%, var(--crease) 50%, transparent 50.7%);
-    opacity:.55;
-    mix-blend-mode:multiply;
-    pointer-events:none;
-  }
+  /* QUITADO: la X fea de pliegues */
+  .mw-env-base::before{ display:none; }
 
-  /* ───────────── FLAPS ───────────── */
   .mw-flap{
     position:absolute;
     inset:0;
@@ -91,11 +86,10 @@ const ENVELOPE_CSS = `
     pointer-events:none;
   }
 
-  .mw-flap-top, .mw-flap-bottom, .mw-flap-left, .mw-flap-right{
+  .mw-flap-top,.mw-flap-bottom,.mw-flap-left,.mw-flap-right{
     position:absolute;
     inset:0;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.05));
+    background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.05));
     background-color: var(--env);
     backface-visibility: visible;
     transform-style:preserve-3d;
@@ -132,20 +126,10 @@ const ENVELOPE_CSS = `
     opacity:.97;
   }
 
-  .mw-flap-bottom::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    clip-path: polygon(0 100%, 100% 100%, 50% 48%);
-    background:
-      linear-gradient(180deg, rgba(2,6,23,.06), rgba(255,255,255,.02));
-    background-color: var(--env2);
-    transform: rotateX(180deg);
-    transform-origin: 50% 50%;
-    box-shadow: inset 0 -20px 45px rgba(2,6,23,.05);
-  }
+  /* QUITADO: parte trasera del flap bottom */
+  .mw-flap-bottom::after{ display:none; }
 
-  /* ───────────── SELLO ───────────── */
+  /* SELLO fijo */
   .mw-seal{
     position:absolute;
     left:50%;
@@ -164,6 +148,7 @@ const ENVELOPE_CSS = `
     place-items:center;
     user-select:none;
     pointer-events:none;
+    opacity:1;
   }
 
   .mw-seal::before{
@@ -184,13 +169,12 @@ const ENVELOPE_CSS = `
     box-shadow: 0 12px 25px rgba(2,6,23,.18);
   }
 
-  .mw-seal .mw-ring{
+  .mw-ring{
     position:absolute;
     inset:16%;
     border-radius:999px;
     border: 2px solid rgba(0,0,0,.18);
     opacity:.35;
-    pointer-events:none;
   }
 
   .mw-seal svg{
@@ -199,11 +183,7 @@ const ENVELOPE_CSS = `
     filter: drop-shadow(0 8px 14px rgba(0,0,0,.20));
   }
 
-  /* ───────────── OPEN sequence (igual HTML) ───────────── */
-  .mw-intro.open .mw-seal{
-    animation: sealBreak var(--sealDur) var(--ease2) forwards;
-    animation-delay: var(--dSeal);
-  }
+  /* Apertura */
   .mw-intro.open .mw-flap-left{
     animation: flapLeft var(--sideDur) var(--ease) forwards;
     animation-delay: var(--dSides);
@@ -221,40 +201,46 @@ const ENVELOPE_CSS = `
     animation-delay: var(--dBottom);
   }
 
-  @keyframes sealBreak{
-    0%   { transform: translate(-50%,-50%) scale(1); opacity:1; }
-    18%  { transform: translate(-50%,-50%) scale(1.06); }
-    40%  { transform: translate(-50%,-50%) scale(1.00); }
-    70%  { transform: translate(-50%,-50%) scale(.78) rotate(-8deg); opacity:.65; }
-    100% { transform: translate(-50%,-50%) scale(.58) translateY(12px) rotate(-12deg); opacity:0; }
-  }
   @keyframes flapLeft{
-    0%   { transform: rotateY(0deg) translateZ(10px); }
-    30%  { transform: rotateY(-28deg) translateZ(10px); }
-    100% { transform: rotateY(-128deg) translateX(-12px) translateZ(10px); opacity:.95; }
+    0%{transform:rotateY(0deg) translateZ(10px);}
+    30%{transform:rotateY(-28deg) translateZ(10px);}
+    100%{transform:rotateY(-128deg) translateX(-12px) translateZ(10px);opacity:.95;}
   }
   @keyframes flapRight{
-    0%   { transform: rotateY(0deg) translateZ(10px); }
-    30%  { transform: rotateY(28deg) translateZ(10px); }
-    100% { transform: rotateY(128deg) translateX(12px) translateZ(10px); opacity:.95; }
+    0%{transform:rotateY(0deg) translateZ(10px);}
+    30%{transform:rotateY(28deg) translateZ(10px);}
+    100%{transform:rotateY(128deg) translateX(12px) translateZ(10px);opacity:.95;}
   }
   @keyframes flapTop{
-    0%   { transform: rotateX(0deg) translateZ(8px); }
-    30%  { transform: rotateX(26deg) translateZ(8px); }
-    100% { transform: rotateX(165deg) translateY(-6px) translateZ(8px); opacity:.92; }
+    0%{transform:rotateX(0deg) translateZ(8px);}
+    30%{transform:rotateX(26deg) translateZ(8px);}
+    100%{transform:rotateX(165deg) translateY(-6px) translateZ(8px);opacity:.92;}
   }
   @keyframes flapBottom{
-    0%   { transform: rotateX(0deg) translateZ(6px); }
-    20%  { transform: rotateX(-10deg) translateZ(6px); }
-    100% { transform: rotateX(-165deg) translateY(10px) translateZ(6px); opacity:.96; }
+    0%{transform:rotateX(0deg) translateZ(6px);}
+    20%{transform:rotateX(-10deg) translateZ(6px);}
+    100%{transform:rotateX(-165deg) translateY(10px) translateZ(6px);opacity:.96;}
   }
 
+  /* REVEAL: desaparece sobre + sello cuando TOP/BOTTOM casi abiertos */
+  .mw-intro.open .mw-envelope{
+    animation: envOut 220ms ease forwards;
+    animation-delay: var(--revealDelay);
+  }
+  .mw-intro.open .mw-seal{
+    animation: sealFade 180ms ease forwards;
+    animation-delay: var(--revealDelay);
+  }
+  @keyframes envOut{ to{ opacity:0; } }
+  @keyframes sealFade{ to{ opacity:0; } }
+
   @media (prefers-reduced-motion: reduce){
-    .mw-intro.open .mw-seal,
     .mw-intro.open .mw-flap-left,
     .mw-intro.open .mw-flap-right,
     .mw-intro.open .mw-flap-top,
-    .mw-intro.open .mw-flap-bottom{
+    .mw-intro.open .mw-flap-bottom,
+    .mw-intro.open .mw-envelope,
+    .mw-intro.open .mw-seal{
       animation:none !important;
     }
   }
@@ -263,36 +249,35 @@ const ENVELOPE_CSS = `
 export function FullScreenLoader({
   done = false,
   message = "Cargando...",
-  startDelayMs = 280,      // igual HTML
-  introTotalMs = 3950,     // igual HTML
-  fadeOutMs = 700,         // parecido al HTML (ajústalo si quieres)
+  startDelayMs = 200,
+  introTotalMs = 3200, // escena mínima; si done llega antes, igual espera hasta esto para cerrar overlay
+  fadeOutMs = 280,
   longWaitMs = 7000,
   onHidden,
 }) {
   if (typeof document === "undefined") return null;
 
-  const gradId = useId().replace(/:/g, "_"); // evita colisión de IDs
+  const gradId = useId().replace(/:/g, "_");
   const startAtRef = useRef(0);
-  const closeTimerRef = useRef(null);
-  const fadeTimerRef = useRef(null);
+  const closeRef = useRef(null);
+  const fadeRef = useRef(null);
 
   const [open, setOpen] = useState(false);
   const [showAux, setShowAux] = useState(false);
   const [showLong, setShowLong] = useState(false);
   const [fading, setFading] = useState(false);
 
-  const clearAll = () => {
-    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-    closeTimerRef.current = null;
-    fadeTimerRef.current = null;
+  const clearTimers = () => {
+    if (closeRef.current) clearTimeout(closeRef.current);
+    if (fadeRef.current) clearTimeout(fadeRef.current);
+    closeRef.current = null;
+    fadeRef.current = null;
   };
 
-  const startClose = () => {
-    // evita doble cierre
+  const doHide = () => {
     if (fading) return;
     setFading(true);
-    fadeTimerRef.current = setTimeout(() => {
+    fadeRef.current = setTimeout(() => {
       if (typeof onHidden === "function") onHidden();
     }, fadeOutMs);
   };
@@ -308,22 +293,21 @@ export function FullScreenLoader({
       clearTimeout(t0);
       clearTimeout(t1);
       clearTimeout(t2);
-      clearAll();
+      clearTimers();
     };
   }, [startDelayMs, introTotalMs, longWaitMs]);
 
-  // Si done=true: cerrar SOLO cuando termine la intro (para que sí se vea abrir el sobre)
   useEffect(() => {
     if (!done) return;
 
     const elapsed = performance.now() - startAtRef.current;
-    const mustStay = startDelayMs + introTotalMs;
-    const remaining = Math.max(0, mustStay - elapsed);
+    const minScene = startDelayMs + introTotalMs;
+    const remaining = Math.max(0, minScene - elapsed);
 
-    clearAll();
-    closeTimerRef.current = setTimeout(() => startClose(), remaining);
+    clearTimers();
+    closeRef.current = setTimeout(() => doHide(), remaining);
 
-    return () => clearAll();
+    return () => clearTimers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done, startDelayMs, introTotalMs]);
 
@@ -337,7 +321,6 @@ export function FullScreenLoader({
     >
       <style dangerouslySetInnerHTML={{ __html: ENVELOPE_CSS }} />
 
-      {/* SOBRE fullscreen (oversized) */}
       <div className="mw-envelope" aria-hidden="true">
         <div className="mw-env-base" />
         <div className="mw-flap">
@@ -348,7 +331,6 @@ export function FullScreenLoader({
         </div>
       </div>
 
-      {/* SELLO centrado */}
       <div className="mw-seal" aria-hidden="true">
         <div className="mw-ring" />
         <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -366,11 +348,11 @@ export function FullScreenLoader({
         </svg>
       </div>
 
-      {/* AUXILIAR: solo si ya pasó la intro y aún no está done */}
       {showAux && !done && (
         <div
           className="absolute inset-x-0 bottom-10 flex justify-center px-4"
           style={{ zIndex: 99999 }}
+          aria-hidden="true"
         >
           <div className="flex items-center gap-3 rounded-2xl bg-white/85 backdrop-blur-md border border-slate-200 shadow-xl px-4 py-3 max-w-[620px] w-full sm:w-auto">
             <div className="h-9 w-9 rounded-full border-2 border-slate-400/40 border-t-slate-700 animate-spin" />
