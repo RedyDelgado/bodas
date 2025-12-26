@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 /**
- * FullScreenLoader - Intro tipo "sobre" con sello.
- * - Mantiene el loader visible al menos minDurationMs.
- * - Se cierra solo cuando done=true y ya cumplió el mínimo.
- * - Llama onHidden() cuando termina de ocultarse (para desmontarlo desde el Provider).
- * - Sobre centrado y visible (no full-screen imperceptible).
+ * FullScreenLoader (sobre fullscreen estilo HTML)
+ * - Corre SIEMPRE la animación completa del sobre (START_DELAY + INTRO_TOTAL).
+ * - Si done=true antes de terminar la intro, espera a que termine y recién cierra.
+ * - Si done=false y ya terminó la intro, muestra el auxiliar (spinner + texto) hasta done=true.
+ * - Cuando termina el fade-out, llama onHidden() para que el Provider lo desmonte.
  */
 const ENVELOPE_CSS = `
   :root{
@@ -29,9 +29,9 @@ const ENVELOPE_CSS = `
     --dSides: 950ms;
     --dTop: 1240ms;
     --dBottom: 1320ms;
-
-    --fadeOut: 320ms;
   }
+
+  *{box-sizing:border-box}
 
   .mw-intro{
     position:fixed;
@@ -39,39 +39,29 @@ const ENVELOPE_CSS = `
     z-index:9999;
     display:grid;
     place-items:center;
-
     background:
       radial-gradient(1100px 520px at 50% -10%, rgba(15,23,42,.06), transparent 60%),
       linear-gradient(180deg, #fff, #f8fafc);
-
     perspective: 1600px;
 
-    /* Bloquea interacción */
+    /* bloquea interacción */
     pointer-events:auto;
     cursor: wait;
+
+    opacity:1;
   }
 
   .mw-intro.mw-fadeout{
-    animation: mwFadeOut var(--fadeOut) ease forwards;
+    animation: mwFadeOut var(--fadeMs) ease forwards;
   }
+  @keyframes mwFadeOut{ from{opacity:1} to{opacity:0} }
 
-  @keyframes mwFadeOut{
-    from{ opacity: 1; }
-    to{ opacity: 0; }
-  }
-
-  /* === CONTENEDOR DEL SOBRE (VISIBLE) === */
+  /* sobre oversized para que nunca se vean bordes (igual HTML) */
   .mw-envelope{
-    position:relative;
-    width: min(780px, 88vw);
-    height: min(520px, 54vh);
+    position:absolute;
+    inset:-20vh -20vw;
     transform-style:preserve-3d;
-
-    border-radius: 28px;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(2,6,23,.18);
-    border: 1px solid rgba(15,23,42,.10);
-    background: linear-gradient(180deg, var(--env), var(--env2));
+    pointer-events:none;
   }
 
   .mw-env-base{
@@ -90,18 +80,22 @@ const ENVELOPE_CSS = `
       linear-gradient(225deg, transparent 49.3%, var(--crease) 50%, transparent 50.7%);
     opacity:.55;
     mix-blend-mode:multiply;
+    pointer-events:none;
   }
 
+  /* ───────────── FLAPS ───────────── */
   .mw-flap{
     position:absolute;
     inset:0;
     transform-style:preserve-3d;
+    pointer-events:none;
   }
 
-  .mw-flap-top,.mw-flap-bottom,.mw-flap-left,.mw-flap-right{
+  .mw-flap-top, .mw-flap-bottom, .mw-flap-left, .mw-flap-right{
     position:absolute;
     inset:0;
-    background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.05));
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.05));
     background-color: var(--env);
     backface-visibility: visible;
     transform-style:preserve-3d;
@@ -143,30 +137,33 @@ const ENVELOPE_CSS = `
     position:absolute;
     inset:0;
     clip-path: polygon(0 100%, 100% 100%, 50% 48%);
-    background: linear-gradient(180deg, rgba(2,6,23,.06), rgba(255,255,255,.02));
+    background:
+      linear-gradient(180deg, rgba(2,6,23,.06), rgba(255,255,255,.02));
     background-color: var(--env2);
     transform: rotateX(180deg);
     transform-origin: 50% 50%;
     box-shadow: inset 0 -20px 45px rgba(2,6,23,.05);
   }
 
+  /* ───────────── SELLO ───────────── */
   .mw-seal{
     position:absolute;
     left:50%;
     top:50%;
     transform: translate(-50%,-50%);
-    width: clamp(120px, 12vw, 180px);
-    height: clamp(120px, 12vw, 180px);
+    width: clamp(120px, 10vw, 170px);
+    height: clamp(120px, 10vw, 170px);
     border-radius:999px;
     background:
       radial-gradient(circle at 30% 22%, rgba(255,255,255,.22), transparent 46%),
       radial-gradient(circle at 60% 75%, rgba(255,255,255,.10), transparent 55%),
       linear-gradient(180deg, var(--seal2), var(--seal));
     box-shadow: 0 22px 55px rgba(2,6,23,.30);
-    z-index:20;
+    z-index:10;
     display:grid;
     place-items:center;
     user-select:none;
+    pointer-events:none;
   }
 
   .mw-seal::before{
@@ -187,21 +184,22 @@ const ENVELOPE_CSS = `
     box-shadow: 0 12px 25px rgba(2,6,23,.18);
   }
 
-  .mw-ring{
+  .mw-seal .mw-ring{
     position:absolute;
     inset:16%;
     border-radius:999px;
     border: 2px solid rgba(0,0,0,.18);
     opacity:.35;
+    pointer-events:none;
   }
 
   .mw-seal svg{
-    width: clamp(52px, 4.4vw, 76px);
-    height: clamp(52px, 4.4vw, 76px);
+    width: clamp(52px, 4vw, 72px);
+    height: clamp(52px, 4vw, 72px);
     filter: drop-shadow(0 8px 14px rgba(0,0,0,.20));
   }
 
-  /* activar con .open */
+  /* ───────────── OPEN sequence (igual HTML) ───────────── */
   .mw-intro.open .mw-seal{
     animation: sealBreak var(--sealDur) var(--ease2) forwards;
     animation-delay: var(--dSeal);
@@ -224,31 +222,31 @@ const ENVELOPE_CSS = `
   }
 
   @keyframes sealBreak{
-    0%{transform:translate(-50%,-50%) scale(1);opacity:1;}
-    18%{transform:translate(-50%,-50%) scale(1.06);}
-    40%{transform:translate(-50%,-50%) scale(1.00);}
-    70%{transform:translate(-50%,-50%) scale(.78) rotate(-8deg);opacity:.65;}
-    100%{transform:translate(-50%,-50%) scale(.58) translateY(12px) rotate(-12deg);opacity:0;}
+    0%   { transform: translate(-50%,-50%) scale(1); opacity:1; }
+    18%  { transform: translate(-50%,-50%) scale(1.06); }
+    40%  { transform: translate(-50%,-50%) scale(1.00); }
+    70%  { transform: translate(-50%,-50%) scale(.78) rotate(-8deg); opacity:.65; }
+    100% { transform: translate(-50%,-50%) scale(.58) translateY(12px) rotate(-12deg); opacity:0; }
   }
   @keyframes flapLeft{
-    0%{transform:rotateY(0deg) translateZ(10px);}
-    30%{transform:rotateY(-28deg) translateZ(10px);}
-    100%{transform:rotateY(-128deg) translateX(-12px) translateZ(10px);opacity:.95;}
+    0%   { transform: rotateY(0deg) translateZ(10px); }
+    30%  { transform: rotateY(-28deg) translateZ(10px); }
+    100% { transform: rotateY(-128deg) translateX(-12px) translateZ(10px); opacity:.95; }
   }
   @keyframes flapRight{
-    0%{transform:rotateY(0deg) translateZ(10px);}
-    30%{transform:rotateY(28deg) translateZ(10px);}
-    100%{transform:rotateY(128deg) translateX(12px) translateZ(10px);opacity:.95;}
+    0%   { transform: rotateY(0deg) translateZ(10px); }
+    30%  { transform: rotateY(28deg) translateZ(10px); }
+    100% { transform: rotateY(128deg) translateX(12px) translateZ(10px); opacity:.95; }
   }
   @keyframes flapTop{
-    0%{transform:rotateX(0deg) translateZ(8px);}
-    30%{transform:rotateX(26deg) translateZ(8px);}
-    100%{transform:rotateX(165deg) translateY(-6px) translateZ(8px);opacity:.92;}
+    0%   { transform: rotateX(0deg) translateZ(8px); }
+    30%  { transform: rotateX(26deg) translateZ(8px); }
+    100% { transform: rotateX(165deg) translateY(-6px) translateZ(8px); opacity:.92; }
   }
   @keyframes flapBottom{
-    0%{transform:rotateX(0deg) translateZ(6px);}
-    20%{transform:rotateX(-10deg) translateZ(6px);}
-    100%{transform:rotateX(-165deg) translateY(10px) translateZ(6px);opacity:.96;}
+    0%   { transform: rotateX(0deg) translateZ(6px); }
+    20%  { transform: rotateX(-10deg) translateZ(6px); }
+    100% { transform: rotateX(-165deg) translateY(10px) translateZ(6px); opacity:.96; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -265,76 +263,81 @@ const ENVELOPE_CSS = `
 export function FullScreenLoader({
   done = false,
   message = "Cargando...",
-  minDurationMs = 2800,
-  startDelayMs = 180,
-  auxDelayMs = 1800,
+  startDelayMs = 280,      // igual HTML
+  introTotalMs = 3950,     // igual HTML
+  fadeOutMs = 700,         // parecido al HTML (ajústalo si quieres)
   longWaitMs = 7000,
-  fadeOutMs = 320,
-  onHidden, // 👈 callback cuando ya desapareció
+  onHidden,
 }) {
   if (typeof document === "undefined") return null;
 
+  const gradId = useId().replace(/:/g, "_"); // evita colisión de IDs
   const startAtRef = useRef(0);
-  const hiddenCalledRef = useRef(false);
+  const closeTimerRef = useRef(null);
+  const fadeTimerRef = useRef(null);
 
   const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(true);
   const [showAux, setShowAux] = useState(false);
   const [showLong, setShowLong] = useState(false);
   const [fading, setFading] = useState(false);
 
-  // Montaje: disparar animación
+  const clearAll = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    closeTimerRef.current = null;
+    fadeTimerRef.current = null;
+  };
+
+  const startClose = () => {
+    // evita doble cierre
+    if (fading) return;
+    setFading(true);
+    fadeTimerRef.current = setTimeout(() => {
+      if (typeof onHidden === "function") onHidden();
+    }, fadeOutMs);
+  };
+
   useEffect(() => {
     startAtRef.current = performance.now();
-    hiddenCalledRef.current = false;
 
     const t0 = setTimeout(() => setOpen(true), startDelayMs);
-    const t1 = setTimeout(() => setShowAux(true), auxDelayMs);
+    const t1 = setTimeout(() => setShowAux(true), startDelayMs + introTotalMs);
     const t2 = setTimeout(() => setShowLong(true), longWaitMs);
 
     return () => {
       clearTimeout(t0);
       clearTimeout(t1);
       clearTimeout(t2);
+      clearAll();
     };
-  }, [startDelayMs, auxDelayMs, longWaitMs]);
+  }, [startDelayMs, introTotalMs, longWaitMs]);
 
-  // Cierre controlado: solo cuando done=true y ya cumplió minDuration
+  // Si done=true: cerrar SOLO cuando termine la intro (para que sí se vea abrir el sobre)
   useEffect(() => {
     if (!done) return;
 
     const elapsed = performance.now() - startAtRef.current;
-    const remaining = Math.max(0, minDurationMs - elapsed);
+    const mustStay = startDelayMs + introTotalMs;
+    const remaining = Math.max(0, mustStay - elapsed);
 
-    const t = setTimeout(() => {
-      setFading(true);
+    clearAll();
+    closeTimerRef.current = setTimeout(() => startClose(), remaining);
 
-      const tFade = setTimeout(() => {
-        setVisible(false);
-
-        if (!hiddenCalledRef.current) {
-          hiddenCalledRef.current = true;
-          if (typeof onHidden === "function") onHidden();
-        }
-      }, fadeOutMs);
-
-      return () => clearTimeout(tFade);
-    }, remaining);
-
-    return () => clearTimeout(t);
-  }, [done, minDurationMs, fadeOutMs, onHidden]);
-
-  if (!visible) return null;
+    return () => clearAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done, startDelayMs, introTotalMs]);
 
   return createPortal(
     <div
       className={`mw-intro ${open ? "open" : ""} ${fading ? "mw-fadeout" : ""}`}
-      aria-label="Cargando"
+      style={{ ["--fadeMs"]: `${fadeOutMs}ms` }}
       aria-busy="true"
       role="status"
+      aria-label="Cargando"
     >
       <style dangerouslySetInnerHTML={{ __html: ENVELOPE_CSS }} />
 
+      {/* SOBRE fullscreen (oversized) */}
       <div className="mw-envelope" aria-hidden="true">
         <div className="mw-env-base" />
         <div className="mw-flap">
@@ -343,30 +346,31 @@ export function FullScreenLoader({
           <div className="mw-flap-right" />
           <div className="mw-flap-bottom" />
         </div>
-
-        <div className="mw-seal" aria-hidden="true">
-          <div className="mw-ring" />
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <defs>
-              <linearGradient id="mw_g" x1="0" x2="1">
-                <stop offset="0" stopColor="rgba(255,255,255,.92)" />
-                <stop offset=".55" stopColor="rgba(255,255,255,.70)" />
-                <stop offset="1" stopColor="rgba(255,255,255,.92)" />
-              </linearGradient>
-            </defs>
-            <path
-              fill="url(#mw_g)"
-              d="M32 55s-18-11.7-24-22.8C2.5 21.1 9.2 10 20.7 10c5.7 0 9.1 3 11.3 6.2C34.2 13 37.6 10 43.3 10 54.8 10 61.5 21.1 56 32.2 50 43.3 32 55 32 55z"
-            />
-          </svg>
-        </div>
       </div>
 
-      {showAux && (
+      {/* SELLO centrado */}
+      <div className="mw-seal" aria-hidden="true">
+        <div className="mw-ring" />
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id={`mw_g_${gradId}`} x1="0" x2="1">
+              <stop offset="0" stopColor="rgba(255,255,255,.92)" />
+              <stop offset=".55" stopColor="rgba(255,255,255,.70)" />
+              <stop offset="1" stopColor="rgba(255,255,255,.92)" />
+            </linearGradient>
+          </defs>
+          <path
+            fill={`url(#mw_g_${gradId})`}
+            d="M32 55s-18-11.7-24-22.8C2.5 21.1 9.2 10 20.7 10c5.7 0 9.1 3 11.3 6.2C34.2 13 37.6 10 43.3 10 54.8 10 61.5 21.1 56 32.2 50 43.3 32 55 32 55z"
+          />
+        </svg>
+      </div>
+
+      {/* AUXILIAR: solo si ya pasó la intro y aún no está done */}
+      {showAux && !done && (
         <div
           className="absolute inset-x-0 bottom-10 flex justify-center px-4"
           style={{ zIndex: 99999 }}
-          aria-hidden="true"
         >
           <div className="flex items-center gap-3 rounded-2xl bg-white/85 backdrop-blur-md border border-slate-200 shadow-xl px-4 py-3 max-w-[620px] w-full sm:w-auto">
             <div className="h-9 w-9 rounded-full border-2 border-slate-400/40 border-t-slate-700 animate-spin" />
