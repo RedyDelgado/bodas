@@ -1325,7 +1325,7 @@ const stopCelebration = () => {
 
                       {/* Pie premium (opcional pero suma) */}
                       <div className="text-[12px] text-slate-600 px-1">
-                        Gracias por ser parte de nuestra historia. ✨
+                        Gracias por ser parte de nuestra historia. 
                       </div>
                     </div>
                   </div>
@@ -1347,8 +1347,8 @@ const stopCelebration = () => {
         </div>
 
         {/* FLORES: SOLO EN LOS MÁRGENES (CENTRO ENMASCARADO) */}
-        <div
-          className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
+        <div        
+          className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
           style={{
             // Sin máscara CSS - solo vamos a mostrar imágenes en los laterales
           }}
