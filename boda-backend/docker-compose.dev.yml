@@ -1,7 +1,19 @@
+
 version: '3.8'
 
 services:
-  # Frontend en modo desarrollo con Vite HMR
+  app:
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      LOG_LEVEL: debug
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+
   frontend:
     build:
       context: ../boda-frontend
@@ -20,3 +32,7 @@ services:
       - app
     networks:
       - web
+
+networks:
+  web:
+    driver: bridge
