@@ -268,6 +268,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Confirmación manual de invitado (si llaman por teléfono, etc.)
         Route::post('/invitados/{invitado}/confirmar', [InvitadoController::class, 'confirmar']);
 
+        // Marcar como no asistirá
+        Route::post('/invitados/{invitado}/no-asistir', [InvitadoController::class, 'noAsistir']);
+
         // Envío de mensajes WhatsApp (crear log)
         Route::post('/invitados/{invitado}/enviar-whatsapp', [LogWhatsappEnvioController::class, 'enviarMensajeInvitado']);
         

@@ -192,6 +192,20 @@ class InvitadoController extends Controller
         ]);
     }
 
+    public function noAsistir(Request $request, Invitado $invitado)
+    {
+        $this->ensureOwnerOrAbort($invitado->boda);
+
+        $invitado->es_confirmado = -1;
+        $invitado->fecha_confirmacion = now();
+        $invitado->save();
+
+        return response()->json([
+            'message'  => 'Invitado marcado como no asistirá',
+            'invitado' => $invitado,
+        ]);
+    }
+
     // =============== IMPORTACIÓN DESDE ARCHIVO (CSV / XLSX) =================
 
     /**
