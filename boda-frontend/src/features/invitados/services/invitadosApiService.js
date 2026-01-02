@@ -30,9 +30,15 @@ function mapInvitadoFromApi(inv) {
     email: inv.correo,
     telefono: inv.celular,
     nombreAcompanante: inv.nombre_acompanante,
-    estadoConfirmacion: inv.es_confirmado ? "confirmado" : "pendiente",
+    estadoConfirmacion:
+      inv.es_confirmado === 1
+        ? "confirmado"
+        : inv.es_confirmado === -1
+        ? "no_asiste"
+        : "pendiente",
     fechaConfirmacion: inv.fecha_confirmacion,
     notas: inv.notas,
+    es_confirmado: inv.es_confirmado,
   };
 }
 
@@ -58,7 +64,12 @@ export async function updateInvitadoApi(id, datos) {
     pases: datos.pases,
     nombre_acompanante: datos.nombreAcompanante,
     notas: datos.notas,
-    es_confirmado: datos.estadoConfirmacion === "confirmado",
+    es_confirmado:
+      datos.estadoConfirmacion === "confirmado"
+        ? 1
+        : datos.estadoConfirmacion === "no_asiste"
+        ? -1
+        : 0,
   };
 
   const response = await axiosClient.put(`/invitados/${id}`, payload);

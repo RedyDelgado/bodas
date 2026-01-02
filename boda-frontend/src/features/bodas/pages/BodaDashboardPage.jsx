@@ -392,14 +392,14 @@ export function BodaDashboardPage() {
   const { boda, invitados, fotos } = resumen;
   const porcentajes = invitados?.porcentajes || {
     confirmados: 0,
-    rechazados: 0,
     pendientes: 0,
+    no_asisten: 0,
   };
 
   const totalInvitados = invitados?.total || 0;
   const totalConfirmados = invitados?.confirmados || 0;
   const totalPendientes = invitados?.pendientes || 0;
-  const totalRechazados = invitados?.rechazados || 0;
+  const totalNoAsisten = invitados?.no_asisten || 0;
   const totalAsistentes = invitados?.total_asistentes_confirmados || 0;
 
   const totalVistas = boda?.total_vistas || 0;
@@ -761,17 +761,17 @@ export function BodaDashboardPage() {
             <div className="bg-white rounded-2xl border border-rose-200 p-4 flex flex-col gap-1">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[11px] font-semibold text-rose-700 uppercase">
-                  Rechazados
+                  No asisten
                 </p>
                 <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-rose-50 text-rose-700">
                   <FiXCircle className="w-3.5 h-3.5" />
                 </span>
               </div>
               <p className="mt-1 text-2xl font-semibold text-rose-800">
-                {totalRechazados}
+                {totalNoAsisten}
               </p>
               <p className="text-[11px] text-rose-700">
-                No podrán asistir al evento.
+                Marcados por el equipo / llamadas.
               </p>
             </div>
           </div>
@@ -813,9 +813,9 @@ export function BodaDashboardPage() {
               </span>
               <span className="flex items-center gap-1">
                 <span className="h-2 w-2 rounded-full bg-slate-300" />
-                Rechazados:{" "}
+                No asisten:{" "}
                 <strong className="font-semibold">
-                  {porcentajes.rechazados}%
+                  {porcentajes.no_asisten ?? 0}%
                 </strong>
               </span>
             </div>

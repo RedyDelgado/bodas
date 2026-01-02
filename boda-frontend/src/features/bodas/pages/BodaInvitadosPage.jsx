@@ -8,6 +8,7 @@ import CardDesignerModal from "../components/CardDesignerModal";
 import EditInvitadoModal from "../components/EditInvitadoModal";
 
 import axiosClient from "../../../shared/config/axiosClient";
+import { generarPdfInvitados } from "../services/generarPdfInvitados";
 import GenerationProgressModal from "../components/GenerationProgressModal";
 
 // React Icons
@@ -151,6 +152,7 @@ export function BodaInvitadosPage() {
 
   // búsqueda
   const [busqueda, setBusqueda] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("todos");
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [descargandoZip, setDescargandoZip] = useState(false);
   // --------- CARGA INICIAL ----------
@@ -217,22 +219,33 @@ export function BodaInvitadosPage() {
   const stats = useMemo(() => {
     const totalInvitados = invitados.length;
     const totalPases = invitados.reduce((acc, i) => acc + (i.pases ?? 1), 0);
-    const totalConfirmados = invitados.filter((i) => i.es_confirmado).length;
-    const totalPendientes = invitados.filter(
-      (i) => !i.es_confirmado && !i.fecha_confirmacion
-    ).length;
-    const totalNoAsiste = invitados.filter(
-      (i) => !i.es_confirmado && i.fecha_confirmacion
-    ).length;
+    const totalPasesConfirmados = invitados
+      .filter((i) => i.es_confirmado === 1)
+      .reduce((acc, i) => acc + (i.pases ?? 1), 0);
+    const totalPasesPendientes = invitados
+      .filter(
+        (i) =>
+          i.es_confirmado === 0 ||
+          i.es_confirmado === null ||
+          i.es_confirmado === undefined
+      )
+      .reduce((acc, i) => acc + (i.pases ?? 1), 0);
+    const totalPasesNoAsiste = invitados
+      .filter((i) => i.es_confirmado === -1)
+      .reduce((acc, i) => acc + (i.pases ?? 1), 0);
+    const totalNoAsiste = invitados.filter((i) => i.es_confirmado === -1).length;
 
     return {
       totalInvitados,
       totalPases,
-      totalConfirmados,
-      totalPendientes,
+      totalConfirmados: totalPasesConfirmados,
+      totalPendientes: totalPasesPendientes,
       totalNoAsiste,
+      totalPasesNoAsiste,
     };
   }, [invitados]);
+
+  const pasesActivos = stats.totalPases - (stats.totalPasesNoAsiste ?? 0);
 
   // --------- HANDLERS FORM ----------
   const handleChange = (e) => {
@@ -616,19 +629,45 @@ const handleSaveEdit = async (formData) => {
     window.open(url, "_blank");
   };
 
+  // --------- DESCARGAR PDF ----------
+  const handleDescargarPdf = async () => {
+    try {
+      await generarPdfInvitados(boda, invitados);
+    } catch (error) {
+      console.error("Error descargando PDF:", error);
+      alert("No se pudo descargar el PDF. Intenta nuevamente.");
+    }
+  };
+
   // --------- FILTRO BUSCADOR ----------
-  const invitadosFiltrados = useMemo(() => {
-    if (!busqueda.trim()) return invitados;
-    const term = busqueda.toLowerCase();
-    return invitados.filter((i) => {
-      const nombre = (i.nombre_invitado || "").toLowerCase();
-      const codigo = (i.codigo_clave || "").toLowerCase();
-      const tel = (i.celular || i.telefono || "").toString().toLowerCase();
-      return (
-        nombre.includes(term) || codigo.includes(term) || tel.includes(term)
-      );
-    });
-  }, [busqueda, invitados]);
+    const aplicarFiltro = () => {
+      if (filtroEstado === "confirmados")
+        return invitados.filter((i) => i.es_confirmado === 1);
+      if (filtroEstado === "pendientes")
+        return invitados.filter(
+          (i) =>
+            i.es_confirmado === 0 ||
+            i.es_confirmado === null ||
+            i.es_confirmado === undefined
+        );
+      if (filtroEstado === "no_asisten")
+        return invitados.filter((i) => i.es_confirmado === -1);
+      return invitados;
+    };
+
+    const invitadosFiltrados = useMemo(() => {
+      const base = aplicarFiltro();
+      if (!busqueda.trim()) return base;
+      const term = busqueda.toLowerCase();
+      return base.filter((i) => {
+        const nombre = (i.nombre_invitado || "").toLowerCase();
+        const codigo = (i.codigo_clave || "").toLowerCase();
+        const tel = (i.celular || i.telefono || "").toString().toLowerCase();
+        return (
+          nombre.includes(term) || codigo.includes(term) || tel.includes(term)
+        );
+      });
+    }, [busqueda, filtroEstado, invitados]);
 
   // --------- NAVEGACIÓN ----------
   const handleIrDashboard = () => {
@@ -982,70 +1021,118 @@ const handleSaveEdit = async (formData) => {
 
       {/* Resumen + Buscador + Tabla */}
       <div className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-        {/* Resumen y buscador */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-          <div className="space-y-1">
-            <h2 className="text-sm font-semibold text-slate-900">
-              Lista de invitados
-            </h2>
-            <p className="text-xs text-slate-500">
-              Total: {stats.totalInvitados} invitado(s) · Pases:{" "}
-              {stats.totalPases}
-            </p>
-          </div>
-
-          <div className="flex flex-col items-stretch gap-3 md:items-end">
-            {/* Tarjetas de resumen */}
-            <div className="flex flex-wrap gap-2 justify-start md:justify-end">
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-1.5">
-                <FiUser className="w-4 h-4 text-slate-700" />
-                <span className="text-[11px] text-slate-600">
-                  Invitados:{" "}
-                  <span className="font-semibold">{stats.totalInvitados}</span>
-                </span>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-1.5">
-                <FiUsers className="w-4 h-4 text-slate-700" />
-                <span className="text-[11px] text-slate-600">
-                  Pases:{" "}
-                  <span className="font-semibold">{stats.totalPases}</span>
-                </span>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-1.5">
-                <FiCheckCircle className="w-4 h-4 text-emerald-700" />
-                <span className="text-[11px] text-emerald-700">
-                  Confirmados:{" "}
-                  <span className="font-semibold">
-                    {stats.totalConfirmados}
-                  </span>
-                </span>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-amber-100 bg-amber-50 px-3 py-1.5">
-                <FiClock className="w-4 h-4 text-amber-700" />
-                <span className="text-[11px] text-amber-700">
-                  Pendientes:{" "}
-                  <span className="font-semibold">{stats.totalPendientes}</span>
-                </span>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-rose-100 bg-rose-50 px-3 py-1.5">
-                <FiXCircle className="w-4 h-4 text-rose-700" />
-                <span className="text-[11px] text-rose-700">
-                  No asisten:{" "}
-                  <span className="font-semibold">{stats.totalNoAsiste}</span>
-                </span>
-              </div>
+        {/* Resumen, buscador y filtros unificados */}
+        <div className="flex flex-col gap-3 mb-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <div className="space-y-1">
+              <h2 className="text-sm font-semibold text-slate-900">
+                Lista de invitados
+              </h2>
+              <p className="text-xs text-slate-500">
+                Total: {stats.totalInvitados} invitado(s) · Pases: {stats.totalPases}
+              </p>
             </div>
 
-            {/* Buscador */}
-            <div className="relative w-full sm:w-64">
-              <input
-                type="text"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full rounded-full border border-slate-200 pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-200"
-                placeholder="Buscar por nombre, código o teléfono..."
-              />
-              <FiSearch className="absolute left-2.5 top-1.5 w-4 h-4 text-slate-400" />
+            <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+              <div className="relative flex-1 sm:w-72">
+                <input
+                  type="text"
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  className="w-full rounded-full border border-slate-200 pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  placeholder="Buscar por nombre, código o teléfono..."
+                />
+                <FiSearch className="absolute left-2.5 top-1.5 w-4 h-4 text-slate-400" />
+              </div>
+
+              <button
+                onClick={handleDescargarPdf}
+                disabled={!invitados.length}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-600 text-white px-4 py-2 text-xs font-medium hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                <FiDownload className="w-4 h-4" />
+                Descargar PDF
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setFiltroEstado("todos")}
+              aria-pressed={filtroEstado === "todos"}
+              className={`inline-flex items-center gap-2 rounded-2xl border px-3 py-1.5 text-[11px] font-medium transition ${
+                filtroEstado === "todos"
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
+              }`}
+            >
+              <FiUser className="w-4 h-4" />
+              <span>
+                Invitados: <span className="font-semibold">{stats.totalInvitados}</span>
+              </span>
+            </button>
+
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] text-slate-700">
+              <FiUsers className="w-4 h-4" />
+              <span>
+                Pases: <span className="font-semibold">{stats.totalPases}</span>
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setFiltroEstado("confirmados")}
+              aria-pressed={filtroEstado === "confirmados"}
+              className={`inline-flex items-center gap-2 rounded-2xl border px-3 py-1.5 text-[11px] font-medium transition ${
+                filtroEstado === "confirmados"
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "border-emerald-100 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              }`}
+            >
+              <FiCheckCircle className="w-4 h-4" />
+              <span>
+                Confirmados: <span className="font-semibold">{stats.totalConfirmados}</span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFiltroEstado("pendientes")}
+              aria-pressed={filtroEstado === "pendientes"}
+              className={`inline-flex items-center gap-2 rounded-2xl border px-3 py-1.5 text-[11px] font-medium transition ${
+                filtroEstado === "pendientes"
+                  ? "bg-amber-600 text-white border-amber-600"
+                  : "border-amber-100 bg-amber-50 text-amber-700 hover:bg-amber-100"
+              }`}
+            >
+              <FiClock className="w-4 h-4" />
+              <span>
+                Pendientes: <span className="font-semibold">{stats.totalPendientes}</span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFiltroEstado("no_asisten")}
+              aria-pressed={filtroEstado === "no_asisten"}
+              className={`inline-flex items-center gap-2 rounded-2xl border px-3 py-1.5 text-[11px] font-medium transition ${
+                filtroEstado === "no_asisten"
+                  ? "bg-rose-600 text-white border-rose-600"
+                  : "border-rose-100 bg-rose-50 text-rose-700 hover:bg-rose-100"
+              }`}
+            >
+              <FiXCircle className="w-4 h-4" />
+              <span>
+                No asisten: <span className="font-semibold">{stats.totalNoAsiste}</span>
+              </span>
+            </button>
+
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-blue-100 bg-blue-50 px-3 py-1.5 text-[11px] text-blue-700">
+              <FiUsers className="w-4 h-4" />
+              <span>
+                Pases activos: <span className="font-semibold">{pasesActivos}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -1109,12 +1196,12 @@ const handleSaveEdit = async (formData) => {
                       {i.pases ?? 1}
                     </td>
                     <td className="py-2 pr-4">
-                      {i.es_confirmado ? (
+                      {i.es_confirmado === 1 ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] text-emerald-700">
                           <FiCheckCircle className="w-3 h-3" />
                           Confirmado
                         </span>
-                      ) : i.fecha_confirmacion ? (
+                      ) : i.es_confirmado === -1 ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[11px] text-rose-700">
                           <FiXCircle className="w-3 h-3" />
                           No asiste

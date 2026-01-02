@@ -1,8 +1,36 @@
 // src/shared/config/axiosClient.js
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_API_URL || "/api"; // ej. "http://localhost:8000/api"
+
+// Fuerza credenciales en todas las peticiones
+axios.defaults.withCredentials = true;
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // ej. "http://localhost:8000/api"
+  baseURL,
+  withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-CSRF-TOKEN",
+  headers: {
+    Accept: "application/json",
+  },
+});
+
+// Interceptor para agregar CSRF token de la cookie y credenciales
+axiosClient.interceptors.request.use((config) => {
+  config.withCredentials = true;
+  
+  // Extrae el token XSRF de la cookie y lo agrega al header
+  const xsrfToken = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("XSRF-TOKEN="))
+    ?.split("=")[1];
+  
+  if (xsrfToken) {
+    config.headers["X-CSRF-TOKEN"] = decodeURIComponent(xsrfToken);
+  }
+  
+  return config;
 });
 
 // Interceptor de request: añade Bearer token si hay authToken

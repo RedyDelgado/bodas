@@ -26,6 +26,11 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
   const [estadoFormulario, setEstadoFormulario] = useState("idle"); // idle | loading | success | error
   const [mensajeError, setMensajeError] = useState("");
   const [invitadoEncontrado, setInvitadoEncontrado] = useState(null);
+  const [isClosed, setIsClosed] = useState(false);
+  const [deadlineMessage, setDeadlineMessage] = useState(
+    "Puedes confirmar hasta 10 días antes del evento."
+  );
+  const [deadlineLabel, setDeadlineLabel] = useState("");
 
   // Maneja envío final (confirmación) - solo se llama en etapa 'confirmar'
   const manejadorEnvio = async (e) => {
@@ -42,6 +47,14 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
     if (!numeroContacto.trim() || numeroContacto.trim().length < 6) {
       setEstadoFormulario("error");
       setMensajeError("Ingresa un número de celular válido.");
+      return;
+    }
+
+    if (etapa === "confirmar" && isClosed) {
+      setEstadoFormulario("error");
+      setMensajeError(
+        deadlineMessage || "Solo se puede confirmar hasta 10 días antes del evento para garantizar los espacios y platos."
+      );
       return;
     }
 
@@ -78,7 +91,13 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
       } else if (error.response?.status === 422) {
         const errores = error.response?.data?.errors;
         const primerError = errores ? Object.values(errores)[0] : null;
-        setMensajeError(Array.isArray(primerError) ? primerError[0] : primerError || "Datos inválidos.");
+        setIsClosed(Boolean(error.response?.data?.is_closed));
+        const mensajeApi = error.response?.data?.message;
+        setMensajeError(
+          Array.isArray(primerError)
+            ? primerError[0]
+            : mensajeApi || primerError || "Datos inválidos."
+        );
       } else {
         setMensajeError("Ocurrió un error al confirmar. Intenta más tarde.");
       }
@@ -97,6 +116,18 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
     try {
       setEstadoFormulario("loading");
       const data = await validarCodigo(codigoInvitacion.trim().toUpperCase());
+
+      const fechaLimite = data?.deadline_formatted || "";
+      const mensajeLimite =
+        data?.mensaje_deadline ||
+        (fechaLimite
+          ? `Puedes confirmar hasta el ${fechaLimite} (10 días antes del evento).`
+          : "Puedes confirmar hasta 10 días antes del evento.");
+
+      setDeadlineLabel(fechaLimite);
+      setDeadlineMessage(mensajeLimite);
+      setIsClosed(Boolean(data?.is_closed));
+
       if (data?.ok && data?.invitado) {
         const inv = data.invitado;
         setInvitadoEncontrado(inv);
@@ -104,7 +135,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
         setNumeroContacto(inv.celular || "");
 
         // Si ya está confirmado, notificar al padre para mostrar la celebración
-        if (inv.es_confirmado) {
+        if (inv.es_confirmado === 1) {
           setEstadoFormulario("success");
           if (onSuccess) {
             // Enviar datos similares a los que se envían tras confirmar
@@ -253,10 +284,27 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
                 </p>
               </div>
 
+              {deadlineMessage && (
+                <div className="bg-white/5 border border-amber-500/30 rounded-2xl p-2 sm:p-3 mb-4 backdrop-blur-sm">
+                  <p className="text-xs text-amber-100 flex gap-2 items-start">
+                    <FiClock className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <span>
+                      {deadlineMessage}
+                      {isClosed ? " (plazo cerrado)" : ""}
+                      {deadlineLabel
+                        ? ` | Fecha límite: ${deadlineLabel}`
+                        : ""}
+                    </span>
+                  </p>
+                </div>
+              )}
+
               {/* Botón enviar / validar */}
               <button
                 type="submit"
-                disabled={estadoFormulario === "loading"}
+                disabled={
+                  estadoFormulario === "loading" || (etapa === "confirmar" && isClosed)
+                }
                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all"
               >
                 {estadoFormulario === "loading" ? (

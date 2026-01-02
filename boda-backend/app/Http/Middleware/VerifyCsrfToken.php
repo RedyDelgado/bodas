@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'api/*',  // Las APIs son stateless y usan Bearer tokens, no CSRF
     ];
 }

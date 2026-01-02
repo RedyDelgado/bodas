@@ -32,7 +32,8 @@ class Invitado extends Model
 
     protected $casts = [
         'pases'              => 'integer',
-        'es_confirmado'      => 'boolean',
+        // Tri-estado: -1 = no asiste, 0 = pendiente, 1 = confirmado
+        'es_confirmado'      => 'integer',
         'fecha_confirmacion' => 'datetime',
 
         // NUEVO

@@ -153,7 +153,7 @@ class BodaController extends Controller
         $user = $request->user();
 
         $boda = Boda::where('user_id', $user->id)
-            ->with(['plan', 'plantilla'])
+            ->with(['plan', 'plantilla', 'configuracion'])
             ->first();
 
         if (!$boda) {
@@ -171,7 +171,7 @@ class BodaController extends Controller
         $user = $request->user();
 
         $bodas = Boda::where('user_id', $user->id)
-            ->with(['plan', 'plantilla'])
+            ->with(['plan', 'plantilla', 'configuracion'])
             ->orderBy('fecha_boda', 'desc')
             ->get();
 
@@ -250,31 +250,35 @@ public function resumenPropia(Request $request, Boda $boda)
 
     // Invitados
     $totalInvitados = $boda->invitados()->count();
-    $totalConfirmados = $boda->invitados()
-        ->where('es_confirmado', true)
-        ->count();
+    $totalConfirmados = $boda->invitados()->where('es_confirmado', 1)->count();
+    $totalNoAsisten = $boda->invitados()->where('es_confirmado', -1)->count();
+    $totalPendientes = $boda->invitados()->where('es_confirmado', 0)->count();
 
-    // En esta versión no manejamos "rechazados", así que siempre 0
-    $totalRechazados = 0;
-    $totalPendientes = $totalInvitados - $totalConfirmados - $totalRechazados;
-
-    // Pases (asistentes estimados) solo de confirmados
+    // Pases (asistentes estimados) por estado
     $totalAsistentesConfirmados = $boda->invitados()
-        ->where('es_confirmado', true)
+        ->where('es_confirmado', 1)
+        ->sum('pases');
+    $totalAsistentesPendientes = $boda->invitados()
+        ->where('es_confirmado', 0)
+        ->sum('pases');
+    $totalAsistentesNoAsisten = $boda->invitados()
+        ->where('es_confirmado', -1)
         ->sum('pases');
 
     // Porcentajes
-    $porcentaje = function (int $valor) use ($totalInvitados): int {
-        if ($totalInvitados === 0) {
+    $porcentaje = function (int $valor, int $baseTotal): int {
+        if ($baseTotal === 0) {
             return 0;
         }
-        return (int) round(($valor * 100) / $totalInvitados);
+        return (int) round(($valor * 100) / $baseTotal);
     };
 
+    $baseTotal = $totalInvitados === 0 ? 0 : $totalInvitados;
+
     $porcentajes = [
-        'confirmados' => $porcentaje($totalConfirmados),
-        'pendientes'  => $porcentaje($totalPendientes),
-        'rechazados'  => $porcentaje($totalRechazados),
+        'confirmados' => $porcentaje($totalConfirmados, $baseTotal),
+        'pendientes'  => $porcentaje($totalPendientes, $baseTotal),
+        'no_asisten'  => $porcentaje($totalNoAsisten, $baseTotal),
     ];
 
     // Fotos
@@ -299,8 +303,10 @@ public function resumenPropia(Request $request, Boda $boda)
             'total'                        => $totalInvitados,
             'confirmados'                  => $totalConfirmados,
             'pendientes'                   => $totalPendientes,
-            'rechazados'                   => $totalRechazados,
+            'no_asisten'                   => $totalNoAsisten,
             'total_asistentes_confirmados' => $totalAsistentesConfirmados,
+            'total_asistentes_pendientes'  => $totalAsistentesPendientes,
+            'total_asistentes_no_asisten'  => $totalAsistentesNoAsisten,
             'porcentajes'                  => $porcentajes,
         ],
         'fotos' => [

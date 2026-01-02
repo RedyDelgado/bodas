@@ -8,9 +8,43 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class PublicRsvpController extends Controller
 {
+    /**
+     * Calcula el límite de confirmación: fecha_boda - 10 días (23:59:59).
+     * Plazo para confirmar espacios y cantidad de platos.
+     */
+    protected function calcularDeadline(?Invitado $invitado): ?Carbon
+    {
+        $boda = $invitado?->boda;
+
+        if (! $boda || empty($boda->fecha_boda)) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($boda->fecha_boda)
+                ->subDays(10)
+                ->endOfDay();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    protected function buildDeadlineMeta(?Carbon $deadline): array
+    {
+        $formatted = $deadline?->format('d/m/Y');
+        return [
+            'deadline'           => $deadline?->toIso8601String(),
+            'deadline_formatted' => $formatted,
+            'mensaje_deadline'   => $formatted
+                ? "Solo puedes confirmar hasta el {$formatted}"
+                : null,
+        ];
+    }
+
     /**
      * Registrar la respuesta pública de un invitado.
      *
@@ -43,7 +77,7 @@ class PublicRsvpController extends Controller
             ], 422);
         }
 
-        $invitado = Invitado::where('codigo_clave', $request->codigo)->first();
+        $invitado = Invitado::with('boda')->where('codigo_clave', $request->codigo)->first();
 
         if (! $invitado) {
             return response()->json([
@@ -51,8 +85,21 @@ class PublicRsvpController extends Controller
             ], 404);
         }
 
+        $deadline = $this->calcularDeadline($invitado);
+        $isClosed = $deadline && now()->greaterThan($deadline);
+
+        if ($request->respuesta === 'confirmado' && $isClosed) {
+            $meta = $this->buildDeadlineMeta($deadline);
+
+            return response()->json([
+                'message' => $meta['mensaje_deadline'] ?? 'El plazo de confirmación ha finalizado.',
+                'is_closed' => true,
+            ] + $meta, 422);
+        }
+
         // Actualizamos estado de confirmación
-        $invitado->es_confirmado      = $request->respuesta === 'confirmado';
+        $nuevoEstado = $request->respuesta === 'confirmado' ? 1 : -1;
+        $invitado->es_confirmado      = $nuevoEstado;
         $invitado->fecha_confirmacion = now();
 
         if ($request->filled('cantidad_personas')) {
@@ -69,22 +116,25 @@ class PublicRsvpController extends Controller
 
         $invitado->save();
 
+        $deadlineMeta = $this->buildDeadlineMeta($deadline);
+
         return response()->json([
             'message'  => 'Respuesta registrada correctamente. ¡Gracias por confirmar!',
             'invitado' => [
-                'id'                => $invitado->id,
-                'nombre_invitado'   => $invitado->nombre_invitado,
-                'es_confirmado'     => $invitado->es_confirmado,
-                'pases'             => $invitado->pases,
-                'fecha_confirmacion'=> $invitado->fecha_confirmacion,
-                'notas'             => $invitado->notas,
-                'celular'           => $invitado->celular,
+                'id'                  => $invitado->id,
+                'nombre_invitado'     => $invitado->nombre_invitado,
+                'es_confirmado'       => $invitado->es_confirmado,
+                'estado_publico'      => $invitado->es_confirmado === 1 ? 'confirmado' : 'pendiente',
+                'pases'               => $invitado->pases,
+                'fecha_confirmacion'  => $invitado->fecha_confirmacion,
+                'notas'               => $invitado->notas,
+                'celular'             => $invitado->celular,
             ],
-        ]);
+        ] + $deadlineMeta);
     }
     public function validar($codigo)
     {
-        $invitado = Invitado::where('codigo_clave', $codigo)->first();
+        $invitado = Invitado::with('boda')->where('codigo_clave', $codigo)->first();
 
         if (!$invitado) {
             return response()->json([
@@ -93,10 +143,26 @@ class PublicRsvpController extends Controller
             ], 404);
         }
 
+        $deadline = $this->calcularDeadline($invitado);
+        $isClosed = $deadline && now()->greaterThan($deadline);
+        $deadlineMeta = $this->buildDeadlineMeta($deadline);
+
         return response()->json([
             'ok' => true,
-            'invitado' => $invitado
-        ]);
+            'is_closed' => $isClosed,
+            'invitado' => [
+                'id'                 => $invitado->id,
+                'nombre_invitado'    => $invitado->nombre_invitado,
+                'pases'              => $invitado->pases,
+                // No exponemos “no asiste” en público; lo tratamos como pendiente
+                'es_confirmado'      => $invitado->es_confirmado === 1 ? 1 : 0,
+                'estado_publico'     => $invitado->es_confirmado === 1 ? 'confirmado' : 'pendiente',
+                'fecha_confirmacion' => $invitado->fecha_confirmacion,
+                'notas'              => $invitado->notas,
+                'celular'            => $invitado->celular,
+                'estado_interno'     => $invitado->es_confirmado,
+            ],
+        ] + $deadlineMeta);
     }
 
 }

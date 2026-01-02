@@ -8,6 +8,7 @@ use App\Models\Invitado;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 // NUEVO: para leer XLSX/XLS
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -31,7 +32,7 @@ class InvitadoController extends Controller
             'correo'             => 'nullable|email|max:150',
             'celular'            => 'nullable|string|max:30',
             'nombre_acompanante' => 'nullable|string|max:150',
-            'es_confirmado'      => 'boolean',
+            'es_confirmado'      => ['nullable', Rule::in([-1, 0, 1])],
             'notas'              => 'nullable|string|max:255',
         ];
 
@@ -41,6 +42,24 @@ class InvitadoController extends Controller
         }
 
         return $request->validate($baseRules);
+    }
+
+    protected function syncEstado(Invitado $invitado, array &$data): void
+    {
+        if (! array_key_exists('es_confirmado', $data)) {
+            return;
+        }
+
+        $estado = (int) $data['es_confirmado'];
+        $data['es_confirmado'] = $estado;
+
+        if ($estado === 1) {
+            $invitado->fecha_confirmacion = now();
+        } elseif ($estado === 0) {
+            $invitado->fecha_confirmacion = null;
+        } elseif ($estado === -1) {
+            $invitado->fecha_confirmacion = $invitado->fecha_confirmacion ?? now();
+        }
     }
 
     // ================= SUPERADMIN – apiResource(bodas.invitados) ================
@@ -68,7 +87,8 @@ class InvitadoController extends Controller
     public function update(Request $request, Invitado $invitado)
     {
         $data = $this->validateData($request, false);
-        $invitado->update($data);
+        $this->syncEstado($invitado, $data);
+        $invitado->fill($data)->save();
 
         return response()->json($invitado);
     }
@@ -143,7 +163,8 @@ class InvitadoController extends Controller
         $this->ensureOwnerOrAbort($invitado->boda);
 
         $data = $this->validateData($request, false);
-        $invitado->update($data);
+        $this->syncEstado($invitado, $data);
+        $invitado->fill($data)->save();
 
         return response()->json($invitado);
     }
@@ -161,7 +182,7 @@ class InvitadoController extends Controller
     {
         $this->ensureOwnerOrAbort($invitado->boda);
 
-        $invitado->es_confirmado = true;
+        $invitado->es_confirmado = 1;
         $invitado->fecha_confirmacion = now();
         $invitado->save();
 

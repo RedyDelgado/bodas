@@ -1,15 +1,38 @@
 // src/features/auth/services/authService.js
 import axiosClient from "../../../shared/config/axiosClient";
 
+async function ensureCsrfCookie() {
+  // Necesario para Sanctum cuando usamos cookies + withCredentials
+  const apiBase = axiosClient.defaults.baseURL || "/api";
+  // Si baseURL es absoluta, tomamos el origin; si es relativa, usamos mismo host
+  let origin = "";
+  try {
+    const url = new URL(apiBase, window.location.origin);
+    origin = url.origin;
+  } catch (_) {
+    origin = window.location.origin;
+  }
+  await axiosClient.get(`${origin}/sanctum/csrf-cookie`, { withCredentials: true });
+}
+
 /**
  * Login real contra backend Laravel.
- * Ajusta los nombres de campos según tu backend si fuera necesario.
+ * Usa form-urlencoded que es lo que Sanctum espera con cookies.
  */
 export async function loginApi({ email, password }) {
-  const { data } = await axiosClient.post("/auth/login", {
-    email,
-    password,
-  });
+  // Crea el body en formato form-urlencoded (así funciona con Sanctum + cookies)
+  const body = new URLSearchParams();
+  body.append("email", email);
+  body.append("password", password);
+  
+  const { data } = await axiosClient.post(
+    "/auth/login",
+    body,
+    { 
+      withCredentials: true,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    }
+  );
 
   // Se espera algo como:
   // {
