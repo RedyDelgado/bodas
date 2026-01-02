@@ -44,6 +44,11 @@ export const invitadosApi = {
     const res = await axiosClient.post(`/invitados/${id}/confirmar`);
     return res.data;
   },
+
+  async noAsistir(id) {
+    const res = await axiosClient.post(`/invitados/${id}/no-asistir`);
+    return res.data;
+  },
   
   async importarExcel(bodaId, formData) {
     const res = await axiosClient.post(

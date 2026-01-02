@@ -219,27 +219,22 @@ export function BodaInvitadosPage() {
   const stats = useMemo(() => {
     const totalInvitados = invitados.length;
     const totalPases = invitados.reduce((acc, i) => acc + (i.pases ?? 1), 0);
+    const totalConfirmados = invitados.filter((i) => i.es_confirmado === 1).length;
     const totalPasesConfirmados = invitados
       .filter((i) => i.es_confirmado === 1)
       .reduce((acc, i) => acc + (i.pases ?? 1), 0);
-    const totalPasesPendientes = invitados
-      .filter(
-        (i) =>
-          i.es_confirmado === 0 ||
-          i.es_confirmado === null ||
-          i.es_confirmado === undefined
-      )
-      .reduce((acc, i) => acc + (i.pases ?? 1), 0);
+    const totalNoAsiste = invitados.filter((i) => i.es_confirmado === -1).length;
     const totalPasesNoAsiste = invitados
       .filter((i) => i.es_confirmado === -1)
       .reduce((acc, i) => acc + (i.pases ?? 1), 0);
-    const totalNoAsiste = invitados.filter((i) => i.es_confirmado === -1).length;
+    const totalPendientes = totalInvitados - totalConfirmados - totalNoAsiste;
 
     return {
       totalInvitados,
       totalPases,
-      totalConfirmados: totalPasesConfirmados,
-      totalPendientes: totalPasesPendientes,
+      totalConfirmados: totalConfirmados,
+      totalPasesConfirmados: totalPasesConfirmados,
+      totalPendientes,
       totalNoAsiste,
       totalPasesNoAsiste,
     };
@@ -307,6 +302,20 @@ export function BodaInvitadosPage() {
     } catch (error) {
       console.error(error);
       alert("No se pudo marcar como confirmado.");
+    }
+  };
+
+  const handleNoAsistir = async (id) => {
+    try {
+      const resp = await invitadosApi.noAsistir(id);
+      const invitadoActualizado = resp.invitado ?? resp;
+
+      setInvitados((prev) =>
+        prev.map((i) => (i.id === id ? invitadoActualizado : i))
+      );
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo marcar como no asistirá.");
     }
   };
 
@@ -1259,6 +1268,17 @@ const handleSaveEdit = async (formData) => {
                           Confirmar
                         </button>
                       )}
+                      {i.es_confirmado !== -1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleNoAsistir(i.id)}
+                          disabled={genOpen}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-medium text-red-700 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <FiXCircle className="w-3.5 h-3.5" />
+                          No asistirá
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => handleEditar(i)}
@@ -1271,7 +1291,7 @@ const handleSaveEdit = async (formData) => {
                         type="button"
                         onClick={() => handleEliminar(i.id)}
                         disabled={genOpen}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-medium text-rose-700 hover:bg-rose-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <FiTrash2 className="w-3.5 h-3.5" />
                         Eliminar
