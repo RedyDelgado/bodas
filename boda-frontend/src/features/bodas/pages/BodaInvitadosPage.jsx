@@ -622,14 +622,26 @@ const handleSaveEdit = async (formData) => {
     const nombrePareja = boda?.nombre_pareja || "nuestra boda";
     const fecha = boda?.fecha_boda || "";
 
+    // Formatea fecha a un formato legible (ej: 31 de enero de 2026)
+    const fechaLegible = (() => {
+      if (!fecha) return "";
+      const d = new Date(fecha);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+    })();
+
     let mensaje = [
       `¡Hola ${invitado.nombre_invitado}!`,
       `Te invitamos a acompañarnos en nuestra boda, ${nombrePareja}${
-        fecha ? ` el ${fecha}` : ""
+        fechaLegible ? ` el ${fechaLegible}` : ""
       }.`,
       enlaceRsvp
         ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
-        : "Te agradecemos que nos confirmes tu asistencia.",
+        : "Te agradecemos que nos confirmes tu asistencia cuantos antes.",
     ].join("\n\n");
 
     const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
