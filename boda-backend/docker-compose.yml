@@ -128,7 +128,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-"R3DY@D3M3TR10"}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-"D3LG4D0#S3QU3IR0S"}
     ports:
-      - "3307:3306"
+      - "33060:3306"
     volumes:
       - ./.docker/mysql:/var/lib/mysql
     networks:
