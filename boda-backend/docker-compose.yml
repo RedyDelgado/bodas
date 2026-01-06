@@ -65,7 +65,7 @@ services:
       DB_PORT: ${DB_PORT:-3306}
       DB_DATABASE: ${DB_DATABASE:-db_wedding}
       DB_USERNAME: ${DB_USERNAME:-db_wedding}
-      DB_PASSWORD: ${DB_PASSWORD:-secret123}
+      DB_PASSWORD: ${DB_PASSWORD:-"R3DY@D3M3TR10"}
 
       # CORS / cookies para SPA + Sanctum
       SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-${SERVER_IP},localhost:3000}
@@ -125,8 +125,8 @@ services:
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-db_wedding}
       MYSQL_USER: ${DB_USERNAME:-db_wedding}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-secret123}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-"R3DY@D3M3TR10"}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-"D3LG4D0#S3QU3IR0S"}
     ports:
       - "3307:3306"
     volumes:
