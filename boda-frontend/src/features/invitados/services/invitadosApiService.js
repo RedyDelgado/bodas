@@ -86,3 +86,22 @@ export async function confirmarInvitadoApi(id) {
   const raw = response.data.data || response.data;
   return mapInvitadoFromApi(raw);
 }
+
+/**
+ * ADMIN_BODA – marcar invitado como "no asistirá" manualmente.
+ *   POST /invitados/{invitado}/no-asistir
+ */
+export async function noAsistiraInvitadoApi(id) {
+  const response = await axiosClient.post(`/invitados/${id}/no-asistir`);
+  const raw = response.data.invitado || response.data.data || response.data;
+  return mapInvitadoFromApi(raw);
+}
+
+/**
+ * ADMIN_BODA – eliminar invitado propio.
+ *   DELETE /invitados/{invitado}
+ */
+export async function eliminarInvitadoApi(id) {
+  await axiosClient.delete(`/invitados/${id}`);
+  return { id };
+}

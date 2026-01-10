@@ -9,6 +9,8 @@ export default defineConfig({
     ),
   },
   server: {
+    hmr: { overlay: false },
+    watch: { usePolling: true, interval: 1000 },
     historyApiFallback: true,
     proxy: {
       "/api": {

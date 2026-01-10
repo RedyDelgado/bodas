@@ -246,6 +246,22 @@ export function InvitadoSidebar({
               >
                 Confirmado
               </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setForm((prev) => ({
+                    ...prev,
+                    estadoConfirmacion: "no_asiste",
+                  }))
+                }
+                className={`px-3 py-1 rounded-full text-xs border ${
+                  form.estadoConfirmacion === "no_asiste"
+                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                    : "bg-white text-slate-600 border-slate-200"
+                }`}
+              >
+                No asistirá
+              </button>
             </div>
           </div>
 

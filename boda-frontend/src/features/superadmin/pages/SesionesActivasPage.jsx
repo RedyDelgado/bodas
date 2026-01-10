@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiMonitor, FiUser, FiMapPin, FiClock, FiRefreshCw } from 'react-icons/fi';
+import { ImSpinner2 } from 'react-icons/im';
 import axiosClient from '../../../shared/config/axiosClient';
 
 const SesionesActivasPage = () => {
@@ -61,53 +62,57 @@ const SesionesActivasPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Encabezado */}
+    <div className="space-y-5 text-[14px]">
+      {/* Encabezado Premium */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Sesiones Activas</h1>
-          <p className="text-slate-600">Usuarios conectados actualmente en la plataforma</p>
+          <h1 className="text-2xl font-semibold text-slate-800 mb-1.5 flex items-center gap-2">
+            <FiMonitor className="text-blue-600" size={26} />
+            Sesiones Activas
+          </h1>
+          <p className="text-slate-600 text-[13px]">Usuarios conectados actualmente en la plataforma</p>
         </div>
         <button
           onClick={cargarSesiones}
           disabled={actualizando}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-3.5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold text-sm"
         >
-          <FiRefreshCw size={18} className={actualizando ? 'animate-spin' : ''} />
+          <FiRefreshCw size={16} className={actualizando ? 'animate-spin' : ''} />
           <span>Actualizar</span>
         </button>
       </div>
 
-      {/* Tarjeta de resumen */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+      {/* Tarjeta de resumen Premium */}
+      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
         <div className="flex items-center gap-4">
-          <div className="p-4 bg-white bg-opacity-20 rounded-lg">
-            <FiMonitor size={32} />
+          <div className="p-3 bg-white bg-opacity-20 rounded-xl">
+            <FiMonitor size={24} />
           </div>
           <div>
-            <h2 className="text-4xl font-bold">{totalSesiones}</h2>
-            <p className="text-blue-100">Sesiones activas en este momento</p>
+            <h2 className="text-3xl font-bold">{totalSesiones}</h2>
+            <p className="text-blue-100 text-sm">Sesiones activas en este momento</p>
           </div>
         </div>
       </div>
 
-      {/* Lista de sesiones */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Lista de sesiones Premium */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
         {cargando ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
+          <div className="flex flex-col justify-center items-center h-64">
+            <ImSpinner2 className="animate-spin text-slate-600 mb-4" size={48} />
+            <p className="text-slate-600">Cargando sesiones...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50">
+              <thead className="bg-slate-50 text-xs uppercase">
                 <tr>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Usuario</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Dispositivo</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Navegador</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">IP</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Última Actividad</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Tiempo Conectado</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">Usuario</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">Dispositivo</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">Navegador</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">IP</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">Última Actividad</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">Tiempo Conectado</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -122,8 +127,8 @@ const SesionesActivasPage = () => {
                     <tr key={sesion.id} className="hover:bg-slate-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
-                            <FiUser className="text-slate-600" size={20} />
+                          <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center">
+                            <FiUser className="text-slate-600" size={18} />
                           </div>
                           <div>
                             <p className="text-sm font-medium text-slate-800">

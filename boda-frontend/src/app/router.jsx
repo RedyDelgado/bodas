@@ -30,6 +30,7 @@ import GestionUsuariosPage from "../features/superadmin/pages/GestionUsuariosPag
 import GestionBodasPage from "../features/superadmin/pages/GestionBodasPage.jsx";
 import IpsBloqueadasPage from "../features/superadmin/pages/IpsBloqueadasPage.jsx";
 import SesionesActivasPage from "../features/superadmin/pages/SesionesActivasPage.jsx";
+import BackupAdmin from "../components/Admin/BackupAdmin.jsx";
 
 // Hook para detectar dominio personalizado
 import { useDomainDetection } from "../shared/hooks/useDomainDetection.js";
@@ -98,6 +99,7 @@ export function AppRouter() {
           <Route path="/admin/bodas" element={<GestionBodasPage />} />
           <Route path="/admin/ips-bloqueadas" element={<IpsBloqueadasPage />} />
           <Route path="/admin/sesiones-activas" element={<SesionesActivasPage />} />
+          <Route path="/admin/backups" element={<BackupAdmin />} />
           {/* Más adelante: /admin/bodas, /admin/planes, /admin/plantillas, etc. */}
         </Route>
 

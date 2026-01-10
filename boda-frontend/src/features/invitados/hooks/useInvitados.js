@@ -4,6 +4,8 @@ import {
   obtenerInvitadosPorBoda,
   actualizarInvitado,
   confirmarInvitado,
+  marcarNoAsistira,
+  eliminarInvitado,
 } from "../services/invitadosService";
 
 /**
@@ -74,6 +76,52 @@ export function useInvitados(bodaId) {
     }
   }, []);
 
+  /**
+   * Marca "no asistirá" y actualiza estado en memoria.
+   */
+  const noAsistira = useCallback(async (id) => {
+    try {
+      const actualizado = await marcarNoAsistira(id);
+      setInvitados((prev) =>
+        prev.map((inv) => (inv.id === id ? actualizado : inv))
+      );
+      return actualizado;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }, []);
+
+  /**
+   * Revertir a pendiente mediante actualización genérica.
+   */
+  const revertirPendiente = useCallback(async (id) => {
+    try {
+      const actualizado = await actualizarInvitado(id, { estadoConfirmacion: "pendiente" });
+      setInvitados((prev) =>
+        prev.map((inv) => (inv.id === id ? actualizado : inv))
+      );
+      return actualizado;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }, []);
+
+  /**
+   * Eliminar invitado de la lista.
+   */
+  const eliminar = useCallback(async (id) => {
+    try {
+      await eliminarInvitado(id);
+      setInvitados((prev) => prev.filter((inv) => inv.id !== id));
+      return true;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }, []);
+
   return {
     invitados,
     cargando,
@@ -81,5 +129,8 @@ export function useInvitados(bodaId) {
     recargar: cargarInvitados,
     guardarInvitado,
     confirmar,
+    noAsistira,
+    revertirPendiente,
+    eliminar,
   };
 }

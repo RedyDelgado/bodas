@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiFilter, FiSearch, FiAlertCircle, FiInfo, FiShield } from 'react-icons/fi';
+import { ImSpinner2 } from 'react-icons/im';
 import axiosClient from '../../../shared/config/axiosClient';
 
 const LogsAuditoriaPage = () => {
@@ -96,43 +97,48 @@ const LogsAuditoriaPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Encabezado */}
+    <div className="space-y-5 text-[14px]">
+      {/* Encabezado Premium */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Logs de Auditoría</h1>
-        <p className="text-slate-600">Registro de todas las acciones importantes en la plataforma</p>
+        <h1 className="text-2xl font-semibold text-slate-800 mb-1.5 flex items-center gap-2">
+          <FiShield className="text-slate-600" size={26} />
+          Logs de Auditoría
+        </h1>
+        <p className="text-slate-600 text-[13px]">Registro de todas las acciones importantes en la plataforma</p>
       </div>
 
-      {/* Filtros */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <FiFilter className="text-slate-600" size={20} />
-          <h2 className="text-lg font-bold text-slate-800">Filtros</h2>
+      {/* Filtros Premium */}
+      <div className="bg-white rounded-xl shadow-lg p-5 border border-slate-200">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="bg-slate-100 p-2 rounded-lg">
+            <FiFilter className="text-slate-600" size={18} />
+          </div>
+          <h2 className="text-base font-semibold text-slate-800">Filtros</h2>
         </div>
-        
-        <form onSubmit={aplicarFiltros} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+        <form onSubmit={aplicarFiltros} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Usuario</label>
+            <label className="block text-[11px] font-semibold text-slate-700 mb-1 uppercase tracking-wider">Usuario</label>
             <select
               value={filtros.usuario_id}
               onChange={(e) => setFiltros({ ...filtros, usuario_id: e.target.value })}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 text-sm"
             >
-              <option value="">Todos los usuarios</option>
+              <option value="">Todos</option>
               {usuarios.map((usuario) => (
                 <option key={usuario.id} value={usuario.id}>
-                  {usuario.name} ({usuario.email})
+                  {usuario.name}
                 </option>
               ))}
             </select>
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Acción</label>
+            <label className="block text-[11px] font-semibold text-slate-700 mb-1 uppercase tracking-wider">Acción</label>
             <select
               value={filtros.accion}
               onChange={(e) => setFiltros({ ...filtros, accion: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 text-sm"
             >
               <option value="">Todas</option>
               {accionesDisponibles.map((accion) => (
@@ -144,11 +150,11 @@ const LogsAuditoriaPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Nivel</label>
+            <label className="block text-[11px] font-semibold text-slate-700 mb-1 uppercase tracking-wider">Nivel</label>
             <select
               value={filtros.nivel}
               onChange={(e) => setFiltros({ ...filtros, nivel: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 text-sm"
             >
               <option value="">Todos</option>
               <option value="CRITICO">CRÍTICO</option>
@@ -158,7 +164,7 @@ const LogsAuditoriaPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Fecha Desde</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Fecha Desde</label>
             <input
               type="date"
               value={filtros.fecha_desde}
@@ -168,7 +174,7 @@ const LogsAuditoriaPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Fecha Hasta</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Fecha Hasta</label>
             <input
               type="date"
               value={filtros.fecha_hasta}
@@ -180,14 +186,14 @@ const LogsAuditoriaPage = () => {
           <div className="flex items-end gap-2">
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              className="flex-1 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-semibold"
             >
               Aplicar
             </button>
             <button
               type="button"
               onClick={limpiarFiltros}
-              className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+              className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-semibold"
             >
               Limpiar
             </button>
@@ -205,14 +211,14 @@ const LogsAuditoriaPage = () => {
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-50">
+                <thead className="bg-slate-50 text-xs uppercase">
                   <tr>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Fecha</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Usuario</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Acción</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Nivel</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Descripción</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">IP</th>
+                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Fecha</th>
+                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Usuario</th>
+                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Acción</th>
+                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Nivel</th>
+                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Descripción</th>
+                    <th className="text-left py-3 px-4 font-semibold text-slate-700">IP</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -235,7 +241,7 @@ const LogsAuditoriaPage = () => {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           {obtenerIconoNivel(log.nivel)}
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${obtenerColorNivel(log.nivel)}`}>
+                          <span className={`px-2 py-1 rounded text-[11px] font-semibold ${obtenerColorNivel(log.nivel)}`}>
                             {log.nivel}
                           </span>
                         </div>
@@ -254,22 +260,22 @@ const LogsAuditoriaPage = () => {
 
             {/* Paginación */}
             {totalPaginas > 1 && (
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-                <div className="text-sm text-slate-600">
+              <div className="px-5 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-sm">
+                <div className="text-slate-600">
                   Página {paginaActual} de {totalPaginas}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setPaginaActual((p) => Math.max(1, p - 1))}
                     disabled={paginaActual === 1}
-                    className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3.5 py-2 border border-slate-300 rounded-lg font-semibold text-slate-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Anterior
                   </button>
                   <button
                     onClick={() => setPaginaActual((p) => Math.min(totalPaginas, p + 1))}
                     disabled={paginaActual === totalPaginas}
-                    className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3.5 py-2 border border-slate-300 rounded-lg font-semibold text-slate-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Siguiente
                   </button>

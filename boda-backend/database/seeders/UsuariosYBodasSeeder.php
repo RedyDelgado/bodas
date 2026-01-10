@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Faker\Factory as Faker;
+use FakerPHP\Faker\Factory;
 
 use App\Models\{
     User,
@@ -22,7 +22,7 @@ class UsuariosYBodasSeeder extends Seeder
 {
     public function run(): void
     {
-        $faker = Faker::create('es_PE');
+        $faker = Factory::create('es_PE');
 
         $rolSuperadmin = Role::where('nombre', 'superadmin')->first();
         $rolAdminBoda  = Role::where('nombre', 'admin_boda')->first();

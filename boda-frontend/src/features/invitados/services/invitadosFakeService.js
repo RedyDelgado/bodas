@@ -60,3 +60,30 @@ export function confirmarInvitadoFake(id) {
 
   return Promise.resolve(INVITADOS_FAKE[index]);
 }
+
+/**
+ * Marca un invitado como "no asistirá" en el fake.
+ */
+export function noAsistiraInvitadoFake(id) {
+  const index = INVITADOS_FAKE.findIndex((inv) => inv.id === id);
+  if (index === -1) {
+    return Promise.resolve(null);
+  }
+
+  INVITADOS_FAKE[index] = {
+    ...INVITADOS_FAKE[index],
+    estadoConfirmacion: "no_asiste",
+  };
+
+  return Promise.resolve(INVITADOS_FAKE[index]);
+}
+
+/**
+ * Elimina un invitado del array fake.
+ */
+export function eliminarInvitadoFake(id) {
+  const index = INVITADOS_FAKE.findIndex((inv) => inv.id === id);
+  if (index === -1) return Promise.resolve(false);
+  INVITADOS_FAKE.splice(index, 1);
+  return Promise.resolve(true);
+}

@@ -1,6 +1,4 @@
 
-version: '3.8'
-
 services:
   app:
     environment:
@@ -8,6 +6,12 @@ services:
       APP_DEBUG: "true"
       APP_URL: http://localhost:8000
       LOG_LEVEL: debug
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: db_wedding
+      DB_USERNAME: db_wedding
+      DB_PASSWORD: R3DY@D3M3TR10
+      DB_ROOT_PASSWORD: D3LG4D0#S3QU3IR0S
     ports:
       - "8000:80"
     volumes:
@@ -27,9 +31,18 @@ services:
     environment:
       - VITE_API_URL=http://localhost:8000/api
       - VITE_USE_FAKE=false
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     command: npm run dev -- --host 0.0.0.0
     depends_on:
       - app
+    networks:
+      - web
+
+  mysql:
+    environment:
+      MYSQL_PASSWORD: R3DY@D3M3TR10
+      MYSQL_ROOT_PASSWORD: D3LG4D0#S3QU3IR0S
     networks:
       - web
 

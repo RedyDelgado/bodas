@@ -356,6 +356,20 @@ export function AdminLayout() {
                 <IconLayers className="w-4 h-4" />
                 <span>Sesiones Activas</span>
               </NavLink>
+              
+              <NavLink
+                to="/admin/backups"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`
+                }
+              >
+                <IconSettings className="w-4 h-4" />
+                <span>Gestión de Backups</span>
+              </NavLink>
             </>
           )}
 

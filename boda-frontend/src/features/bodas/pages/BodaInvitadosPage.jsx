@@ -10,6 +10,7 @@ import EditInvitadoModal from "../components/EditInvitadoModal";
 import axiosClient from "../../../shared/config/axiosClient";
 import { generarPdfInvitados } from "../services/generarPdfInvitados";
 import GenerationProgressModal from "../components/GenerationProgressModal";
+import { ConfirmationDialog } from "../../public/components/ConfirmationDialog";
 
 // React Icons
 import {
@@ -155,6 +156,9 @@ export function BodaInvitadosPage() {
   const [filtroEstado, setFiltroEstado] = useState("todos");
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [descargandoZip, setDescargandoZip] = useState(false);
+  // Modales de confirmación de acciones
+  const [modalAccion, setModalAccion] = useState({ open: false, tipo: null, invitado: null });
+  const [procesandoAccion, setProcesandoAccion] = useState(false);
   // --------- CARGA INICIAL ----------
   useEffect(() => {
     if (!bodaId) {
@@ -228,6 +232,9 @@ export function BodaInvitadosPage() {
       .filter((i) => i.es_confirmado === -1)
       .reduce((acc, i) => acc + (i.pases ?? 1), 0);
     const totalPendientes = totalInvitados - totalConfirmados - totalNoAsiste;
+    const totalPasesPendientes = invitados
+      .filter((i) => i.es_confirmado === 0 || i.es_confirmado === null)
+      .reduce((acc, i) => acc + (i.pases ?? 1), 0);
 
     return {
       totalInvitados,
@@ -235,12 +242,11 @@ export function BodaInvitadosPage() {
       totalConfirmados: totalConfirmados,
       totalPasesConfirmados: totalPasesConfirmados,
       totalPendientes,
+      totalPasesPendientes,
       totalNoAsiste,
       totalPasesNoAsiste,
     };
   }, [invitados]);
-
-  const pasesActivos = stats.totalPases - (stats.totalPasesNoAsiste ?? 0);
 
   // --------- HANDLERS FORM ----------
   const handleChange = (e) => {
@@ -316,6 +322,50 @@ export function BodaInvitadosPage() {
     } catch (error) {
       console.error(error);
       alert("No se pudo marcar como no asistirá.");
+    }
+  };
+
+  const handleRevertirPendiente = async (invitado) => {
+    try {
+      const payload = {
+        nombre_invitado: invitado.nombre_invitado,
+        pases: invitado.pases ?? 1,
+        correo: invitado.correo ?? null,
+        celular: invitado.celular ?? null,
+        nombre_acompanante: invitado.nombre_acompanante ?? null,
+        notas: invitado.notas ?? null,
+        es_confirmado: 0,
+      };
+      const resp = await invitadosApi.actualizar(invitado.id, payload);
+      const invitadoActualizado = resp.invitado ?? resp;
+
+      setInvitados((prev) =>
+        prev.map((i) => (i.id === invitado.id ? invitadoActualizado : i))
+      );
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo volver a pendiente.");
+    }
+  };
+
+  // Abrir/cerrar modal y ejecutar acción seleccionada
+  const abrirModalAccion = (tipo, invitado) => setModalAccion({ open: true, tipo, invitado });
+  const cerrarModalAccion = () => setModalAccion({ open: false, tipo: null, invitado: null });
+  const confirmarAccionModal = async () => {
+    const { tipo, invitado } = modalAccion;
+    if (!tipo || !invitado) return;
+    setProcesandoAccion(true);
+    try {
+      if (tipo === "no_asistira") {
+        await handleNoAsistir(invitado.id);
+      } else if (tipo === "eliminar") {
+        await handleEliminar(invitado.id);
+      } else if (tipo === "revertir") {
+        await handleRevertirPendiente(invitado);
+      }
+      cerrarModalAccion();
+    } finally {
+      setProcesandoAccion(false);
     }
   };
 
@@ -642,6 +692,74 @@ const handleSaveEdit = async (formData) => {
       enlaceRsvp
         ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
         : "Te agradecemos que nos confirmes tu asistencia cuantos antes.",
+    ].join("\n\n");
+
+    const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
+      mensaje
+    )}`;
+    window.open(url, "_blank");
+  };
+
+  // --------- RECORDATORIO WHATSAPP ----------
+  const handleEnviarRecordatorio = (invitado) => {
+    const celular = invitado.celular ?? invitado.telefono;
+    if (!celular)
+      return alert("Este invitado no tiene número de teléfono registrado.");
+
+    let telefonoLimpio = String(celular).replace(/\D/g, "");
+
+    if (telefonoLimpio.startsWith("51")) {
+      telefonoLimpio = telefonoLimpio.slice(2);
+    }
+    if (telefonoLimpio.length < 9)
+      return alert("El número de teléfono no es válido.");
+
+    const base = window.location.origin;
+    const sub = boda?.subdominio;
+    const codigo = invitado.codigo_clave;
+
+    const enlaceRsvp =
+      sub && codigo
+        ? `${base}/boda/${sub}?rsvp=${encodeURIComponent(codigo)}`
+        : "";
+
+    const nombrePareja = boda?.nombre_pareja || "nuestra boda";
+    const fecha = boda?.fecha_boda || "";
+
+    // Calcular días faltantes
+    const diasFaltantes = (() => {
+      if (!fecha) return null;
+      const fechaBoda = new Date(fecha);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+      fechaBoda.setHours(0, 0, 0, 0);
+      const diff = Math.ceil((fechaBoda - hoy) / (1000 * 60 * 60 * 24));
+      return diff > 0 ? diff : null;
+    })();
+
+    const fechaLegible = (() => {
+      if (!fecha) return "";
+      const d = new Date(fecha);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+    })();
+
+    const partesFecha = diasFaltantes
+      ? `Faltan ${diasFaltantes} día${diasFaltantes !== 1 ? "s" : ""} para ${nombrePareja}${fechaLegible ? ` (${fechaLegible})` : ""}.`
+      : `Te esperamos en ${nombrePareja}${fechaLegible ? ` el ${fechaLegible}` : ""}.`;
+
+    let mensaje = [
+      `¡Hola ${invitado.nombre_invitado}!`,
+      partesFecha,
+      "Nos encantaría contar con tu presencia en este día tan especial.",
+      enlaceRsvp
+        ? `Por favor confirma tu asistencia aquí: ${enlaceRsvp}`
+        : "Por favor confirma tu asistencia cuanto antes.",
+      "Si por algún motivo no puedes asistir, también puedes indicarlo en el mismo enlace. ¡Muchas gracias!",
     ].join("\n\n");
 
     const url = `https://wa.me/51${telefonoLimpio}?text=${encodeURIComponent(
@@ -1117,6 +1235,13 @@ const handleSaveEdit = async (formData) => {
               </span>
             </button>
 
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[11px] text-emerald-700">
+              <FiUsers className="w-4 h-4" />
+              <span>
+                Pases confirmados: <span className="font-semibold">{stats.totalPasesConfirmados}</span>
+              </span>
+            </div>
+
             <button
               type="button"
               onClick={() => setFiltroEstado("pendientes")}
@@ -1132,6 +1257,13 @@ const handleSaveEdit = async (formData) => {
                 Pendientes: <span className="font-semibold">{stats.totalPendientes}</span>
               </span>
             </button>
+
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-amber-100 bg-amber-50 px-3 py-1.5 text-[11px] text-amber-700">
+              <FiUsers className="w-4 h-4" />
+              <span>
+                Pases pendientes: <span className="font-semibold">{stats.totalPasesPendientes}</span>
+              </span>
+            </div>
 
             <button
               type="button"
@@ -1149,10 +1281,10 @@ const handleSaveEdit = async (formData) => {
               </span>
             </button>
 
-            <div className="inline-flex items-center gap-2 rounded-2xl border border-blue-100 bg-blue-50 px-3 py-1.5 text-[11px] text-blue-700">
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-rose-100 bg-rose-50 px-3 py-1.5 text-[11px] text-rose-700">
               <FiUsers className="w-4 h-4" />
               <span>
-                Pases activos: <span className="font-semibold">{pasesActivos}</span>
+                Pases no asisten: <span className="font-semibold">{stats.totalPasesNoAsiste}</span>
               </span>
             </div>
           </div>
@@ -1269,6 +1401,17 @@ const handleSaveEdit = async (formData) => {
                           WhatsApp
                         </button>
                       )}
+                      {celular && !i.es_confirmado && (
+                        <button
+                          type="button"
+                          onClick={() => handleEnviarRecordatorio(i)}
+                          disabled={genOpen}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <FiMessageCircle className="w-3.5 h-3.5" />
+                          Recordatorio
+                        </button>
+                      )}
                       {!i.es_confirmado && (
                         <button
                           type="button"
@@ -1280,15 +1423,24 @@ const handleSaveEdit = async (formData) => {
                           Confirmar
                         </button>
                       )}
-                      {i.es_confirmado !== -1 && (
+                      {i.es_confirmado !== -1 ? (
                         <button
                           type="button"
-                          onClick={() => handleNoAsistir(i.id)}
+                          onClick={() => abrirModalAccion("no_asistira", i)}
                           disabled={genOpen}
                           className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-medium text-red-700 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <FiXCircle className="w-3.5 h-3.5" />
                           No asistirá
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => abrirModalAccion("revertir", i)}
+                          disabled={genOpen}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700 hover:bg-amber-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Volver a pendiente
                         </button>
                       )}
                       <button
@@ -1301,7 +1453,7 @@ const handleSaveEdit = async (formData) => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleEliminar(i.id)}
+                        onClick={() => abrirModalAccion("eliminar", i)}
                         disabled={genOpen}
                         className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
@@ -1320,6 +1472,31 @@ const handleSaveEdit = async (formData) => {
         open={genOpen}
         progress={genProgress}
         onClose={() => setGenOpen(false)}
+      />
+
+      {/* Modal confirmación para acciones de invitado */}
+      <ConfirmationDialog
+        isOpen={modalAccion.open}
+        title={
+          modalAccion.tipo === "eliminar"
+            ? "¿Eliminar invitado?"
+            : modalAccion.tipo === "revertir"
+            ? "¿Volver a 'Pendiente'?"
+            : "¿Marcar como 'No asistirá'?"
+        }
+        message={
+          modalAccion.tipo === "eliminar"
+            ? "Se eliminará al invitado de forma permanente de esta boda. Esta acción no se puede deshacer."
+            : modalAccion.tipo === "revertir"
+            ? "El invitado volverá al estado 'Pendiente' y dejará de figurar como 'No asistirá'."
+            : "Esta acción marcará que el invitado no asistirá al evento. Podrás revertirlo más adelante si cambia de opinión."
+        }
+        confirmText={modalAccion.tipo === "eliminar" ? "Eliminar" : "Confirmar"}
+        cancelText="Cancelar"
+        isDangerous={modalAccion.tipo === "eliminar"}
+        isLoading={procesandoAccion}
+        onConfirm={confirmarAccionModal}
+        onCancel={cerrarModalAccion}
       />
 
       {/* Modal de edición de invitado */}

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   traefik:
     image: traefik:v2.11
@@ -36,6 +34,7 @@ services:
     volumes:
       - ./:/var/www/html
       - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - rclone_config:/root/.config/rclone
     ports:
       - "8000:80"
     depends_on:
@@ -65,7 +64,7 @@ services:
       DB_PORT: ${DB_PORT:-3306}
       DB_DATABASE: ${DB_DATABASE:-db_wedding}
       DB_USERNAME: ${DB_USERNAME:-db_wedding}
-      DB_PASSWORD: ${DB_PASSWORD:-"R3DY@D3M3TR10"}
+      DB_PASSWORD: ${DB_PASSWORD:-R3DY@D3M3TR10}
 
       # CORS / cookies para SPA + Sanctum
       SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-${SERVER_IP},localhost:3000}
@@ -125,8 +124,8 @@ services:
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-db_wedding}
       MYSQL_USER: ${DB_USERNAME:-db_wedding}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-"R3DY@D3M3TR10"}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-"D3LG4D0#S3QU3IR0S"}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-R3DY@D3M3TR10}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-D3LG4D0#S3QU3IR0S}
     ports:
       - "33060:3306"
     volumes:
@@ -153,3 +152,6 @@ services:
 networks:
   web:
     driver: bridge
+
+volumes:
+  rclone_config:

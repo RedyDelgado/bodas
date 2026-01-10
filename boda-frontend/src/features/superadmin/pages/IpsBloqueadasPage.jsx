@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FiShield, FiX, FiCheck, FiClock, FiAlertTriangle } from 'react-icons/fi';
+import { FiShield, FiX, FiCheck, FiClock, FiAlertTriangle, FiPlus } from 'react-icons/fi';
+import { ImSpinner2 } from 'react-icons/im';
 import axiosClient from '../../../shared/config/axiosClient';
 
 const IpsBloqueadasPage = () => {
@@ -68,94 +69,100 @@ const IpsBloqueadasPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Encabezado */}
+    <div className="space-y-5 text-[14px]">
+      {/* Encabezado Premium */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">IPs Bloqueadas</h1>
-          <p className="text-slate-600">Control de direcciones IP bloqueadas en la plataforma</p>
+          <h1 className="text-2xl font-semibold text-slate-800 mb-1.5 flex items-center gap-2">
+            <FiShield className="text-red-600" size={26} />
+            IPs Bloqueadas
+          </h1>
+          <p className="text-slate-600 text-[13px]">Control de direcciones IP bloqueadas en la plataforma</p>
         </div>
         <button
           onClick={() => setModalAbierto(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          className="flex items-center gap-2 px-3.5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold text-sm"
         >
-          <FiShield size={18} />
+          <FiPlus size={16} />
           <span>Bloquear IP</span>
         </button>
       </div>
 
-      {/* Lista de IPs */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Lista de IPs Premium */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
         {cargando ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
+          <div className="flex flex-col justify-center items-center h-64">
+            <ImSpinner2 className="animate-spin text-slate-600 mb-4" size={48} />
+            <p className="text-slate-600">Cargando IPs bloqueadas...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50">
+              <thead className="bg-gradient-to-r from-slate-50 to-slate-100 text-xs uppercase">
                 <tr>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">IP</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Razón</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Bloqueado por</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Intentos</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Expira</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Estado</th>
-                  <th className="text-right py-3 px-4 text-sm font-semibold text-slate-700">Acciones</th>
+                  <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">IP</th>
+                  <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Razón</th>
+                  <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Por</th>
+                  <th className="text-center py-3 px-5 font-bold text-slate-700 tracking-wider">Intentos</th>
+                  <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Expira</th>
+                  <th className="text-center py-3 px-5 font-bold text-slate-700 tracking-wider">Estado</th>
+                  <th className="text-center py-3 px-5 font-bold text-slate-700 tracking-wider">Acción</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {ipsBloqueadas.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-slate-500">
-                      No hay IPs bloqueadas
+                    <td colSpan={7} className="py-12 text-center">
+                      <FiShield className="mx-auto text-slate-300 mb-2" size={48} />
+                      <p className="text-slate-600 font-medium">No hay IPs bloqueadas</p>
+                      <p className="text-sm text-slate-500">El sistema está seguro</p>
                     </td>
                   </tr>
                 ) : (
                   ipsBloqueadas.map((ip) => (
-                    <tr key={ip.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 text-sm font-mono font-bold text-slate-800">
+                    <tr key={ip.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-5 text-sm font-mono font-bold text-slate-800">
                         {ip.ip_address}
                       </td>
-                      <td className="py-3 px-4 text-sm text-slate-600 max-w-xs truncate">
+                      <td className="py-3 px-5 text-sm text-slate-600 max-w-xs">
                         {ip.razon}
                       </td>
-                      <td className="py-3 px-4 text-sm text-slate-600">
+                      <td className="py-3 px-5 text-sm text-slate-600">
                         {ip.bloqueado_por ? ip.bloqueado_por.name : 'Sistema'}
                       </td>
-                      <td className="py-3 px-4 text-sm text-center">
-                        <span className="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">
+                      <td className="py-3 px-5 text-center">
+                        <span className="inline-flex items-center justify-center w-8 h-8 bg-red-100 text-red-700 rounded-full text-sm font-bold">
                           {ip.intentos_fallidos}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm text-slate-600">
+                      <td className="py-3 px-5 text-sm text-slate-600">
                         {ip.bloqueado_hasta ? (
-                          <div className="flex items-center gap-1">
-                            <FiClock size={14} />
-                            <span>{new Date(ip.bloqueado_hasta).toLocaleString('es-ES')}</span>
+                          <div className="flex items-center gap-1 text-slate-600">
+                            <FiClock size={14} className="text-amber-600" />
+                            <span>{new Date(ip.bloqueado_hasta).toLocaleDateString('es-ES')}</span>
                           </div>
                         ) : (
-                          <span className="text-slate-400">Permanente</span>
+                          <span className="text-slate-500 font-medium">Permanente</span>
                         )}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-5 text-center">
                         {estaActivo(ip) ? (
-                          <span className="flex items-center gap-1 text-red-600 text-sm font-medium">
-                            <FiAlertTriangle size={16} />
-                            <span>Bloqueada</span>
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-100 text-red-800 rounded-full text-xs font-bold">
+                            <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                            Bloqueada
                           </span>
                         ) : (
-                          <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
-                            <FiCheck size={16} />
-                            <span>Expirada</span>
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
+                            <span className="w-2 h-2 bg-emerald-600 rounded-full"></span>
+                            Expirada
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-right">
+                      <td className="py-3 px-5 text-center">
                         {estaActivo(ip) && (
                           <button
                             onClick={() => desbloquearIp(ip)}
-                            className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
+                            className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                           >
                             Desbloquear
                           </button>
@@ -174,8 +181,8 @@ const IpsBloqueadasPage = () => {
       {modalAbierto && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-slate-800">Bloquear IP</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-slate-800">Bloquear IP</h3>
               <button
                 onClick={cerrarModal}
                 className="text-slate-400 hover:text-slate-600 transition-colors"
@@ -186,7 +193,7 @@ const IpsBloqueadasPage = () => {
 
             <form onSubmit={bloquearIp} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Dirección IP
                 </label>
                 <input
@@ -201,7 +208,7 @@ const IpsBloqueadasPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Razón del bloqueo
                 </label>
                 <textarea
@@ -215,7 +222,7 @@ const IpsBloqueadasPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Duración (horas)
                 </label>
                 <input
@@ -231,17 +238,17 @@ const IpsBloqueadasPage = () => {
                 </p>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-3">
                 <button
                   type="button"
                   onClick={cerrarModal}
-                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-semibold text-sm"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold text-sm"
                 >
                   Bloquear IP
                 </button>

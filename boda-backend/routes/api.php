@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\CardDesignController;
 use App\Http\Controllers\Api\RsvpGenerationProgressController;
 use App\Http\Controllers\Api\RsvpCardDownloadController;
 use App\Http\Controllers\Api\SuperadminController;
+use App\Http\Controllers\Admin\BackupController;
 /*
 |--------------------------------------------------------------------------
 | Rutas públicas
@@ -297,5 +298,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/mis-bodas/{boda}/dominio/verificar', [BodaController::class, 'verifyDomainPropia']);
         Route::get('/validar-disponibilidad-dominio', [BodaController::class, 'checkDomainAvailability']);
 
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin: Gestión de Backups
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['auth:sanctum'])->prefix('admin/backups')->group(function () {
+        Route::get('/settings', [BackupController::class, 'getSettings']);
+        Route::put('/settings', [BackupController::class, 'updateSettings']);
+        Route::get('/history', [BackupController::class, 'getHistory']);
+        Route::get('/run/{backupRun}', [BackupController::class, 'getRunDetails']);
+        Route::post('/run-now', [BackupController::class, 'runNow']);
+        Route::post('/retry/{backupRun}', [BackupController::class, 'retry']);
+        Route::post('/verify-drive', [BackupController::class, 'verifyDriveConnection']);
+        Route::get('/drive-usage', [BackupController::class, 'getDriveUsage']);
+        Route::get('/stats', [BackupController::class, 'getStats']);
     });
 });

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiSearch, FiEye, FiEdit, FiTrash2, FiUserCheck } from 'react-icons/fi';
+import { FiSearch, FiEye, FiEdit, FiTrash2, FiUserCheck, FiHeart } from 'react-icons/fi';
+import { ImSpinner2 } from 'react-icons/im';
 import axiosClient from '../../../shared/config/axiosClient';
 
 const GestionBodasPage = () => {
@@ -90,18 +91,21 @@ const GestionBodasPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Encabezado */}
+    <div className="space-y-5 text-[14px]">
+      {/* Encabezado Premium */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Gestión de Bodas</h1>
-        <p className="text-slate-600">Administra y visualiza todas las bodas de la plataforma</p>
+        <h1 className="text-2xl font-semibold text-slate-800 mb-1.5 flex items-center gap-2">
+          <FiHeart className="text-rose-600" size={26} />
+          Gestión de Bodas
+        </h1>
+        <p className="text-slate-600 text-[13px]">Administra y visualiza todas las bodas de la plataforma</p>
       </div>
 
-      {/* Barra de búsqueda */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <div className="flex gap-4">
+      {/* Barra de búsqueda Premium */}
+      <div className="bg-white rounded-xl shadow-lg p-4 border border-slate-200">
+        <div className="flex gap-3">
           <div className="flex-1 relative">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
             <input
               type="text"
               value={buscar}
@@ -109,92 +113,116 @@ const GestionBodasPage = () => {
                 setBuscar(e.target.value);
                 setPaginaActual(1);
               }}
-              placeholder="Buscar por nombres, subdominio o dominio..."
-              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500"
+              placeholder="Buscar bodas..."
+              className="w-full pl-12 pr-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
             />
           </div>
         </div>
       </div>
 
-      {/* Tabla de bodas */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Tabla de bodas Premium */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
         {cargando ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
+          <div className="flex flex-col justify-center items-center h-64">
+            <ImSpinner2 className="animate-spin text-slate-600 mb-4" size={48} />
+            <p className="text-slate-600">Cargando bodas...</p>
           </div>
         ) : bodas.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-slate-500">No se encontraron bodas</p>
+          <div className="text-center py-16">
+            <FiHeart className="mx-auto text-slate-300 mb-3" size={48} />
+            <p className="text-slate-600 font-medium">No se encontraron bodas</p>
+            <p className="text-sm text-slate-500">Intenta con otros términos de búsqueda</p>
           </div>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-50">
+                <thead className="bg-gradient-to-r from-slate-50 to-slate-100 text-xs uppercase">
                   <tr>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">ID</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Pareja</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Usuario</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Fecha Evento</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Slug/Dominio</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Plan</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Estado</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Acciones</th>
+                    <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Pareja</th>
+                    <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Usuario</th>
+                    <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Fecha</th>
+                    <th className="text-left py-3 px-5 font-bold text-slate-700 tracking-wider">Dominio</th>
+                    <th className="text-center py-3 px-5 font-bold text-slate-700 tracking-wider">Plan</th>
+                    <th className="text-center py-3 px-5 font-bold text-slate-700 tracking-wider">Estado</th>
+                    <th className="text-center py-3 px-5 font-bold text-slate-700 tracking-wider">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {bodas.map((boda) => (
-                    <tr key={boda.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 text-sm text-slate-600 font-mono">
-                        #{boda.id}
+                    <tr key={boda.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-5">
+                        <div className="flex items-center gap-2">
+                          <FiHeart className="text-rose-400" size={16} />
+                          <span className="font-semibold text-slate-900">{boda.titulo}</span>
+                        </div>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-5">
                         <div className="font-medium text-slate-800">
                           {boda.nombre_novia} & {boda.nombre_novio}
                         </div>
                         <div className="text-xs text-slate-500">{boda.ciudad || '-'}</div>
                       </td>
-                      <td className="py-3 px-4">
-                        <div className="text-sm text-slate-800">{boda.usuario?.name}</div>
+                      <td className="py-3 px-5">
+                        <div className="text-sm font-medium text-slate-800">{boda.usuario?.name}</div>
                         <div className="text-xs text-slate-500">{boda.usuario?.email}</div>
                       </td>
-                      <td className="py-3 px-4 text-sm text-slate-600">
+                      <td className="py-3 px-5 text-sm text-slate-600">
                         {formatearFecha(boda.fecha_boda || boda.fecha_evento)}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-5">
                         <div className="text-sm text-slate-800 font-mono">{boda.slug}</div>
                         {boda.dominio_personalizado && (
-                          <div className="text-xs text-blue-600">{boda.dominio_personalizado}</div>
+                          <div className="text-xs text-blue-600 font-medium">{boda.dominio_personalizado}</div>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-sm text-slate-600">
-                        {boda.plan?.nombre || '-'}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${obtenerEstadoBadge(boda.estado)}`}>
-                          {boda.estado}
+                      <td className="py-3 px-5 text-center">
+                        <span className="inline-flex px-2 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700">
+                          {boda.plan?.nombre || '-'}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
+                      <td className="py-3 px-5 text-center">
+                        <span
+                          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${
+                            boda.estado === 'activa'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : boda.estado === 'inactiva'
+                              ? 'bg-slate-100 text-slate-800'
+                              : 'bg-rose-100 text-rose-800'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block w-1.5 h-1.5 rounded-full ${
+                              boda.estado === 'activa'
+                                ? 'bg-emerald-600'
+                                : boda.estado === 'inactiva'
+                                ? 'bg-slate-600'
+                                : 'bg-rose-600'
+                            }`}
+                          ></span>
+                          {boda.estado.charAt(0).toUpperCase() + boda.estado.slice(1)}
+                        </span>
+                      </td>
+                      <td className="py-3 px-5">
+                        <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => verBoda(boda.slug)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                             title="Ver boda pública"
                           >
                             <FiEye size={18} />
                           </button>
                           <button
                             onClick={() => editarBodaDirectamente(boda.id, boda.usuario?.id)}
-                            className="p-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-                            title="Editar boda (como superadmin)"
+                            className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                            title="Editar boda"
                           >
                             <FiEdit size={18} />
                           </button>
                           <button
                             onClick={() => impersonarUsuario(boda.usuario?.id, boda.usuario?.name, boda.id)}
-                            className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                            title="Entrar como este usuario"
+                            className="p-1.5 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                            title="Entrar como usuario"
                           >
                             <FiUserCheck size={18} />
                           </button>
@@ -206,23 +234,23 @@ const GestionBodasPage = () => {
               </table>
             </div>
 
-            {/* Paginación */}
+            {/* Paginación Premium */}
             {totalPaginas > 1 && (
-              <div className="flex justify-center items-center gap-4 py-4 px-6 border-t border-slate-200">
+              <div className="flex justify-center items-center gap-3 py-3.5 px-5 border-t border-slate-200 bg-slate-50 text-sm">
                 <button
                   onClick={() => setPaginaActual(p => Math.max(1, p - 1))}
                   disabled={paginaActual === 1}
-                  className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 font-medium border border-slate-300 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Anterior
                 </button>
-                <span className="text-sm text-slate-600">
-                  Página {paginaActual} de {totalPaginas}
+                <span className="font-medium text-slate-600">
+                  {paginaActual} de {totalPaginas}
                 </span>
                 <button
                   onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))}
                   disabled={paginaActual === totalPaginas}
-                  className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 font-medium border border-slate-300 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Siguiente
                 </button>

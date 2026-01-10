@@ -1,11 +1,14 @@
 FROM php:8.2-apache
 
-# 1) Librerías del sistema necesarias para GD + ZIP
+# 1) Librerías del sistema necesarias para GD + ZIP + MySQL + rclone + cron
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
     libzip-dev \
+    mariadb-client \
+    rclone \
+    cron \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install gd pdo pdo_mysql zip
 
@@ -30,5 +33,9 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' \
     sed -ri -e 's!/var/www/html!/var/www/html/public!g' \
     /etc/apache2/apache2.conf
 
-# 6) Al iniciar el contenedor, instalar dependencias y arrancar Apache
-CMD ["bash", "-lc", "composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader && apache2-foreground"]
+# 6) Script de startup que inicia cron + Apache
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# 7) Al iniciar el contenedor, ejecutar script de startup
+ENTRYPOINT ["/entrypoint.sh"]

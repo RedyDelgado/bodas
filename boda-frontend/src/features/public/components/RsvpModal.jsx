@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FiX, FiCheckCircle, FiClock, FiAlertCircle } from "react-icons/fi";
 import { registrarRsvp, validarCodigo } from "../services/publicRsvpService";
 import { ConfirmationSuccess } from "./ConfirmationSuccess";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 import {
   COLOR_AZUL,
@@ -16,7 +17,7 @@ import {
  */
 export function RsvpModal({ isOpen, onClose, onSuccess }) {
   // Colores de boda (importados desde tokens compartidos)
-  // Etapas: 'buscar' (solo código) | 'confirmar' (mostrar datos y confirmar)
+  // Etapas: 'buscar' (solo código) | 'confirmar' (mostrar datos y confirmar) | 'opciones' (elegir si asiste o no)
   const [etapa, setEtapa] = useState("buscar");
 
   const [codigoInvitacion, setCodigoInvitacion] = useState("");
@@ -31,6 +32,11 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
     "Puedes confirmar hasta 10 días antes del evento."
   );
   const [deadlineLabel, setDeadlineLabel] = useState("");
+  
+  // Estados para modal de confirmación de rechazo
+  const [mostrarConfirmacionRechazo, setMostrarConfirmacionRechazo] = useState(false);
+  const [estaEnviandoRechazo, setEstaEnviandoRechazo] = useState(false);
+  const [tipoRespuesta, setTipoRespuesta] = useState(null); // 'confirmado' | 'rechazado'
 
   // Maneja envío final (confirmación) - solo se llama en etapa 'confirmar'
   const manejadorEnvio = async (e) => {
@@ -72,6 +78,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
       const respuesta = await registrarRsvp(cargaUtilidad);
 
       // mostrar pantalla de éxito (usamos ConfirmationSuccess)
+      setTipoRespuesta('confirmado');
       setEstadoFormulario("success");
       setInvitadoEncontrado(respuesta?.invitado || invitadoEncontrado);
 
@@ -157,10 +164,64 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
     }
   };
 
-  if (!isOpen) return null;
+  // Mostrar confirmación para rechazar invitación
+  const mostrarConfirmacionRechazarInvitacion = () => {
+    setMostrarConfirmacionRechazo(true);
+  };
+
+  // Confirmar que desea rechazar
+  const confirmarRechazo = async () => {
+    setEstaEnviandoRechazo(true);
+    setMensajeError("");
+
+    try {
+      const cargaUtilidad = {
+        codigo: codigoInvitacion.trim().toUpperCase(),
+        respuesta: "rechazado",
+      };
+
+      // Solo agregar campos opcionales si tienen valor
+      if (mensajePersonal.trim()) {
+        cargaUtilidad.mensaje = mensajePersonal.trim();
+      }
+      
+      if (numeroContacto.trim()) {
+        cargaUtilidad.celular = numeroContacto.trim();
+      }
+
+      const respuesta = await registrarRsvp(cargaUtilidad);
+      
+      // Primero cerrar el modal de confirmación
+      setMostrarConfirmacionRechazo(false);
+      setEstaEnviandoRechazo(false);
+      
+      // Luego establecer el tipo de respuesta y el invitado
+      setInvitadoEncontrado(respuesta?.invitado || invitadoEncontrado);
+      setTipoRespuesta('rechazado');
+      
+      // Finalmente cambiar a estado de éxito (esto renderizará el mensaje correcto)
+      setEstadoFormulario("success");
+
+      // NO ejecutar onSuccess cuando rechaza, solo cuando confirma
+    } catch (error) {
+      console.error("Error al rechazar:", error);
+      setMensajeError(
+        error.response?.data?.message || error.response?.data?.errors?.codigo?.[0] || "No se pudo registrar el rechazo. Intenta más tarde."
+      );
+      setEstaEnviandoRechazo(false);
+      setMostrarConfirmacionRechazo(false);
+    }
+  };
+
+  // Cancelar rechazo
+  const cancelarRechazo = () => {
+    setMostrarConfirmacionRechazo(false);
+  };
 
   // Usamos el mismo fondo oscuro y tarjeta que ConfirmationSuccess para mantener coherencia visual
   const modalBg = undefined;
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -319,28 +380,88 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
                   </>
                 )}
               </button>
+
+              {/* Botón rechazar - solo en etapa confirmar */}
+              {etapa === "confirmar" && (
+                <button
+                  type="button"
+                  onClick={mostrarConfirmacionRechazarInvitacion}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all mt-3"
+                >
+                  ✗ No podré asistir
+                </button>
+              )}
             </form>
           ) : (
-            /* estadoFormulario de éxito: usamos ConfirmationSuccess con confeti */
-            <ConfirmationSuccess
-              nombreInvitado={invitadoEncontrado?.nombre_invitado}
-              cantidadPersonas={invitadoEncontrado?.pases || cantidadPersonas}
-              invitado={invitadoEncontrado}
-              onClose={() => {
-                // limpiar estado y cerrar modal
-                setCodigoInvitacion("");
-                setCantidadPersonas(1);
-                setMensajePersonal("");
-                setNumeroContacto("");
-                setInvitadoEncontrado(null);
-                setEtapa("buscar");
-                setEstadoFormulario("idle");
-                if (onClose) onClose();
-              }}
-            />
+            /* estadoFormulario de éxito: diferentes mensajes según confirmó o rechazó */
+            tipoRespuesta === 'rechazado' ? (
+              /* Mensaje amigable para quien no puede asistir */
+              <div className="text-center space-y-4">
+                <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-slate-700/50 mb-3">
+                  <span className="text-3xl">💙</span>
+                </div>
+                <h3 className="text-2xl font-serif text-white mb-3">
+                  ¡Gracias por avisarnos!
+                </h3>
+                <p className="text-slate-200 leading-relaxed mb-4">
+                  Lamentamos que {invitadoEncontrado?.nombre_invitado || 'tú'} no pueda{invitadoEncontrado?.nombre_invitado ? '' : 's'} acompañarnos en este día especial.
+                </p>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Aunque no estarás físicamente, tu cariño y buenos deseos nos acompañarán. 
+                  ¡Esperamos compartir contigo en futuras ocasiones!
+                </p>
+                <button
+                  onClick={() => {
+                    setCodigoInvitacion("");
+                    setCantidadPersonas(1);
+                    setMensajePersonal("");
+                    setNumeroContacto("");
+                    setInvitadoEncontrado(null);
+                    setEtapa("buscar");
+                    setEstadoFormulario("idle");
+                    setTipoRespuesta(null);
+                    if (onClose) onClose();
+                  }}
+                  className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all"
+                >
+                  Cerrar
+                </button>
+              </div>
+            ) : (
+              /* Mensaje de éxito para quien confirmó */
+              <ConfirmationSuccess
+                nombreInvitado={invitadoEncontrado?.nombre_invitado}
+                cantidadPersonas={invitadoEncontrado?.pases || cantidadPersonas}
+                invitado={invitadoEncontrado}
+                onClose={() => {
+                  setCodigoInvitacion("");
+                  setCantidadPersonas(1);
+                  setMensajePersonal("");
+                  setNumeroContacto("");
+                  setInvitadoEncontrado(null);
+                  setEtapa("buscar");
+                  setEstadoFormulario("idle");
+                  setTipoRespuesta(null);
+                  if (onClose) onClose();
+                }}
+              />
+            )
           )}
         </div>
       </div>
+
+      {/* Modal de confirmación para rechazar invitación */}
+      <ConfirmationDialog
+        isOpen={mostrarConfirmacionRechazo}
+        title="¿Seguro que no asistirás?"
+        message="Esta acción registrará que no asistirás a la boda. ¿Deseas continuar? Si cambias de opinión, puedes contactar con los organizadores."
+        confirmText="Sí, no asistiré"
+        cancelText="Cancelar"
+        isDangerous={true}
+        onConfirm={confirmarRechazo}
+        onCancel={cancelarRechazo}
+        isLoading={estaEnviandoRechazo}
+      />
     </div>
     </div>
     </div>

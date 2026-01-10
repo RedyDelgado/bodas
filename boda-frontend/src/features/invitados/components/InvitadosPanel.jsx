@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from "react";
 import { useInvitados } from "../hooks/useInvitados";
 import { InvitadoSidebar } from "./InvitadoSidebar";
+import { ConfirmationDialog } from "../../public/components/ConfirmationDialog";
 
 /**
  * Panel SaaS de invitados para una boda.
@@ -16,11 +17,16 @@ export function InvitadosPanel({ bodaId }) {
     error,
     guardarInvitado,
     confirmar,
+    noAsistira,
+    revertirPendiente,
+    eliminar,
   } = useInvitados(bodaId);
 
   const [busqueda, setBusqueda] = useState("");
   const [invitadoActivo, setInvitadoActivo] = useState(null);
   const [sidebarAbierto, setSidebarAbierto] = useState(false);
+  const [modalAccion, setModalAccion] = useState({ open: false, tipo: null, invitado: null });
+  const [procesandoAccion, setProcesandoAccion] = useState(false);
 
   const invitadosFiltrados = useMemo(() => {
     if (!busqueda.trim()) return invitados;
@@ -60,6 +66,32 @@ export function InvitadosPanel({ bodaId }) {
   const handleConfirmarInvitado = async () => {
     if (!invitadoActivo) return;
     await confirmar(invitadoActivo.id);
+  };
+
+  const abrirModalAccion = (tipo, invitado) => {
+    setModalAccion({ open: true, tipo, invitado });
+  };
+
+  const cerrarModalAccion = () => setModalAccion({ open: false, tipo: null, invitado: null });
+
+  const ejecutarAccionModal = async () => {
+    if (!modalAccion.open || !modalAccion.invitado) return;
+    setProcesandoAccion(true);
+    try {
+      const id = modalAccion.invitado.id;
+      if (modalAccion.tipo === "no_asistira") {
+        await noAsistira(id);
+      } else if (modalAccion.tipo === "eliminar") {
+        await eliminar(id);
+      } else if (modalAccion.tipo === "revertir") {
+        await revertirPendiente(id);
+      }
+      cerrarModalAccion();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setProcesandoAccion(false);
+    }
   };
 
   return (
@@ -166,10 +198,12 @@ export function InvitadosPanel({ bodaId }) {
                   </td>
                   <td className="px-3 py-2 border-b text-center">
                     <span
-                      className={`px-2 py-1 rounded-full text-[11px] ${
+                      className={`px-2 py-1 rounded-full text-[11px] border ${
                         inv.estadoConfirmacion === "confirmado"
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                          : "bg-amber-50 text-amber-700 border border-amber-100"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                          : inv.estadoConfirmacion === "no_asiste"
+                          ? "bg-rose-50 text-rose-700 border-rose-100"
+                          : "bg-amber-50 text-amber-700 border-amber-100"
                       }`}
                     >
                       {inv.estadoConfirmacion}
@@ -180,21 +214,40 @@ export function InvitadosPanel({ bodaId }) {
                   </td>
                   <td
                     className="px-3 py-2 border-b text-center"
-                    onClick={(e) => e.stopPropagation()} // evitar que dispare el click de fila
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    {inv.estadoConfirmacion !== "confirmado" && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setInvitadoActivo(inv);
-                          setSidebarAbierto(true);
-                        }}
-                        className="px-2 py-1 rounded-md bg-slate-900 text-white text-[11px] hover:bg-slate-800"
-                      >
-                        Editar / Confirmar
-                      </button>
-                    )}
-                    {inv.estadoConfirmacion === "confirmado" && (
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      {/* Confirmar */}
+                      {inv.estadoConfirmacion !== "confirmado" && (
+                        <button
+                          type="button"
+                          onClick={() => confirmar(inv.id)}
+                          className="px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] hover:bg-emerald-100"
+                        >
+                          Confirmar
+                        </button>
+                      )}
+
+                      {/* No asistirá / Revertir a pendiente */}
+                      {inv.estadoConfirmacion !== "no_asiste" ? (
+                        <button
+                          type="button"
+                          onClick={() => abrirModalAccion("no_asistira", inv)}
+                          className="px-2 py-1 rounded-md bg-rose-50 text-rose-700 border border-rose-200 text-[11px] hover:bg-rose-100"
+                        >
+                          No asistirá
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => abrirModalAccion("revertir", inv)}
+                          className="px-2 py-1 rounded-md bg-amber-50 text-amber-700 border border-amber-200 text-[11px] hover:bg-amber-100"
+                        >
+                          Volver a pendiente
+                        </button>
+                      )}
+
+                      {/* Editar */}
                       <button
                         type="button"
                         onClick={() => {
@@ -203,9 +256,18 @@ export function InvitadosPanel({ bodaId }) {
                         }}
                         className="px-2 py-1 rounded-md border border-slate-200 text-[11px] text-slate-700 hover:bg-slate-50"
                       >
-                        Ver / Editar
+                        Editar
                       </button>
-                    )}
+
+                      {/* Eliminar */}
+                      <button
+                        type="button"
+                        onClick={() => abrirModalAccion("eliminar", inv)}
+                        className="px-2 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-300 text-[11px] hover:bg-slate-200"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -220,6 +282,32 @@ export function InvitadosPanel({ bodaId }) {
         onClose={handleCerrarSidebar}
         onGuardar={handleGuardarInvitado}
         onConfirmar={handleConfirmarInvitado}
+      />
+
+      {/* Modal de confirmación para acciones */}
+      <ConfirmationDialog
+        isOpen={modalAccion.open}
+        title={
+          modalAccion.tipo === "no_asistira"
+            ? "¿Marcar como 'No asistirá'?"
+            : modalAccion.tipo === "eliminar"
+            ? "¿Eliminar invitado?"
+            : "¿Volver a estado 'Pendiente'?"
+        }
+        message={
+          modalAccion.tipo === "no_asistira"
+            ? "Esta acción registrará que el invitado no asistirá. Podrás revertirlo a 'Pendiente' si cambia de opinión."
+            : modalAccion.tipo === "eliminar"
+            ? "Se eliminará al invitado de forma permanente de esta boda. Esta acción no se puede deshacer."
+            : "El invitado volverá a estado 'Pendiente' y dejará de aparecer como 'No asistirá'."
+        }
+        confirmText={
+          modalAccion.tipo === "eliminar" ? "Eliminar" : "Confirmar"
+        }
+        isDangerous={modalAccion.tipo === "eliminar"}
+        isLoading={procesandoAccion}
+        onConfirm={ejecutarAccionModal}
+        onCancel={cerrarModalAccion}
       />
     </div>
   );

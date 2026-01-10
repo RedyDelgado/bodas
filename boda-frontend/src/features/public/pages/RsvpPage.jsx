@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { rsvpApi } from "../services/rsvpApi";
+import { ConfirmationDialog } from "../components/ConfirmationDialog";
 
 export function RsvpPage() {
   const { codigo } = useParams();
@@ -14,6 +15,11 @@ export function RsvpPage() {
     cantidad_personas: 1,
     mensaje: "",
   });
+
+  // Estado para modal de confirmación
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+  const [respuestaPendiente, setRespuestaPendiente] = useState("");
+  const [estaEnviando, setEstaEnviando] = useState(false);
 
   useEffect(() => {
     const fetchInvitado = async () => {
@@ -34,7 +40,27 @@ export function RsvpPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Si está cambiando la respuesta a "rechazado", mostrar confirmación
+    if (name === "respuesta" && value === "rechazado") {
+      setRespuestaPendiente(value);
+      setMostrarConfirmacion(true);
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // Confirmar que desea rechazar la invitación
+  const confirmarRechazo = () => {
+    setForm((prev) => ({ ...prev, respuesta: respuestaPendiente }));
+    setMostrarConfirmacion(false);
+    setRespuestaPendiente("");
+  };
+
+  // Cancelar el rechazo y volver al estado anterior
+  const cancelarRechazo = () => {
+    setMostrarConfirmacion(false);
+    setRespuestaPendiente("");
   };
 
   const enviar = async (e) => {
@@ -48,10 +74,12 @@ export function RsvpPage() {
     };
 
     try {
+      setEstaEnviando(true);
       await rsvpApi.registrar(payload);
       setEstado("enviado");
     } catch (e) {
       setMensajeError("No se pudo registrar la respuesta.");
+      setEstaEnviando(false);
     }
   };
 
@@ -98,12 +126,17 @@ export function RsvpPage() {
             value={form.respuesta}
             onChange={handleChange}
             required
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
           >
             <option value="">Seleccionar</option>
-            <option value="confirmado">Sí, asistiré</option>
-            <option value="rechazado">No podré asistir</option>
+            <option value="confirmado">✓ Sí, asistiré</option>
+            <option value="rechazado">✗ No podré asistir</option>
           </select>
+          {form.respuesta === "rechazado" && (
+            <p className="text-xs text-rose-600 mt-2 font-medium">
+              ⚠ Marcado como "No asistirá" - Se enviará al confirmar
+            </p>
+          )}
         </div>
 
         <div>
@@ -136,11 +169,25 @@ export function RsvpPage() {
 
         <button
           type="submit"
-          className="w-full bg-slate-900 text-white py-2 rounded-lg"
+          disabled={estaEnviando}
+          className="w-full bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Enviar respuesta
+          {estaEnviando ? "Enviando..." : "Enviar respuesta"}
         </button>
       </form>
+
+      {/* Modal de confirmación para rechazar invitación */}
+      <ConfirmationDialog
+        isOpen={mostrarConfirmacion}
+        title="¿Seguro que no asistirás?"
+        message="Esta acción registrará que no asistirás a la boda. ¿Deseas continuar? Podrás contactar con los organizadores si cambias de opinión."
+        confirmText="Sí, no asistiré"
+        cancelText="Cancelar"
+        isDangerous={true}
+        onConfirm={confirmarRechazo}
+        onCancel={cancelarRechazo}
+        isLoading={false}
+      />
     </div>
   );
 }
