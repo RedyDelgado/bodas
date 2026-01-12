@@ -168,10 +168,10 @@ export function ConfirmationSuccess({
                     <span className="font-semibold text-yellow-300">
                       {nombreInvitado}
                     </span>{" "}
-                    {cantidadPersonas > 1
+                    {/* {cantidadPersonas > 1
                       ? `(junto a ${cantidadPersonas - 1} persona(s) más) `
-                      : ""}
-                    acompañe este día tan especial.
+                      : ""} */}
+                    nos acompañe este día tan especial.
                   </>
                 )}
                 {!nombreInvitado && "Estamos felices de que confirmes tu asistencia."}
@@ -201,14 +201,14 @@ export function ConfirmationSuccess({
                   </p>
                   <p className="text-lg font-bold text-emerald-400">Confirmado</p>
                 </div>
-                <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                {/* <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
                   <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">Teléfono</p>
                   <p className="text-sm text-slate-200">{invitado?.celular || "—"}</p>
                 </div>
                 <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
                   <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">Correo</p>
                   <p className="text-sm text-slate-200">{invitado?.correo || "—"}</p>
-                </div>
+                </div> */}
               </div>
 
               {/* Próximos pasos */}
