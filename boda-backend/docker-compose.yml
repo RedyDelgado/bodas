@@ -115,7 +115,16 @@ services:
     restart: unless-stopped
     networks:
       - web
-    command: php artisan queue:work --sleep=1 --tries=1 --timeout=300
+    environment:
+      CONTAINER_TYPE: queue
+      APP_ENV: production
+      APP_KEY: ${APP_KEY:-base64:TbWs5GkKFqv5dcZL4h7WV0nSuozbQrGHa0HTl4+CVlY=}
+      DB_CONNECTION: mysql
+      DB_HOST: ${DB_HOST:-mysql}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-db_wedding}
+      DB_USERNAME: ${DB_USERNAME:-db_wedding}
+      DB_PASSWORD: ${DB_PASSWORD:-R3DY@D3M3TR10}
 
   mysql:
     image: mysql:8.0

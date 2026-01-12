@@ -20,6 +20,13 @@ echo "Reloading cron..."
 service cron reload
 
 echo "All services started successfully!"
-echo "Starting Apache in foreground..."
-# Ejecutar Apache en foreground (IMPORTANTE: debe ser el último comando)
-exec apache2-foreground
+
+# Verificar si este es el contenedor queue basado en CONTAINER_TYPE
+if [ "$CONTAINER_TYPE" = "queue" ]; then
+    echo "Starting Laravel Queue Worker..."
+    exec php artisan queue:work --sleep=1 --tries=1 --timeout=300
+else
+    echo "Starting Apache in foreground..."
+    # Ejecutar Apache en foreground (IMPORTANTE: debe ser el último comando)
+    exec apache2-foreground
+fi
