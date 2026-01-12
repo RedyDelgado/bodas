@@ -141,13 +141,72 @@ public function generate(Request $request, Boda $boda)
     $totalInv = $boda->invitados()->count();
     RsvpGenerationProgress::init($boda->id, (int)$totalInv);
 
-    // ✅ 3) Encolar job
-    GenerateRsvpCardsJob::dispatch($boda->id, auth()->id());
+        // 🔍 DETECTAR si hay worker escuchando o usar ejecución directa
+        $queueConnection = config('queue.default');
+        $hasQueue = $queueConnection !== 'sync';
+        
+        \Log::info("CardDesigner: queue config", ['connection' => $queueConnection, 'hasQueue' => $hasQueue]);
 
-    return response()->json([
-        'message' => 'Generación en cola (background).',
-        'card_design' => $card
-    ]);
+        if ($hasQueue && config('queue.connections.' . $queueConnection . '.driver') !== 'database') {
+            // Si es Redis, SQS, etc., asumir que hay worker
+            GenerateRsvpCardsJob::dispatch($boda->id, auth()->id());
+            return response()->json([
+                'message' => 'Generación en cola (background).',
+                'card_design' => $card
+            ]);
+        }
+
+        // ⚠️ Si es 'database' queue, ejecutar SINCRONIZADAMENTE
+        // (porque en Contabo típicamente no hay worker ejecutándose)
+        \Log::info("CardDesigner: ejecutando tarjetas sincronizadamente (sin worker detectado)");
+        
+        try {
+            RsvpGenerationProgress::setEstado($boda->id, 'procesando');
+            $card->estado_generacion = 'procesando';
+            $card->save();
+
+            // Ejecutar el generador directamente
+            $bodaWithInv = Boda::with('invitados')->findOrFail($boda->id);
+            $design = TarjetaDiseno::where('boda_id', $boda->id)->first();
+            $generator = new \App\Services\RsvpCardGenerator();
+
+            $count = 0;
+            foreach ($bodaWithInv->invitados as $inv) {
+                try {
+                    $path = $generator->generateForInvitado($inv, $design);
+                    if ($path) {
+                        $count++;
+                        $card->ultimo_conteo_generado = $count;
+                        RsvpGenerationProgress::increment($boda->id, 1);
+                    }
+                } catch (\Throwable $eInv) {
+                    \Log::error("Error generando tarjeta invitado {$inv->id}: " . $eInv->getMessage());
+                }
+            }
+
+            $card->estado_generacion = 'finalizado';
+            $card->ultima_generacion_at = now();
+            $card->ultimo_conteo_generado = $count;
+            $card->save();
+            RsvpGenerationProgress::setEstado($boda->id, 'finalizado');
+
+            \Log::info("CardDesigner: generación sincrónica completada", ['boda_id' => $boda->id, 'generadas' => $count]);
+
+            return response()->json([
+                'message' => "Tarjetas generadas: {$count}",
+                'card_design' => $card
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error("CardDesigner: error en generación sincrónica: " . $e->getMessage());
+            $card->estado_generacion = 'error';
+            $card->save();
+            RsvpGenerationProgress::fail($boda->id, $e->getMessage());
+
+            return response()->json([
+                'message' => 'Error generando tarjetas: ' . $e->getMessage(),
+                'error' => $e->getMessage()
+            ], 500);
+        }
 }
 
     public function progress(Request $request, Boda $boda)
