@@ -13,7 +13,13 @@ use Carbon\Carbon;
 class PublicRsvpController extends Controller
 {
     /**
-     * Calcula el límite de confirmación: fecha_boda - 10 días (23:59:59).
+     * Días antes de la boda para cerrar confirmaciones.
+     * Cambiar este valor actualizará automáticamente todos los mensajes.
+     */
+    const DIAS_ANTES_DEADLINE = 1;
+
+    /**
+     * Calcula el límite de confirmación: fecha_boda - DIAS_ANTES_DEADLINE días (23:59:59).
      * Plazo para confirmar espacios y cantidad de platos.
      */
     protected function calcularDeadline(?Invitado $invitado): ?Carbon
@@ -26,7 +32,7 @@ class PublicRsvpController extends Controller
 
         try {
             return Carbon::parse($boda->fecha_boda)
-                ->subDays(1)
+                ->subDays(self::DIAS_ANTES_DEADLINE)
                 ->endOfDay();
         } catch (\Throwable $e) {
             return null;
@@ -36,12 +42,16 @@ class PublicRsvpController extends Controller
     protected function buildDeadlineMeta(?Carbon $deadline): array
     {
         $formatted = $deadline?->format('d/m/Y');
+        $diasAntes = self::DIAS_ANTES_DEADLINE;
+        $textoPlural = $diasAntes === 1 ? 'día' : 'días';
+        
         return [
             'deadline'           => $deadline?->toIso8601String(),
             'deadline_formatted' => $formatted,
+            'dias_antes'         => $diasAntes,
             'mensaje_deadline'   => $formatted
-                ? "Solo puedes confirmar hasta el {$formatted}"
-                : null,
+                ? "Solo puedes confirmar hasta el {$formatted} ({$diasAntes} {$textoPlural} antes)"
+                : "Puedes confirmar hasta {$diasAntes} {$textoPlural} antes del evento.",
         ];
     }
 

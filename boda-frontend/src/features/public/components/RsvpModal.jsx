@@ -29,7 +29,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
   const [invitadoEncontrado, setInvitadoEncontrado] = useState(null);
   const [isClosed, setIsClosed] = useState(false);
   const [deadlineMessage, setDeadlineMessage] = useState(
-    "Puedes confirmar hasta 5 días antes del evento, para garantizar los espacios y platos."
+    "Puedes confirmar hasta unos días antes del evento, para garantizar los espacios y platos."
   );
   const [deadlineLabel, setDeadlineLabel] = useState("");
   
@@ -59,7 +59,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
     if (etapa === "confirmar" && isClosed) {
       setEstadoFormulario("error");
       setMensajeError(
-        deadlineMessage || "Solo se puede confirmar hasta 10 días antes del evento para garantizar los espacios y platos."
+        deadlineMessage || "El plazo para confirmar ha finalizado."
       );
       return;
     }
@@ -125,11 +125,14 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
       const data = await validarCodigo(codigoInvitacion.trim().toUpperCase());
 
       const fechaLimite = data?.deadline_formatted || "";
+      const diasAntes = data?.dias_antes || 10;
+      const textoPlural = diasAntes === 1 ? 'día' : 'días';
+      
       const mensajeLimite =
         data?.mensaje_deadline ||
         (fechaLimite
-          ? `Puedes confirmar hasta el ${fechaLimite} (10 días antes del evento).`
-          : "Puedes confirmar hasta 10 días antes del evento.");
+          ? `Puedes confirmar hasta el ${fechaLimite} (${diasAntes} ${textoPlural} antes del evento).`
+          : `Puedes confirmar hasta ${diasAntes} ${textoPlural} antes del evento.`);
 
       setDeadlineLabel(fechaLimite);
       setDeadlineMessage(mensajeLimite);
