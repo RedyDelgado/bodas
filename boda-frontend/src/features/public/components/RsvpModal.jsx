@@ -29,7 +29,7 @@ export function RsvpModal({ isOpen, onClose, onSuccess }) {
   const [invitadoEncontrado, setInvitadoEncontrado] = useState(null);
   const [isClosed, setIsClosed] = useState(false);
   const [deadlineMessage, setDeadlineMessage] = useState(
-    "Puedes confirmar hasta 10 días antes del evento."
+    "Puedes confirmar hasta 5 días antes del evento, para garantizar los espacios y platos."
   );
   const [deadlineLabel, setDeadlineLabel] = useState("");
   

@@ -26,7 +26,7 @@ class PublicRsvpController extends Controller
 
         try {
             return Carbon::parse($boda->fecha_boda)
-                ->subDays(10)
+                ->subDays(1)
                 ->endOfDay();
         } catch (\Throwable $e) {
             return null;
